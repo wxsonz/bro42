@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>ft_bro - 42 Libft Testing & Guidance Companion</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+	<div class="app-container">
+		<!-- Sidebar Navigation -->
+		<aside class="sidebar">
+			<div class="brand">
+				<div class="brand-icon">🚀</div>
+				<div class="brand-text">
+					<h1>ft_bro</h1>
+					<span class="badge-version">bro v1.0-alpha</span>
+				</div>
+			</div>
+			
+			<nav class="nav-menu">
+				<button class="nav-item active" data-tab="roadmap">
+					<span class="icon">🗺️</span>
+					<span>Roadmap</span>
+				</button>
+				<button class="nav-item" data-tab="tests">
+					<span class="icon">🧪</span>
+					<span>Test Matrix</span>
+					<span class="counter-badge" id="badge-total-tests">43</span>
+				</button>
+				<button class="nav-item" data-tab="memory">
+					<span class="icon">🧠</span>
+					<span>Memory Inspector</span>
+				</button>
+				<button class="nav-item" data-tab="concepts">
+					<span class="icon">💡</span>
+					<span>Concept Cards</span>
+				</button>
+				<button class="nav-item" data-tab="defense">
+					<span class="icon">🛡️</span>
+					<span>Defense Simulator</span>
+				</button>
+				<button class="nav-item" data-tab="macro">
+					<span class="icon">🏗️</span>
+					<span>Macro Checks</span>
+				</button>
+			</nav>
+
+			<div class="sidebar-footer">
+				<button id="theme-toggle" class="btn-secondary btn-block">🌓 Toggle Theme</button>
+			</div>
+		</aside>
+
+		<!-- Main Workspace Area -->
+		<main class="main-content">
+			<!-- Header Status Bar -->
+			<header class="top-header">
+				<div class="target-info">
+					<span class="label">Target:</span>
+					<span id="target-path" class="target-path">libft</span>
+				</div>
+				<div class="header-actions">
+					<div class="score-card">
+						<div class="score-number" id="header-score">0 / 43</div>
+						<div class="score-label">Functions Passed</div>
+					</div>
+					<div class="progress-percent" id="header-percent">0%</div>
+					<button id="btn-rerun" class="btn-primary">⚡ Re-run All</button>
+				</div>
+			</header>
+
+			<!-- Views Container -->
+			<div class="views-wrapper">
+				<!-- VIEW: Roadmap -->
+				<section id="view-roadmap" class="view-panel active">
+					<div class="panel-header">
+						<h2>Pedagogical Learning Roadmap</h2>
+						<p>Recommended sequence from ASCII logic to pointer arithmetic, heap allocation, and linked lists.</p>
+					</div>
+					<div class="roadmap-grid" id="roadmap-container">
+						<!-- Dynamic Roadmap Levels -->
+					</div>
+				</section>
+
+				<!-- VIEW: Test Matrix -->
+				<section id="view-tests" class="view-panel">
+					<div class="panel-header">
+						<h2>Micro Unit Test Matrix</h2>
+						<p>Differential tests against Libc reference oracle, edge cases, and malloc error tracking.</p>
+						<div class="filter-bar">
+							<button class="filter-btn active" data-filter="all">All (43)</button>
+							<button class="filter-btn" data-filter="part1">Part 1: Libc</button>
+							<button class="filter-btn" data-filter="part2">Part 2: Additional</button>
+							<button class="filter-btn" data-filter="part3">Part 3: Bonus</button>
+							<button class="filter-btn" data-filter="failed">Failed Only</button>
+						</div>
+					</div>
+					<div class="test-suites-container" id="test-suites-container">
+						<!-- Dynamic Test Suites Cards -->
+					</div>
+				</section>
+
+				<!-- VIEW: Memory Inspector -->
+				<section id="view-memory" class="view-panel">
+					<div class="panel-header">
+						<h2>Visual Memory & Pointer Inspector</h2>
+						<p>Step-by-step buffer layout, overlapping memory copies, and heap pointers.</p>
+					</div>
+					<div class="memory-inspector-card">
+						<div class="inspector-controls">
+							<label>Select Demonstration:</label>
+							<select id="inspector-select" class="form-select">
+								<option value="memmove">ft_memmove (Overlapping Buffers)</option>
+								<option value="strtrim">ft_strtrim (Pointer Trimming)</option>
+							</select>
+						</div>
+						<div class="memory-grid-display" id="memory-grid-display">
+							<!-- Dynamic visual grid -->
+						</div>
+						<div class="step-controls">
+							<button id="btn-step-prev" class="btn-secondary">◀ Previous Step</button>
+							<span id="step-indicator" class="step-indicator">Step 1 / 4</span>
+							<button id="btn-step-next" class="btn-secondary">Next Step ▶</button>
+						</div>
+						<div class="step-explanation" id="step-explanation"></div>
+					</div>
+				</section>
+
+				<!-- VIEW: Concept Cards -->
+				<section id="view-concepts" class="view-panel">
+					<div class="panel-header">
+						<h2>Mental Models & Core C Concepts</h2>
+						<p>Essential memory and pointer concepts needed to ace the Libft peer evaluation.</p>
+					</div>
+					<div class="concept-cards-grid" id="concepts-grid">
+						<!-- Dynamic Concept Cards -->
+					</div>
+				</section>
+
+				<!-- VIEW: Defense Simulator -->
+				<section id="view-defense" class="view-panel">
+					<div class="panel-header">
+						<h2>Peer-Evaluation Defense Simulator</h2>
+						<p>Simulated peer viva questions and live code modification challenges.</p>
+					</div>
+					<div class="defense-container" id="defense-content">
+						<!-- Dynamic Defense Questions -->
+					</div>
+				</section>
+
+				<!-- VIEW: Macro Checks -->
+				<section id="view-macro" class="view-panel">
+					<div class="panel-header">
+						<h2>Macro Build & Repository Checks</h2>
+						<p>Makefile rules, relinking idempotence, global variables audit, and archive checks.</p>
+					</div>
+					<div class="macro-cards-grid" id="macro-grid">
+						<!-- Dynamic Macro Checks -->
+					</div>
+				</section>
+			</div>
+		</main>
+	</div>
+
+	<script src="report.js"></script>
+	<script src="app.js"></script>
+</body>
+</html>

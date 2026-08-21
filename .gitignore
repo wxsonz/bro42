@@ -1,0 +1,27 @@
+# Build & Binaries
+bin/
+build/
+*.o
+*.a
+*.so
+*.dylib
+*.out
+
+# Runtime & Reports
+*.log
+web/report.*
+
+# Local development & workspace
+_dev/
+.dev/
+local/
+scratch*/
+*.local
+
+# OS & Editor
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
