@@ -154,7 +154,28 @@ def validate(levels, functions):
     return errors
 
 
+
+def spec_missing_ok():
+    """The authored spec is not shipped; the data generated from it is.
+
+    A clone has ft_bro/data/*.json committed and no _dev/ to regenerate them
+    from, so `make` must not die here - the tool is perfectly usable. Only an
+    absent spec AND absent output is a real error.
+    """
+    if SPEC.is_file():
+        return False
+    if OUT.is_file():
+        print(f"  {SPEC.name} not present - keeping the committed "
+              f"{OUT.name} (this is a clone, not the authoring tree)")
+        return True
+    raise SystemExit(
+        f"neither {SPEC} nor {OUT} exists - nothing to generate from and "
+        f"nothing to fall back on")
+
+
 def main():
+    if spec_missing_ok():
+        return 0
     check_only = "--check" in sys.argv
     try:
         levels = parse_track(SPEC.read_text())
