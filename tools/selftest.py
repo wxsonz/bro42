@@ -372,6 +372,46 @@ def check_valgrind():
     return []
 
 
+def check_subject_19_2_layout():
+    """The same library, laid out the way subject 19.2 asks for it.
+
+    19.2 IV.4 puts the nine list functions in the MANDATORY part, so a current
+    repo names them ft_lstnew.c and builds them from `all` with no `bonus`
+    rule. ft_bro used to warn twice at exactly that layout - "bonus file(s)
+    not named _bonus.c" and "no working bonus rule" - telling a student who
+    followed their own subject that they had it wrong.
+
+    Compares every non-OK macro row, not just failures: both of those were
+    WARN, so a FAIL-only comparison would sit through the regression.
+    """
+    src = REFERENCE
+    work = mutants.OUT / "subject_19_2"
+    if work.is_dir():
+        shutil.rmtree(work)
+    shutil.copytree(src, work, ignore=shutil.ignore_patterns(".git"))
+    for old in list(work.glob("*_bonus.c")) + list(work.glob("*_bonus.h")):
+        old.rename(work / old.name.replace("_bonus", ""))
+    mk = work / "Makefile"
+    text = mk.read_text().replace("_bonus.c", ".c")
+    text = text.replace("SRCS_O = $(SRCS:.c=.o)", "SRCS += $(BONUS)\nSRCS_O = $(SRCS:.c=.o)")
+    text = re.sub(r"^bonus: .*\n(\t.*\n)+", "", text, flags=re.M)
+    mk.write_text(text.replace("$(BONUS_O)", ""))
+
+    records = run(work, macro=True)
+    rows = {r["name"]: r["status"] for r in records
+            if r.get("kind") == "macro" and r["status"] != "OK"}
+    unexpected = {k: v for k, v in rows.items() if k not in BASELINE_MACRO}
+    micro = failures(records)
+    problems = []
+    if unexpected:
+        problems.append(f"19.2 layout raises rows a legacy layout does not: {unexpected}")
+    if micro:
+        problems.append(f"19.2 layout changes micro results: {micro}")
+    if not problems:
+        print("  ok   subject 19.2 layout mandatory Part 3, no bonus rule, nothing raised")
+    return problems
+
+
 def main():
     print("selftest")
     if not REFERENCE.is_dir():
@@ -387,6 +427,7 @@ def main():
     problems += check_static()
     problems += check_dashboard()
     problems += check_determinism()
+    problems += check_subject_19_2_layout()
     problems += check_valgrind()
     if problems:
         print(f"\nFAILED ({len(problems)})", file=sys.stderr)

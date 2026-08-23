@@ -24,8 +24,16 @@ PART3 = [
     "ft_lstadd_back", "ft_lstdelone", "ft_lstclear", "ft_lstiter", "ft_lstmap",
 ]
 
-MANDATORY = PART1 + PART2
-ALL = PART1 + PART2 + PART3
+# Subject 19.2 puts Part 3 in Chapter IV, the MANDATORY part - "IV.4 Part 3 -
+# linked list". Libft has no bonus part at all: every "bonus" in the document
+# is in the Chapter II boilerplate that ships with every 42 subject.
+#
+# Repositories written against an older subject put these nine in _bonus.c
+# files and gate them behind a `bonus` rule. Both layouts are accepted (see
+# macro.source_of); neither is warned about, because the naming is a matter of
+# which subject revision the student started under, not of correctness.
+MANDATORY = PART1 + PART2 + PART3
+ALL = MANDATORY
 PART_OF = {**{f: 1 for f in PART1}, **{f: 2 for f in PART2},
            **{f: 3 for f in PART3}}
 

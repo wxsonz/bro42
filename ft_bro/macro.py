@@ -86,6 +86,34 @@ def tracked_artifacts(root):
     return [l.strip() for l in r.stdout.splitlines() if l.strip()]
 
 
+def source_of(root, fn):
+    """The file a function lives in, under either subject revision.
+
+    19.2 makes Part 3 mandatory, so `ft_lstnew.c` is the current name. Repos
+    started under an older subject use `ft_lstnew_bonus.c`. Both are real
+    submissions; neither is an error.
+    """
+    for name in (f"{fn}.c", f"{fn}_bonus.c"):
+        if (root / name).is_file():
+            return root / name
+    return None
+
+
+def ensure_full_build(work):
+    """Leave libft.a containing every function the repo has written.
+
+    Earlier checks rebuild the tree (check_relink runs make twice), and in a
+    repo where Part 3 sits behind a `bonus` rule that leaves the list
+    functions out of the archive. Any check that inspects symbols has to
+    restore them first, or it reports an absence it caused itself.
+    """
+    run(["make"], work)
+    written = [f for f in libft.PART3 if source_of(work, f)]
+    if written and any(f not in archive_symbols(work / "libft.a")
+                       for f in written):
+        run(["make", "bonus"], work)
+
+
 def objects(d):
     return sorted(d.glob("*.o"))
 
@@ -105,27 +133,24 @@ def check_structure(target, out):
                          f"{name} {'found' if ok else 'missing'} at the root",
                          hint=why))
 
-    missing = [f for f in libft.MANDATORY if not (root / f"{f}.c").is_file()]
+    missing = [f for f in libft.MANDATORY if source_of(root, f) is None]
     out.append(Check(
         1, "mandatory sources", "OK" if not missing else "FAIL",
         f"{len(libft.MANDATORY) - len(missing)}/{len(libft.MANDATORY)} present",
         hint=("not written yet: " + ", ".join(missing[:8])) if missing else
              "Subject IV: every mandatory function has its own .c file"))
 
-    bonus = [f for f in libft.PART3
-             if (root / f"{f}.c").is_file() or (root / f"{f}_bonus.c").is_file()]
-    non_std = [f for f in bonus if (root / f"{f}.c").is_file()]
-    if not bonus:
-        out.append(Check(1, "bonus files", "WARN", "Part 3 not implemented",
-                         sev="warn", hint="Part 3 is optional"))
-    elif non_std:
-        out.append(Check(1, "bonus files", "WARN",
-                         f"{len(non_std)} bonus file(s) not named _bonus.c",
-                         sev="warn",
-                         hint="Subject II: bonuses go in _bonus.{c/h} files"))
-    else:
-        out.append(Check(1, "bonus files", "OK",
-                         f"{len(bonus)} bonus function(s), correctly named"))
+    # Part 3 is mandatory under subject 19.2 and is already counted above.
+    # All this reports is WHICH naming the repo uses, because it changes what
+    # `make` has to build - it is not a pass/fail judgement either way.
+    legacy = [f for f in libft.PART3 if (root / f"{f}_bonus.c").is_file()]
+    if legacy:
+        out.append(Check(
+            1, "Part 3 naming", "OK",
+            f"{len(legacy)}/{len(libft.PART3)} in _bonus.c files",
+            hint="An older subject made the list functions a bonus. 19.2 puts "
+                 "them in the mandatory part (IV.4), so plain .c names are "
+                 "current - but nothing here requires you to rename them."))
 
     known = {f"{f}.c" for f in libft.ALL} | {f"{f}_bonus.c" for f in libft.ALL}
     stray = sorted(p.name for p in root.glob("*.c") if p.name not in known)
@@ -170,23 +195,39 @@ def check_rules(work, out):
                      command="make fclean",
                      hint="fclean is clean plus the build product"))
 
+    # Part 3 is mandatory (19.2 IV.4), so a plain `make` has to produce the
+    # list functions. A repo written against an older subject gates them
+    # behind a `bonus` rule instead; that is a valid layout, so the rule is
+    # run when it exists and its absence is not a finding.
     run(["make"], work)
-    r = run(["make", "bonus"], work)
-    if r.returncode:
-        out.append(Check(2, "make bonus", "WARN", "no working bonus rule",
-                         sev="warn", command="make bonus",
-                         output=r.stdout + r.stderr,
-                         hint="Subject II: bonuses need a bonus rule"))
-    else:
+    written = [f for f in libft.PART3 if source_of(work, f)]
+    if not written:
+        out.append(Check(2, "list functions built", "SKIP",
+                         "Part 3 not written yet", sev="skip",
+                         hint="Subject IV.4: the nine ft_lst* functions are "
+                              "part of the mandatory project"))
+        return True
+
+    syms = archive_symbols(work / "libft.a")
+    missing = [f for f in written if f not in syms]
+    used_bonus_rule = False
+    if missing and not run(["make", "bonus"], work).returncode:
+        used_bonus_rule = True
         syms = archive_symbols(work / "libft.a")
-        present = [f for f in libft.PART3 if f in syms]
-        ok = len(present) == len(libft.PART3)
-        out.append(Check(
-            2, "make bonus", "OK" if ok else "WARN",
-            f"{len(present)}/{len(libft.PART3)} bonus symbols in the archive",
-            sev="warn", command="make bonus",
-            hint="a bonus rule that does nothing satisfies a grep - the "
-                 "symbols are the only real test"))
+        missing = [f for f in written if f not in syms]
+
+    ok = not missing
+    detail = f"{len(written) - len(missing)}/{len(written)} in the archive"
+    if ok and used_bonus_rule:
+        detail += ", via the bonus rule"
+    out.append(Check(
+        2, "list functions built", "OK" if ok else "FAIL", detail,
+        command="make && nm -g --defined-only libft.a",
+        hint="a rule that does nothing satisfies a grep - the symbols are the "
+             "only real test" if ok else
+             "these are mandatory: " + ", ".join(missing[:6]) +
+             " compiled but never reached libft.a. If they are behind a "
+             "`bonus` rule, add them to your main build."))
     return True
 
 
@@ -385,7 +426,21 @@ def archive_symbols(archive):
             and p.split()[-2] in ("T", "t")}
 
 
+# Emitted by the compiler, not called by the student. -fstack-protector is on
+# by default in most distributions' gcc, so any function with a local buffer
+# picks up __stack_chk_fail. Reporting it as a forbidden external accuses
+# correct code of something the student did not write.
+#
+# Deliberately narrow: gcc can also emit calls to memcpy and memset for large
+# struct copies, and those stay reportable, because a student calling memcpy
+# directly is exactly what Part 1 forbids and the two cases cannot be told
+# apart from the symbol alone.
+COMPILER_EMITTED = {"stack_chk_fail", "stack_chk_fail_local", "stack_chk_guard",
+                    "GLOBAL_OFFSET_TABLE_"}
+
+
 def check_symbols(work, out):
+    ensure_full_build(work)
     archive = work / "libft.a"
     if not archive.is_file():
         out.append(Check(5, "symbol audit", "SKIP", "no libft.a to inspect",
@@ -421,6 +476,8 @@ def check_symbols(work, out):
         sym = parts[1].lstrip("_").split("@")[0]
         if sym.startswith("ft_") or sym in ft_names:
             continue
+        if sym in COMPILER_EMITTED:
+            continue
         fn = obj[:-2].replace("_bonus", "")
         part = libft.PART_OF.get(fn, 2)
         if sym not in libft.ALLOWED_EXTERNALS[part]:
@@ -439,6 +496,7 @@ def check_symbols(work, out):
 
 
 def check_archive(work, out):
+    ensure_full_build(work)
     archive = work / "libft.a"
     if not archive.is_file():
         out.append(Check(6, "archive", "SKIP", "no libft.a", sev="skip"))
@@ -451,7 +509,7 @@ def check_archive(work, out):
                      hint="Subject IV.1: you must use ar to create your library"))
 
     syms = archive_symbols(archive)
-    expected = [f for f in libft.MANDATORY if (work / f"{f}.c").is_file()]
+    expected = [f for f in libft.MANDATORY if source_of(work, f)]
     missing = [f for f in expected if f not in syms]
     out.append(Check(
         6, "symbols exported", "OK" if not missing else "FAIL",
