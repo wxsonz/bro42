@@ -1,0 +1,382 @@
+{
+ "concepts": {
+  "double-pointer": {
+   "body": "C passes by value, always. `void f(t_list *lst)` receives a copy of the head pointer; assigning\nto it changes nothing the caller can see. `void f(t_list **lst)` receives the address of the\ncaller's variable, and `*lst = new` writes through to it.\n\nThe other instance is shape rather than mutation: `char **` is a `NULL`-terminated array of\n`char *`, each element separately allocated \u2014 two levels of ownership, two levels of cleanup.\n\n`ft_lstmap` `ft_striteri`",
+   "defense": [
+    "Why does `ft_lstadd_front` take `t_list **` and not `t_list *`?"
+   ],
+   "functions": [
+    "ft_split",
+    "ft_lstnew",
+    "ft_lstadd_front",
+    "ft_lstadd_back",
+    "ft_lstclear"
+   ],
+   "refs": [
+    "Subject IV.4"
+   ],
+   "slug": "double-pointer",
+   "title": "To change the caller's pointer, you need the address of the caller's pointer."
+  },
+  "fd-io": {
+   "body": "`0` stdin, `1` stdout, `2` stderr. `ssize_t write(int fd, const void *buf, size_t count)` is the\nonly output primitive Part 2 may use (Subject IV.3) \u2014 no `printf`, no `putchar`. These functions\nhave no return value, so the only observable is what appeared on the descriptor.\n\nA corollary worth knowing: a forgotten debug `printf` inside a libft function is invisible in\nyour own testing and glaring in an evaluation.",
+   "defense": [
+    "Why does `ft_putnbr_fd` take an fd instead of always writing to stdout?"
+   ],
+   "functions": [
+    "ft_putchar_fd",
+    "ft_putstr_fd",
+    "ft_putendl_fd",
+    "ft_putnbr_fd"
+   ],
+   "refs": [
+    "man 2 write",
+    "Subject IV.3"
+   ],
+   "slug": "fd-io",
+   "title": "`write` is a system call, and a file descriptor is just a small integer."
+  },
+  "function-pointer": {
+   "body": "```c\nchar (*f)(unsigned int, char);   /* pointer to a function taking (uint, char), returning char */\nf(i, s[i]);                       /* call it \u2014 the & and * are optional */\n```\n\nIt separates *iteration* from *transformation*: `ft_strmapi` knows how to walk a string, the\ncallback knows what to do with a character, and neither knows about the other. The same idea\ncarries `del` into `ft_lstclear` and `f` into `ft_lstiter`.\n\nRead the declaration outward from the identifier: `f` is a pointer, to a function, taking\n`(unsigned int, char)`, returning `char`.",
+   "defense": [
+    "What is the type of the second parameter of `ft_strmapi`, in words?"
+   ],
+   "functions": [
+    "ft_strmapi",
+    "ft_striteri",
+    "ft_lstiter",
+    "ft_lstmap",
+    "ft_lstclear",
+    "ft_lstdelone"
+   ],
+   "refs": [
+    "C99 \u00a76.7.5.3"
+   ],
+   "slug": "function-pointer",
+   "title": "A parameter that is code."
+  },
+  "int-min": {
+   "body": "Two's complement is asymmetric: `INT_MIN` is \u22122147483648, `INT_MAX` is 2147483647. Negating\n`INT_MIN` overflows, which is undefined behaviour rather than merely a wrong number. `n = -n` as\nthe first line of `ft_itoa` or `ft_putnbr_fd` is the most common crash in the project.\n\nThree legitimate answers: promote to `long`, do the arithmetic in `unsigned`, or special-case\n`INT_MIN`. All three are fine; being able to say which you chose is the point.\n\n`ft_atoi` meets it from the other end \u2014 `\"-2147483648\"` must parse, so the accumulator cannot be\na plain positive `int`.",
+   "defense": [
+    "What happens in your `ft_itoa` with `INT_MIN`?"
+   ],
+   "functions": [
+    "ft_itoa",
+    "ft_putnbr_fd",
+    "ft_atoi"
+   ],
+   "refs": [
+    "C99 \u00a76.2.6.2"
+   ],
+   "slug": "int-min",
+   "title": "`-(-2147483648)` does not fit in an `int`."
+  },
+  "int-promotion": {
+   "body": "`memset(void *, int c, size_t)`, `memchr(const void *, int c, size_t)`, `strchr(const char *,\nint c)` all convert `c` to a character before using it. That is why `ft_strchr(s, 't' + 256)`\nfinds `'t'` and `ft_memset(buf, 0x1FF, n)` fills with `0xFF`.\n\nThe `ft_is*` family is the mirror: they take `int` so they can accept `EOF` and the full\n`unsigned char` range, and must return 0 for everything outside it.\n\nwhole `ft_is*` / `ft_to*` family",
+   "defense": [
+    "What does `ft_memset(b, 300, 4)` write?"
+   ],
+   "functions": [
+    "ft_memset",
+    "ft_memchr",
+    "ft_strchr",
+    "ft_strrchr",
+    "ft_strncmp",
+    "ft_memcmp"
+   ],
+   "refs": [
+    "man 3 memset",
+    "C99 \u00a77.21.6.1",
+    "Subject IV.2"
+   ],
+   "slug": "int-promotion",
+   "title": "Several libc functions take an `int` and use only its low byte."
+  },
+  "list-ownership": {
+   "body": "| | frees the node | frees the content |\n|---|---|---|\n| `ft_lstdelone` | \u2714 `free` | \u2714 via `del` |\n| `ft_lstclear` | \u2714 every node | \u2714 via `del`, every node |\n| `ft_lstiter` | \u2718 | \u2718 |\n| `ft_lstnew` | \u2014 | takes ownership of the *pointer*, does not copy |\n\nTwo rules that are graded. The content is freed with the caller's `del`, never with `free`\ndirectly \u2014 the caller may have allocated it in a way `free` cannot undo. And `ft_lstclear` must\nset `*lst = NULL`, or the caller is left holding a pointer into freed memory. Pitfall **P5**.\n\n`ft_lstlast` `ft_lstadd_back` `ft_lstadd_front`",
+   "defense": [
+    "Why does `ft_lstclear` take `del` instead of just calling `free`?"
+   ],
+   "functions": [
+    "ft_lstnew",
+    "ft_lstdelone",
+    "ft_lstclear",
+    "ft_lstiter",
+    "ft_lstmap",
+    "ft_lstsize"
+   ],
+   "refs": [
+    "Subject IV.4"
+   ],
+   "slug": "list-ownership",
+   "title": "Who frees the content, and with what."
+  },
+  "malloc-rollback": {
+   "body": "```\ns_array \u2500\u2500\u25b6 [ ptr0 | ptr1 |  \u2717   | NULL ]\n              \u2502      \u2502\n              \u25bc      \u25bc\n           \"hello\" \"world\"      \u2190 nobody else holds these pointers\n```\n\nNothing in the program has another reference to those words. Returning `NULL` without freeing\nthem is a permanent leak, and it is invisible to any test that does not force the failure.\n\n`ft_lstmap` is the harder case: the partially built list needs `del` for each content *and*\n`free` for each node.",
+   "defense": [
+    "Walk me through your cleanup when the third word's malloc fails."
+   ],
+   "functions": [
+    "ft_split",
+    "ft_lstmap"
+   ],
+   "refs": [
+    "Subject IV.3",
+    "IV.4"
+   ],
+   "slug": "malloc-rollback",
+   "title": "If allocation *n* fails, allocations 1..n\u22121 are yours to free."
+  },
+  "null-terminator": {
+   "body": "`malloc(strlen(s))` is one byte short of a string. It usually appears to work, because the byte\nafter your allocation is usually already zero \u2014 right up until it is not, and then it fails on\nthe evaluator's machine and not yours. Pitfall **P1**.\n\n`ft_split` `ft_strlen` `ft_strchr` `ft_memset` `ft_memcpy` `ft_memmove` `ft_strlcpy` `ft_strlcat`",
+   "defense": [
+    "How big is the buffer in your `ft_strjoin`, and why?"
+   ],
+   "functions": [
+    "ft_strdup",
+    "ft_substr",
+    "ft_strjoin",
+    "ft_strtrim",
+    "ft_itoa",
+    "ft_strmapi"
+   ],
+   "refs": [
+    "man 3 strdup"
+   ],
+   "slug": "null-terminator",
+   "title": "The `+ 1` that everyone forgets."
+  },
+  "over-allocation": {
+   "body": "`ft_substr(\"hello\", 1, 1000000000)` must allocate 5 bytes, not a gigabyte. The requested `len` is\na maximum; the real size is `min(len, strlen(s) - start) + 1`. With `len = SIZE_MAX` a naive\nimplementation asks the kernel for 18 exabytes and gets `NULL` \u2014 which then looks like an\nallocation bug rather than the arithmetic bug it is.\n\n`ft_calloc` is the same idea from the other side: `nmemb * size` can overflow, so check\n`nmemb > SIZE_MAX / size` *before* multiplying.",
+   "defense": [
+    "How many bytes does `ft_substr(s, 1, SIZE_MAX)` allocate?"
+   ],
+   "functions": [
+    "ft_substr",
+    "ft_strtrim",
+    "ft_calloc"
+   ],
+   "refs": [
+    "Subject IV.3",
+    "man 3 calloc"
+   ],
+   "slug": "over-allocation",
+   "title": "Allocate what you need, not what you were asked for."
+  },
+  "overlap": {
+   "body": "```\nsrc = buf, dst = buf + 2, n = 5, buf = \"abcde\"\n\nforward:  buf[2] = buf[0]   \"abade\"    \u2190 'c' is gone; step 3 still needs it\n          buf[3] = buf[1]   \"ababe\"\n          buf[4] = buf[2]   \"ababa\"    \u2190 reads the 'a' it wrote at step 1  \u2717\n\ncorrect:  \"ababc\"                       backward, from the last byte down\n```\n\n`memcpy` may assume the regions are disjoint and is optimised on that promise. `memmove` must\ncope: when `dst > src`, copy from the end backward.",
+   "defense": [
+    "What is the difference between `memcpy` and `memmove`?"
+   ],
+   "functions": [
+    "ft_memcpy",
+    "ft_memmove"
+   ],
+   "refs": [
+    "man 3 memmove",
+    "Subject IV.2"
+   ],
+   "slug": "overlap",
+   "title": "Copying forward through overlapping memory destroys what you have not read yet."
+  },
+  "pointer-arith": {
+   "body": "Adding 1 to a `char *` moves one byte; adding 1 to an `int *` moves four. `end - start` is the\nnumber of elements between them \u2014 which is the whole length calculation in `ft_substr` and\n`ft_strtrim`, and the reason both are three lines once you see it.\n\n`ft_split` `ft_lstlast`",
+   "defense": [
+    "How do you compute the length of the trimmed region without a second loop?"
+   ],
+   "functions": [
+    "ft_substr",
+    "ft_strtrim",
+    "ft_strnstr",
+    "ft_strchr",
+    "ft_strrchr",
+    "ft_memchr"
+   ],
+   "refs": [
+    "C99 \u00a76.5.6"
+   ],
+   "slug": "pointer-arith",
+   "title": "A pointer is an address; subtracting two of them gives a count."
+  },
+  "return-contract": {
+   "body": "- `ft_is*` return strictly `1` or `0` \u2014 not \"any non-zero\" (Subject IV.2 note).\n- `ft_strlcpy` / `ft_strlcat` return **the length they tried to create**, which is how the caller\n  detects truncation \u2014 not the length they actually wrote.\n- `ft_strlcat` specifically: when `size <= strlen(dst)`, nothing is appended and the return is\n  `size + strlen(src)`.\n- `ft_calloc(0, 0)` returns a unique non-`NULL` pointer that `free()` accepts.\n- `ft_substr` with `start >= strlen(s)` returns an allocated `\"\"`, not `NULL`.\n- `ft_strncmp` / `ft_memcmp` specify only the **sign**; testing for exactly `1` is wrong.\n\nEach is a place where \"it works\" and \"it is correct\" differ \u2014 which is exactly why evaluators ask.\n\n`ft_strncmp` `ft_memcmp` `ft_lstsize` `ft_lstmap` and more",
+   "defense": [
+    "Why does `ft_strlcat` return `size + strlen(src)` in that branch?"
+   ],
+   "functions": [
+    "ft_is*",
+    "ft_strlcpy",
+    "ft_strlcat",
+    "ft_calloc",
+    "ft_substr",
+    "ft_atoi"
+   ],
+   "refs": [
+    "man 3 strlcat",
+    "Subject IV.2"
+   ],
+   "slug": "return-contract",
+   "title": "The return value is part of the specification, not an afterthought."
+  },
+  "signed-char": {
+   "body": "On x86 and ARM Linux, plain `char` is signed: \u2212128 to 127. The byte `\\200` reads as \u2212128, so\n`s1[i] - s2[i]` gives \u2212128 where libc gives +128. Every comparison function in libc is specified\non `unsigned char`.\n\n```\n'\\200' as   signed char  = -128    \u2192  -128 - 0 < 0   \u2717\n'\\200' as unsigned char  =  128    \u2192   128 - 0 > 0   \u2713\n```",
+   "defense": [
+    "Why did you cast to `unsigned char *` in `ft_memcmp`?"
+   ],
+   "functions": [
+    "ft_strncmp",
+    "ft_memcmp",
+    "ft_memchr",
+    "ft_strchr",
+    "ft_strrchr",
+    "ft_memset",
+    "ft_split"
+   ],
+   "refs": [
+    "man 3 memcmp",
+    "C99 \u00a76.2.5",
+    "Subject IV.2"
+   ],
+   "slug": "signed-char",
+   "title": "A `char` may be signed. Memory functions compare bytes, not chars."
+  },
+  "size-t-wrap": {
+   "body": "```c\nsize_t n = 0;\nn - 1;              /* 18446744073709551615, not -1 */\nwhile (n--) { \u2026 }   /* runs once when n == 0 */\n```\n\nThe common real instance is `ft_strlcat` computing `size - dstlen` without first checking\n`size > dstlen`. When the destination is longer than the buffer, that subtraction wraps and the\ncopy loop writes until it hits an unmapped page.\n\n`ft_strtrim` `ft_calloc` `ft_strncmp` `ft_memchr`",
+   "defense": [
+    "What does your `ft_strlcat` do when `size` is smaller than `strlen(dst)`?"
+   ],
+   "functions": [
+    "ft_strlcat",
+    "ft_strlcpy",
+    "ft_strnstr",
+    "ft_memmove",
+    "ft_memset",
+    "ft_substr"
+   ],
+   "refs": [
+    "C99 \u00a76.3.1.3",
+    "man 3 strlcat"
+   ],
+   "slug": "size-t-wrap",
+   "title": "`size_t` is unsigned. Subtracting past zero gives a number near 18 quintillion."
+  },
+  "string-literal-ro": {
+   "body": "The literal lives in `.rodata`; writing through the pointer faults, with no warning at compile\ntime. `char s[] = \"hello\"` is a different thing entirely \u2014 an array, initialised from the\nliteral, writable.\n\nIt matters because `ft_striteri` takes `char *` and modifies in place: passing it a literal\ncrashes, and the crash is inside *your* function even though the bug is at the call site.\nPitfall **P2**.",
+   "defense": [
+    "Why does `ft_striteri(\"hello\", f)` crash when `ft_strmapi(\"hello\", f)` does not?"
+   ],
+   "functions": [
+    "ft_striteri"
+   ],
+   "refs": [
+    "C99 \u00a76.4.5"
+   ],
+   "slug": "string-literal-ro",
+   "title": "`char *s = \"hello\"` points into read-only memory."
+  },
+  "undefined-behavior": {
+   "body": "Some inputs have no defined answer: `memcpy(NULL, NULL, 0)`, `strlcpy` with a `NULL` destination,\n`atoi` past `INT_MAX`, signed overflow, writing to a literal. glibc survives several of them; the\n42 Macs survive a different several. Neither is a specification.\n\nThese cases are run, displayed beside glibc's behaviour, labelled \u2014 and **never scored**.\nEvaluators do poke them, and the right answer at defense is *\"that is undefined behaviour; here\nis what mine does and why I chose it\"*, not silence.\n\n`ft_putstr_fd`\nabout your code.",
+   "defense": [
+    "What should `ft_memcpy(NULL, NULL, 0)` do?"
+   ],
+   "functions": [
+    "UB",
+    "ft_memcpy",
+    "ft_strlcpy",
+    "ft_atoi",
+    "ft_striteri"
+   ],
+   "refs": [
+    "C99 \u00a73.4.3"
+   ],
+   "slug": "undefined-behavior",
+   "title": "\"It works on my machine\" is not a defence, and neither is \"libc does it\"."
+  }
+ },
+ "defense": [
+  {
+   "answer": "`memcpy` is allowed to assume the source and destination do not overlap, and real implementations exploit that to copy in whatever order is fastest. If they do overlap the result is undefined. `memmove` guarantees a correct result either way: when `dst > src` it copies from the end backward, so it never overwrites a byte it still has to read.",
+   "concepts": [
+    "overlap"
+   ],
+   "n": 1,
+   "question": "What is the difference between `memcpy` and `memmove`?"
+  },
+  {
+   "answer": "Subject IV.2 requires it to return a unique non-`NULL` pointer that can be passed to `free`. Returning `NULL` would make the caller unable to distinguish \"you asked for nothing\" from \"allocation failed\". `ft_calloc` also has to check `nmemb > SIZE_MAX / size` before multiplying \u2014 that overflow check is the reason `calloc` takes two arguments instead of one.",
+   "concepts": [
+    "return-contract"
+   ],
+   "n": 2,
+   "question": "Why does `ft_calloc` need to handle a zero argument?"
+  },
+  {
+   "answer": "Because `strlcat` reports the length it *tried* to build, so the caller can detect truncation. In that branch nothing can be appended, and `strlcat` cannot claim to know `strlen(dst)` \u2014 within the `size` it was given, `dst` was never `NUL`-terminated. So it reports the size it was allowed to consider plus the length it wanted to add.",
+   "concepts": [
+    "return-contract"
+   ],
+   "n": 3,
+   "question": "Why does `ft_strlcat` return `size + strlen(src)` when `size <= strlen(dst)`?"
+  },
+  {
+   "answer": "A 32-bit signed int holds \u22122147483648 to 2147483647, so +2147483648 does not exist. `n = -n` overflows, which is undefined behaviour, and in practice leaves the value negative. I handle it by <casting to long / using unsigned arithmetic / peeling the last digit before negating>.",
+   "concepts": [
+    "int-min"
+   ],
+   "n": 4,
+   "question": "Why does `n = -2147483648` need special handling in `ft_putnbr_fd`?"
+  },
+  {
+   "answer": "`char` is signed on this architecture, so a byte above 127 reads as negative and the sign of a subtraction flips \u2014 `memcmp(\"\\200\", \"\\0\", 1)` would return negative instead of positive. The standard defines these functions on `unsigned char`, so I cast once at the top and work in bytes.",
+   "concepts": [
+    "signed-char",
+    "int-promotion"
+   ],
+   "n": 5,
+   "question": "Why `unsigned char *` in `ft_memcmp` and `ft_memset`?"
+  },
+  {
+   "answer": "There are two levels. If the array of pointers fails, I return `NULL` immediately. If word *i* fails, words `0..i-1` are already allocated and nothing else in the program holds those pointers \u2014 so I free each of them, then the array, then return `NULL`. Every allocation index has to be handled, not just the first.",
+   "concepts": [
+    "malloc-rollback",
+    "double-pointer"
+   ],
+   "n": 6,
+   "question": "Walk me through your malloc cleanup in `ft_split`."
+  },
+  {
+   "answer": "Because the list does not own the contents in a way it understands. The caller allocated them and may have done so in a way plain `free` cannot undo \u2014 a nested structure, an array of allocations, a pool. `del` is the caller telling the list how to release one content. The nodes themselves are mine, so those I `free` directly.",
+   "concepts": [
+    "list-ownership",
+    "function-pointer"
+   ],
+   "n": 7,
+   "question": "Why does `ft_lstclear` take `del`?"
+  },
+  {
+   "answer": "Because it has to change the caller's head pointer, and C passes arguments by value. With a `t_list *` I would only be reassigning my own local copy. The `**` gives me the address of the caller's variable so `*lst = new` writes through to it.",
+   "concepts": [
+    "double-pointer"
+   ],
+   "n": 8,
+   "question": "Why does `ft_lstadd_front` take `t_list **`?"
+  },
+  {
+   "answer": "`strlen(s) - 1 + 1` bytes. `len` is a maximum, not a size \u2014 I cap it against the characters actually remaining after `start`. Trusting `len` would ask malloc for 18 exabytes and get `NULL`, which would look like an allocation failure rather than the arithmetic bug it is.",
+   "concepts": [
+    "over-allocation"
+   ],
+   "n": 9,
+   "question": "What does `ft_substr(s, 1, SIZE_MAX)` allocate?"
+  },
+  {
+   "answer": "It is what `strchr` specifies \u2014 the return points into the original buffer, so the caller must not free or modify the string while holding it. That is also why the parameter is `const char *` and the return is `char *`: the standard's compromise so the function is usable from both `const` and non-`const` callers.",
+   "concepts": [
+    "pointer-arith"
+   ],
+   "n": 10,
+   "question": "Your `ft_strchr` returns a pointer into my string. Is that safe?"
+  }
+ ],
+ "source": "_dev/SPEC_LEARNING.md"
+}

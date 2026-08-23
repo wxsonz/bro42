@@ -1,0 +1,24 @@
+# Editor / tooling state. .claude/scheduled_tasks.lock carries a session id
+# and a pid from whatever machine last ran this - a machine trace, not code.
+.claude/
+
+# Build artefacts
+build/
+__pycache__/
+*.pyc
+
+# Local development material: the authored specs, the design ledger, the
+# reference libft used as a test fixture, and the generated mutants. Not
+# published - it is one person's machine and one person's 42 submission.
+#
+# Consequence, stated plainly in the README: `bro` runs from a clone because
+# the data it needs is generated and committed, but `make cases` (regenerate
+# from the specs) and `make selftest` (mutants against a reference libft)
+# cannot run without those sources.
+_dev/
+
+# Generated FROM _dev, and committed on purpose - without these a clone has
+# no case prose, no concept cards and no roadmap, and bro refuses to start.
+!ft_bro/data/cases.json
+!ft_bro/data/concepts.json
+!ft_bro/data/roadmap.json

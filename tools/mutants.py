@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+"""Generate mutant libfts: one copy of the reference with one seeded bug.
+
+design/09_SELFTEST.md, decision B15. A tester's failure mode is silent - it
+reports 43/43 forever - so the only way to know it works is to show it code
+that is wrong and check it says so, for the RIGHT case and the right reason.
+
+_dev/reference/libft_broke/ is advertised as broken code but is md5-identical
+to libft42git/, so it proves nothing. Mutants are generated, never committed,
+so they cannot drift from the reference.
+"""
+
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+REFERENCE = Path(os.environ.get(
+    "FT_BRO_REFERENCE", ROOT / "_dev" / "reference" / "libft42git"))
+
+
+def require_reference():
+    """The mutants need a known-good Libft to seed bugs into.
+
+    That fixture is one person's 42 submission and is deliberately not
+    published, so a clone has to be pointed at one.
+    """
+    if REFERENCE.is_dir():
+        return
+    raise SystemExit(
+        f"no reference Libft at {REFERENCE}\n"
+        "  The self-test seeds deliberate bugs into a known-good Libft, and\n"
+        "  that fixture is not shipped with this repository.\n"
+        "  Point it at one:  FT_BRO_REFERENCE=/path/to/a/working/libft make selftest")
+OUT = ROOT / "_dev" / "fixtures" / "mutants"
+
+# name -> (file, snippet, replacement, {case id: expected status})
+#
+# Expectations name the STATUS, not just the id: a mutant caught as SIGSEGV
+# when it should be KO was found by accident, and the self-test has to be able
+# to tell those apart.
+#
+# Replacement is applied to EVERY occurrence. A partial mutation is worse than
+# no mutation: seeding only the first of ft_memcmp's two `unsigned char` casts
+# left p1 signed and p2 unsigned, which made ft_memcmp:5 pass BY ACCIDENT
+# (0 - 128 is negative, and negative was the expected sign). The expectations
+# would then have been wrong in a way that looked correct.
+MUTANTS = {
+    # Always copy forward, even when dest > src. This is the bug memmove
+    # exists in order not to have.
+    "memmove_forward": (
+        "ft_memmove.c",
+        "if (d < s)",
+        "if (1)",
+        # Seeded at the DISPATCH, not by replacing the else branch: replacing
+        # it leaves ft_copy_bwd unused, which -Werror rejects, and a mutant
+        # that will not compile silently tests the build fallback instead of
+        # the bug it was written for.
+        {"ft_memmove:3": "KO", "ft_memmove:4": "KO"},
+    ),
+    # Drop the remainder loop from the unrolled forward copy, so any length
+    # that is not a multiple of four loses its tail. This is the defect the
+    # reference itself shipped until it was fixed on 2026-08-22.
+    "memmove_no_tail": (
+        "ft_memmove.c",
+        "\t\tn -= 4;\n\t}\n\twhile (n-- > 0)\n\t\t*d++ = *s++;",
+        "\t\tn -= 4;\n\t}",
+        {"ft_memmove:5": "KO"},
+    ),
+    "memcmp_signed": (
+        "ft_memcmp.c",
+        "unsigned char",
+        "char",
+        {"ft_memcmp:4": "KO", "ft_memcmp:5": "KO", "ft_memcmp:6": "KO"},
+    ),
+    # ft_intlen widens to long precisely so -num cannot overflow on INT_MIN.
+    # Narrowing it back is the classic itoa crash.
+    "itoa_int_overflow": (
+        "ft_itoa.c",
+        "\tint\t\tlen;\n\tlong\tnum;",
+        "\tint\t\tlen;\n\tint\t\tnum;",
+        # SIGABRT, not KO, and that is the honest answer: with an int
+        # accumulator -num overflows on INT_MIN, ft_intlen returns 2, itoa
+        # mallocs 3 bytes and writes 11, and glibc's heap check aborts before
+        # any wrong string can be compared. The bug is caught by the crash it
+        # causes rather than by the value it returns.
+        {"ft_itoa:12": "SIGABRT"},
+    ),
+    # A digit-count loop that never terminates: proves the alarm fires and is
+    # classified as TIMEOUT rather than as a crash.
+    "itoa_spin": (
+        "ft_itoa.c",
+        "while (num >= 10)",
+        "while (num >= 0)",
+        {f"ft_itoa:{i}": "TIMEOUT" for i in range(1, 13)},
+    ),
+    # Freeing the content directly instead of routing it through del. Only the
+    # cases that count del calls can see this - which is why they exist.
+    "lstclear_free_not_del": (
+        "ft_lstclear_bonus.c",
+        "del((*l)->content);",
+        "free((*l)->content);",
+        {"ft_lstclear:2": "KO", "ft_lstclear:3": "KO", "ft_lstclear:6": "KO"},
+    ),
+    # Free the array on rollback but not the words already in it. This is the
+    # half-correct answer that leaks silently, and it reseeds the defect the
+    # reference itself shipped until ft_free()/free_all() was wired up.
+    "split_leaks_words": (
+        "ft_split.c",
+        "\t\ti--;\n\t\tfree(wordarr[i]);",
+        "\t\ti--;\n\t\t(void)wordarr[i];",
+        # Only the MULTI-word cases can see this: a single-word split has no
+        # earlier word to leak when its own allocation fails. Cases 3, 6, 7 and
+        # 12 are one-word inputs and are correctly silent here - which is the
+        # argument for the depth rebalance in one line.
+        {f"ft_split:{i}": "LEAK" for i in (1, 2, 4, 5, 8, 13, 14)},
+    ),
+    # Off by one at the top of the alphabetic range. The reference computes
+    # ((unsigned)c | 32) - 'a' < 26; widening it to 27 admits the byte just
+    # past 'z' AND the byte just past 'Z', because the | 32 folds them onto
+    # the same value. Only the boundary cases can see it.
+    "isalpha_off_by_one": (
+        "ft_isalpha.c",
+        "- 'a' < 26",
+        "- 'a' < 27",
+        # ft_isalnum:6 goes too, because the reference implements isalnum as
+        # isalpha || isdigit - so the bug propagates. That is the union
+        # property the spec's `why` describes, showing up as a test result.
+        {"ft_isalpha:5": "KO", "ft_isalpha:7": "KO", "ft_isalnum:6": "KO"},
+    ),
+    # atoi that skips only ' ' instead of all six isspace characters. Exercises
+    # the oracle-compared scalar path with a bug students actually write.
+    # Skip only ' ' instead of all six isspace characters.
+    #
+    # Seeded on the loop inside ft_atoi, NOT on the mini_isspace helper above
+    # it - that helper is dead code the function never calls, and patching it
+    # produced a mutant that changed nothing while looking like a valid one.
+    # A mutant must patch code that actually runs.
+    "atoi_space_only": (
+        "ft_atoi.c",
+        "while (*s == 32 || (*s >= 9 && *s <= 13))",
+        "while (*s == 32)",
+        {"ft_atoi:8": "KO"},
+    ),
+    # Drop the const from ft_memcmp's first parameter - Subject IV.2 requires
+    # it. Invisible from inside the project: the student's own libft.h declared
+    # the same wrong signature, so everything compiled, linked and ran. It only
+    # surfaces when someone includes the SUBJECT's prototype, which is what an
+    # evaluator does. Caught by the prototype-conformance check, not by any
+    # behavioural case - the code is functionally correct either way.
+    "memcmp_drops_const": (
+        [("ft_memcmp.c", "int\tft_memcmp(const void *s1",
+                         "int\tft_memcmp(void *s1"),
+         ("libft.h", "int\t\tft_memcmp(const void *s1",
+                     "int\t\tft_memcmp(void *s1")],
+        None, None,
+        {},
+        {"prototypes match the subject"},
+    ),
+    # --- macro mutants: correct C, wrong Makefile -----------------------
+    # $(NAME) declared .PHONY forces a relink on every build. The classic.
+    "makefile_phony_name": (
+        "Makefile",
+        "$(NAME):",
+        ".PHONY: $(NAME)\n$(NAME):",
+        {},
+        {"no relink"},
+    ),
+    # -std=c99 reached through a variable. A grep of CFLAGS misses this;
+    # reading the real compilation lines does not (decision B12).
+    "makefile_hidden_c99": (
+        "Makefile",
+        "CFLAGS = ",
+        "EXTRA = -std=c99\nCFLAGS = $(EXTRA) ",
+        {},
+        {"no -std=c99"},
+    ),
+    # Remove the INT_MIN special case and the negation overflows.
+    "putnbr_no_intmin": (
+        "ft_putnbr_fd.c",
+        "if (n == -2147483648)",
+        "if (0)",
+        {"ft_putnbr_fd:7": "KO"},
+    ),
+    # Write one byte past what n asked for. The result and the return value
+    # are both still correct - only a canary sees this, which is the whole
+    # point of T1. It also breaks every ft_bzero case for free: the
+    # reference's ft_bzero is a direct call to ft_memset, so the off-by-one
+    # propagates through it untouched.
+    "memset_extra_byte": (
+        "ft_memset.c",
+        "\twhile (n--)\n\t\t*dst++ = (unsigned char)c;\n\treturn (dest);\n}",
+        "\twhile (n--)\n\t\t*dst++ = (unsigned char)c;\n\t*dst = (unsigned char)c;"
+        "\n\treturn (dest);\n}",
+        {f"ft_memset:{i}": "KO" for i in range(1, 8)}
+        | {f"ft_bzero:{i}": "KO" for i in range(1, 5)},
+    ),
+    # size <= strlen(dst) must return size + strlen(src), because strlcat has
+    # no way to know dst's real length beyond the size it was given. Using
+    # the ACTUAL strlen(dst) instead is the mistake this seeds - only in the
+    # early-return branch, so the normal-append cases (1-4, 9) are untouched
+    # and the copy behaviour (correctly skipped) is untouched too.
+    #
+    # Case 5 survives by coincidence: size == strlen(dst) there (5 == 5), so
+    # strlen(dst) + strlen(src) and size + strlen(src) are the same number.
+    # Only 6, 7 and 8 (size < strlen(dst)) can tell the two formulas apart.
+    "strlcat_wrong_formula": (
+        "ft_strlcat.c",
+        "\tif (l == n)\n\t\treturn (l + ft_strlen(s));",
+        "\tif (l == n)\n\t\treturn (ft_strlen(d) + ft_strlen(s));",
+        {"ft_strlcat:6": "KO", "ft_strlcat:7": "KO", "ft_strlcat:8": "KO"},
+    ),
+    # Remove the multiplication-overflow guard entirely. This is exactly the
+    # case 6 / case 7 asymmetry the spec calls out: SIZE_MAX * 2 still wraps
+    # to a number malloc cannot satisfy, so case 6 keeps returning NULL by
+    # accident and stays green. (SIZE_MAX / 2 + 1) * 2 wraps to exactly 0,
+    # so with no guard malloc(0) succeeds and hands back a live zero-byte
+    # block where NULL was required - only case 7 can tell the difference,
+    # which is verified by actually running this mutant.
+    #
+    # ft_calloc's own 64 KB cap (`65535` where the guard should read SIZE_MAX)
+    # was fixed directly in the reference once found - see selftest.py's
+    # REFERENCE_KNOWN_BAD history - so this mutant no longer doubles as the
+    # repair of a standing baseline failure; it now seeds a clean overflow
+    # check onto a clean reference, and only :7 should move.
+    "calloc_no_overflow_check": (
+        "ft_calloc.c",
+        "\tif (n && size > SIZE_MAX / n)\n\t\treturn (NULL);\n\tnew = malloc(n * size);",
+        "\tnew = malloc(n * size);",
+        {"ft_calloc:7": "KO"},
+        set(),
+        set(),
+    ),
+    # Shift the index strmapi hands to the callback by one, without touching
+    # the loop bounds or the terminator - every byte of the result is still
+    # fully written, just with the wrong index baked in. (A first attempt
+    # that started the loop COUNTER at 1 instead of 0 was rejected after
+    # actually running it: on an empty string the loop body never executes,
+    # so the terminator lands at s2[1] instead of s2[0], and s2[0] is read
+    # back as an uninitialised, non-deterministic byte - occasionally not
+    # even valid UTF-8, which crashed the reporting pipeline instead of
+    # scoring KO. This version cannot leave anything uninitialised.)
+    "strmapi_index_off_by_one": (
+        "ft_strmapi.c",
+        "\t\ts2[i] = f(i, *s);",
+        "\t\ts2[i] = f(i + 1, *s);",
+        {"ft_strmapi:1": "KO", "ft_strmapi:4": "KO"},
+    ),
+    # Drop the walk-to-tail loop from ft_lstadd_back: it only ever attaches at
+    # the CURRENT head's next, so a one-element list still works (head IS the
+    # tail) but every longer list gets truncated - the exact bug the T5
+    # handoff singled out as "never executes the walk, which is where the bug
+    # actually lives". The `t_list *back` declaration has to go with it, or
+    # the mutant leaves it unused under -Werror and never builds (rule 2).
+    #
+    # ft_lstmap:1,2,3,4,6,7 go KO as well: ft_lstmap_bonus.c appends every
+    # mapped node with ft_lstadd_back, so a broken add_back silently truncates
+    # the list ft_lstmap builds - genuine propagation between the two
+    # functions, not a second seeded bug.
+    #
+    # (Those six used to be a standing LEAK baseline from a real defect in
+    # ft_lstmap's rollback path. That was fixed on 2026-08-23 and reseeded as
+    # lstmap_orphans_content, so they now move from OK rather than from LEAK.
+    # The expected statuses are unchanged either way - check_mutants compares
+    # the delta against whatever the baseline is.)
+    "lstadd_back_no_walk": (
+        "ft_lstadd_back_bonus.c",
+        "void\tft_lstadd_back(t_list **l, t_list *new)\n{\n\tt_list\t*back;"
+        "\n\n\tif (*l == NULL)\n\t{\n\t\t*l = new;\n\t\treturn ;\n\t}\n\t"
+        "back = *l;\n\twhile (back -> next)\n\t\tback = back -> next;\n\t"
+        "back -> next = new;\n}",
+        "void\tft_lstadd_back(t_list **l, t_list *new)\n{\n\tif (*l == NULL)"
+        "\n\t{\n\t\t*l = new;\n\t\treturn ;\n\t}\n\t(*l)->next = new;\n}",
+        {"ft_lstadd_back:3": "KO", "ft_lstadd_back:4": "KO",
+         "ft_lstadd_back:5": "KO", "ft_lstadd_back:6": "KO",
+         "ft_lstmap:1": "KO", "ft_lstmap:2": "KO", "ft_lstmap:3": "KO",
+         "ft_lstmap:4": "KO", "ft_lstmap:6": "KO", "ft_lstmap:7": "KO"},
+    ),
+    # Orphan the content f() just produced when the following ft_lstnew
+    # fails: this is the real defect the reference shipped in
+    # ft_lstmap_bonus.c until it was fixed on 2026-08-23 (see selftest.py's
+    # REFERENCE_KNOWN_BAD history). Seeded by removing exactly the del(content)
+    # line the fix added, so it restores this defect and nothing else.
+    "lstmap_orphans_content": (
+        "ft_lstmap_bonus.c",
+        "\t\t\tdel(content);\n\t\t\tft_lstclear(&newl, del);",
+        "\t\t\tft_lstclear(&newl, del);",
+        {"ft_lstmap:1": "LEAK", "ft_lstmap:2": "LEAK", "ft_lstmap:3": "LEAK",
+         "ft_lstmap:4": "LEAK", "ft_lstmap:6": "LEAK", "ft_lstmap:7": "LEAK"},
+    ),
+    # free(content) instead of routing it through del: undetectable by a case
+    # that only checks the node/content were released (free does that just as
+    # well), and only visible through bro_del_counting's call count - which is
+    # the entire reason that instrumented del exists instead of plain free.
+    "lstdelone_free_not_del": (
+        "ft_lstdelone_bonus.c",
+        "\t(*del)(l -> content);\n\tfree(l);",
+        "\tfree(l -> content);\n\tfree(l);",
+        {"ft_lstdelone:2": "KO", "ft_lstdelone:4": "KO",
+         "ft_lstdelone:5": "KO"},
+    ),
+    # Drop the trailing newline write: putendl becomes putstr. Every case
+    # expects an exact byte count including the '\n', so all four move.
+    "putendl_fd_no_newline": (
+        "ft_putendl_fd.c",
+        "\tft_putstr_fd(s, fd);\n\twrite(fd, \"\\n\", 1);\n}",
+        "\tft_putstr_fd(s, fd);\n}",
+        {"ft_putendl_fd:1": "KO", "ft_putendl_fd:2": "KO",
+         "ft_putendl_fd:3": "KO", "ft_putendl_fd:4": "KO"},
+    ),
+}
+
+
+def build(name):
+    require_reference()
+    if name not in MUTANTS:
+        raise SystemExit(f"unknown mutant {name}")
+    entry = MUTANTS[name]
+    patch, old, new, expected = entry[:4]
+    # A mutation may need to touch more than one file. Dropping the const from
+    # ft_memcmp's parameter has to change the header too, or the two disagree
+    # and the mutant does not compile - which the build gate catches, correctly.
+    patches = patch if isinstance(patch, list) else [(patch, old, new)]
+    macro_expect = entry[4] if len(entry) > 4 else set()
+    # A mutation can legitimately RESOLVE a known baseline failure - when the
+    # seeded line is the same line that carries a real defect. Declaring it
+    # keeps the "baseline failures vanished" check meaningful instead of
+    # forcing a weaker seed.
+    fixes = entry[5] if len(entry) > 5 else set()
+    dest = OUT / name
+    if dest.exists():
+        shutil.rmtree(dest)
+    shutil.copytree(REFERENCE, dest, ignore=shutil.ignore_patterns(
+        "*.o", "*.a", ".git", "*.swp"))
+    for filename, o, n in patches:
+        path = dest / filename
+        text = path.read_text()
+        if o not in text:
+            raise SystemExit(
+                f"{name}: seed snippet not found in {filename} - the reference "
+                f"changed and this mutant needs updating")
+        path.write_text(text.replace(o, n))
+    subprocess.run(["make"], cwd=dest, capture_output=True)
+    return dest, expected, macro_expect, fixes
+
+
+def build_all(quiet=False):
+    OUT.mkdir(parents=True, exist_ok=True)
+    made = {}
+    for name in MUTANTS:
+        dest, expected, macro_expect, fixes = build(name)
+        made[name] = (dest, expected, macro_expect, fixes)
+        if not quiet:
+            print(f"  {name:20s} {dest.relative_to(ROOT)}")
+    return made
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        print(build(sys.argv[1])[0])
+    else:
+        build_all()

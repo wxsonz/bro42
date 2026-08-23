@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ft_bro report</title>
+<style>/*__STYLE__*/</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <span class="brand">ft_bro</span>
+    <span class="target mono" id="target"></span>
+    <span class="spacer"></span>
+    <span class="counter" id="c-cases"></span>
+    <span class="counter" id="c-funcs"></span>
+    <span class="chip" id="c-extra"></span>
+    <button id="rerun" hidden>&#9889; Re-run</button>
+    <button id="rerun-macro" hidden>&#127959; Re-run macro</button>
+    <button id="theme">theme</button>
+  </div>
+  <input id="search" placeholder="search cases, concepts, functions, checks…  (press /)" autocomplete="off">
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<script id="bro-data" type="application/json">__DATA__</script>
+<script>/*__APP__*/</script>
+</body>
+</html>

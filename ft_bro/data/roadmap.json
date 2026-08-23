@@ -1,0 +1,302 @@
+{
+ "functions": {
+  "ft_atoi": {
+   "level": 4,
+   "order": 21,
+   "prereqs": [
+    "ft_strnstr"
+   ]
+  },
+  "ft_bzero": {
+   "level": 2,
+   "order": 13,
+   "prereqs": [
+    "ft_memset"
+   ]
+  },
+  "ft_calloc": {
+   "level": 5,
+   "order": 22,
+   "prereqs": [
+    "ft_strlcpy"
+   ]
+  },
+  "ft_isalnum": {
+   "level": 1,
+   "order": 3,
+   "prereqs": [
+    "ft_isdigit"
+   ]
+  },
+  "ft_isalpha": {
+   "level": 1,
+   "order": 1,
+   "prereqs": []
+  },
+  "ft_isascii": {
+   "level": 1,
+   "order": 4,
+   "prereqs": [
+    "ft_isalnum"
+   ]
+  },
+  "ft_isdigit": {
+   "level": 1,
+   "order": 2,
+   "prereqs": [
+    "ft_isalpha"
+   ]
+  },
+  "ft_isprint": {
+   "level": 1,
+   "order": 5,
+   "prereqs": [
+    "ft_isascii"
+   ]
+  },
+  "ft_itoa": {
+   "level": 5,
+   "order": 27,
+   "prereqs": [
+    "ft_strlcpy"
+   ]
+  },
+  "ft_lstadd_back": {
+   "level": 8,
+   "order": 39,
+   "prereqs": [
+    "ft_putchar_fd"
+   ]
+  },
+  "ft_lstadd_front": {
+   "level": 8,
+   "order": 36,
+   "prereqs": [
+    "ft_lstnew"
+   ]
+  },
+  "ft_lstclear": {
+   "level": 8,
+   "order": 41,
+   "prereqs": [
+    "ft_lstdelone"
+   ]
+  },
+  "ft_lstdelone": {
+   "level": 8,
+   "order": 40,
+   "prereqs": [
+    "ft_lstadd_back"
+   ]
+  },
+  "ft_lstiter": {
+   "level": 8,
+   "order": 42,
+   "prereqs": [
+    "ft_putchar_fd"
+   ]
+  },
+  "ft_lstlast": {
+   "level": 8,
+   "order": 38,
+   "prereqs": [
+    "ft_lstsize"
+   ]
+  },
+  "ft_lstmap": {
+   "level": 8,
+   "order": 43,
+   "prereqs": [
+    "ft_lstiter"
+   ]
+  },
+  "ft_lstnew": {
+   "level": 8,
+   "order": 35,
+   "prereqs": [
+    "ft_putchar_fd"
+   ]
+  },
+  "ft_lstsize": {
+   "level": 8,
+   "order": 37,
+   "prereqs": [
+    "ft_lstadd_front"
+   ]
+  },
+  "ft_memchr": {
+   "level": 2,
+   "order": 11,
+   "prereqs": [
+    "ft_strrchr"
+   ]
+  },
+  "ft_memcmp": {
+   "level": 3,
+   "order": 17,
+   "prereqs": [
+    "ft_strncmp"
+   ]
+  },
+  "ft_memcpy": {
+   "level": 3,
+   "order": 14,
+   "prereqs": [
+    "ft_strlen"
+   ]
+  },
+  "ft_memmove": {
+   "level": 3,
+   "order": 15,
+   "prereqs": [
+    "ft_memcpy"
+   ]
+  },
+  "ft_memset": {
+   "level": 2,
+   "order": 12,
+   "prereqs": [
+    "ft_isalpha"
+   ]
+  },
+  "ft_putchar_fd": {
+   "level": 7,
+   "order": 31,
+   "prereqs": [
+    "ft_strmapi"
+   ]
+  },
+  "ft_putendl_fd": {
+   "level": 7,
+   "order": 33,
+   "prereqs": [
+    "ft_putstr_fd"
+   ]
+  },
+  "ft_putnbr_fd": {
+   "level": 7,
+   "order": 34,
+   "prereqs": [
+    "ft_putendl_fd"
+   ]
+  },
+  "ft_putstr_fd": {
+   "level": 7,
+   "order": 32,
+   "prereqs": [
+    "ft_putchar_fd"
+   ]
+  },
+  "ft_split": {
+   "level": 6,
+   "order": 30,
+   "prereqs": [
+    "ft_calloc"
+   ]
+  },
+  "ft_strchr": {
+   "level": 2,
+   "order": 9,
+   "prereqs": [
+    "ft_strlen"
+   ]
+  },
+  "ft_strdup": {
+   "level": 5,
+   "order": 23,
+   "prereqs": [
+    "ft_calloc"
+   ]
+  },
+  "ft_striteri": {
+   "level": 6,
+   "order": 29,
+   "prereqs": [
+    "ft_strmapi"
+   ]
+  },
+  "ft_strjoin": {
+   "level": 5,
+   "order": 25,
+   "prereqs": [
+    "ft_substr"
+   ]
+  },
+  "ft_strlcat": {
+   "level": 4,
+   "order": 19,
+   "prereqs": [
+    "ft_strlcpy"
+   ]
+  },
+  "ft_strlcpy": {
+   "level": 4,
+   "order": 18,
+   "prereqs": [
+    "ft_memcpy"
+   ]
+  },
+  "ft_strlen": {
+   "level": 2,
+   "order": 8,
+   "prereqs": [
+    "ft_isalpha"
+   ]
+  },
+  "ft_strmapi": {
+   "level": 6,
+   "order": 28,
+   "prereqs": [
+    "ft_calloc"
+   ]
+  },
+  "ft_strncmp": {
+   "level": 3,
+   "order": 16,
+   "prereqs": [
+    "ft_strlen"
+   ]
+  },
+  "ft_strnstr": {
+   "level": 4,
+   "order": 20,
+   "prereqs": [
+    "ft_memcpy"
+   ]
+  },
+  "ft_strrchr": {
+   "level": 2,
+   "order": 10,
+   "prereqs": [
+    "ft_strchr"
+   ]
+  },
+  "ft_strtrim": {
+   "level": 5,
+   "order": 26,
+   "prereqs": [
+    "ft_strjoin"
+   ]
+  },
+  "ft_substr": {
+   "level": 5,
+   "order": 24,
+   "prereqs": [
+    "ft_strlcpy"
+   ]
+  },
+  "ft_tolower": {
+   "level": 1,
+   "order": 7,
+   "prereqs": [
+    "ft_toupper"
+   ]
+  },
+  "ft_toupper": {
+   "level": 1,
+   "order": 6,
+   "prereqs": []
+  }
+ },
+ "source": "_dev/SPEC_LEARNING.md"
+}
