@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*
-** ft_strdup - T2. Cases from _dev/SPEC_MICRO.md section 23.
+** ft_strdup - T2. Cases from _dev/plan/rank00/libft-01-cases.md section 23.
 **
 ** Cases 4 and 5 carry no INJECT: they are not about the allocation
 ** succeeding or failing, but about what gets copied (case 4, an embedded
@@ -79,12 +79,57 @@ static void	case_05(t_ctx *c)
 	free(got);
 }
 
+/*
+** Cases 6-8 close a hole found by writing a wrong implementation that
+** mallocs strlen(s) bytes (no +1) and writes the terminator one byte past
+** its own allocation: the text that comes back is still byte-for-byte
+** correct, so strcmp above never notices. Only the size actually asked of
+** the allocator, via the wrapped allocator's live-bytes accounting, tells
+** it apart from a correct implementation.
+*/
+static void	strdup_size_case(t_ctx *c, const char *s, size_t want_bytes)
+{
+	t_alloc	before;
+	t_alloc	after;
+	char	*got;
+	size_t	got_bytes;
+
+	bro_alloc_snapshot(&before);
+	got = ft_strdup(s);
+	bro_track(c, got);
+	if (bro_injecting(c))
+		return ;
+	bro_alloc_snapshot(&after);
+	if (!got)
+		return (bro_fail(c->out, "returned NULL"));
+	got_bytes = after.live_bytes - before.live_bytes;
+	if (got_bytes < want_bytes)
+		bro_fail(c->out, "the result needs at least %zu byte(s), only %zu "
+			"were allocated", want_bytes, got_bytes);
+	free(got);
+}
+
+static void	case_06(t_ctx *c) { strdup_size_case(c, "Hello 42", 9); }
+static void	case_07(t_ctx *c) { strdup_size_case(c, "", 1); }
+
+static void	case_08(t_ctx *c)
+{
+	char	buf[101];
+
+	memset(buf, 'q', 100);
+	buf[100] = '\0';
+	strdup_size_case(c, buf, 101);
+}
+
 static const t_case	g_cases[] = {
 {1, "ft_strdup(\"Hello 42\")", BRO_ORACLE | BRO_INJECT, case_01},
 {2, "ft_strdup(\"\")", BRO_ORACLE | BRO_INJECT, case_02},
 {3, "ft_strdup(<100 chars>)", BRO_ORACLE | BRO_INJECT, case_03},
 {4, "ft_strdup(\"abc\\0def\")", BRO_ORACLE, case_04},
 {5, "ft_strdup(s)", BRO_ORACLE, case_05},
+{6, "ft_strdup(\"Hello 42\"): exact allocation", BRO_INJECT, case_06},
+{7, "ft_strdup(\"\"): exact allocation", BRO_INJECT, case_07},
+{8, "ft_strdup(<100 chars>): exact allocation", BRO_INJECT, case_08},
 };
 
 const t_suite	g_suite_ft_strdup = {

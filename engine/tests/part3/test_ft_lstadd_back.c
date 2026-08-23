@@ -2,7 +2,7 @@
 #include "libft_proto.h"
 
 /*
-** ft_lstadd_back - T5. Cases from _dev/SPEC_MICRO.md section 39.
+** ft_lstadd_back - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 39.
 **
 ** Empty list aside, the head never moves - the walk to the tail is where the
 ** bug lives, so cases 3-5 build lists of 2, 3 and 10 nodes rather than

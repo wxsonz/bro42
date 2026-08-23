@@ -2,7 +2,7 @@
 #include "libft_proto.h"
 
 /*
-** ft_lstlast - T5. Cases from _dev/SPEC_MICRO.md section 38.
+** ft_lstlast - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 38.
 **
 ** The last node is the one whose next is NULL - the walk must stop ON it.
 ** fixture_tail() walks the engine's own freshly built (and therefore

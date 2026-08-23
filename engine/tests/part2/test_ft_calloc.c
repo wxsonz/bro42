@@ -5,7 +5,7 @@
 #include <string.h>
 
 /*
-** ft_calloc - T2. Cases from _dev/SPEC_MICRO.md section 22.
+** ft_calloc - T2. Cases from _dev/plan/rank00/libft-01-cases.md section 22.
 **
 ** Cases 1-2 are the only two that carry INJECT: they are the only ones that
 ** make it past the size checks and actually allocate through the wrapped

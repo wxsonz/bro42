@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_strlcat - T1. Cases transcribed from _dev/SPEC_MICRO.md section 12.
+** ft_strlcat - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 12.
 ** Oracle: BSD strlcat(dst, src, size).
 **
 ** Cases 5-8 are the branch everyone gets wrong: when size <= strlen(dst),

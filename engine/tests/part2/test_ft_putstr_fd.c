@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 /*
-** ft_putstr_fd - T4. Cases from _dev/SPEC_MICRO.md section 32.
+** ft_putstr_fd - T4. Cases from _dev/plan/rank00/libft-01-cases.md section 32.
 **
 ** The terminator is not part of the output: an 8-character string produces
 ** exactly 8 bytes, and an empty string produces none at all.

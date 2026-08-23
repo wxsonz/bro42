@@ -3,7 +3,7 @@
 #include <ctype.h>
 
 /*
-** ft_toupper - T0. Cases from _dev/SPEC_MICRO.md section 13.
+** ft_toupper - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 13.
 ** Oracle: toupper(c)
 **
 ** Unlike the ft_is* family this returns the character itself, so the raw libc

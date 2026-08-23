@@ -2,7 +2,7 @@
 #include "libft_proto.h"
 
 /*
-** ft_lstadd_front - T5. Cases from _dev/SPEC_MICRO.md section 36.
+** ft_lstadd_front - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 36.
 **
 ** The fixture is left alive: add_front only relinks pointers and consumes
 ** nothing, so the whole combined list is freed at the end (never consumed

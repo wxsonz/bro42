@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /*
-** ft_atoi - T0. Cases from _dev/SPEC_MICRO.md section 21.
+** ft_atoi - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 21.
 ** Oracle: atoi(nptr).
 */
 

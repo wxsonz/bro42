@@ -347,7 +347,7 @@ static int	run_once(const t_suite *s, const t_case *c, const t_limits *lim,
 }
 
 /*
-** SPEC_MICRO's allocation-failure section asks for malloc_fail_after(k) on ten
+** libft-01-cases.md's allocation-failure section asks for malloc_fail_after(k) on ten
 ** functions. Rather than hand-writing ten injection tests, the sweep derives
 ** them: run once to learn how many allocations the case makes, then re-run it
 ** once per allocation index with malloc failing exactly there - each in a

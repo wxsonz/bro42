@@ -3,7 +3,7 @@
 #include <ctype.h>
 
 /*
-** ft_tolower - T0. Cases from _dev/SPEC_MICRO.md section 14.
+** ft_tolower - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 14.
 ** Oracle: tolower(c)
 **
 ** Unlike the ft_is* family this returns the character itself, so the raw libc

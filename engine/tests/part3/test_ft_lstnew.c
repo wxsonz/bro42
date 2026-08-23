@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /*
-** ft_lstnew - T5. Cases from _dev/SPEC_MICRO.md section 35.
+** ft_lstnew - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 35.
 **
 ** lstnew stores the content POINTER, never a copy - pointer identity is
 ** asserted against the exact pointer handed in, because a strcmp would let

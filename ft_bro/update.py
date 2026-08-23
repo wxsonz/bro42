@@ -17,7 +17,8 @@ from . import VERSION, paths
 
 def _git(*args):
     return subprocess.run(["git", "-C", str(paths.ROOT), *args],
-                          capture_output=True, text=True, timeout=20)
+                          capture_output=True, text=True, timeout=20,
+                          errors="replace")
 
 
 def check():

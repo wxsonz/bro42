@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*
-** ft_lstmap - T5. Cases from _dev/SPEC_MICRO.md section 43.
+** ft_lstmap - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 43.
 **
 ** The tier-model check: a structure of allocations (T3's ft_split) built on
 ** top of a caller-owned source list (T5's fixtures). dup_upper allocates its

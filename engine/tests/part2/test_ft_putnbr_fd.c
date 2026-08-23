@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 /*
-** ft_putnbr_fd - T4. Cases from _dev/SPEC_MICRO.md section 34.
+** ft_putnbr_fd - T4. Cases from _dev/plan/rank00/libft-01-cases.md section 34.
 **
 ** No return value, so the only observable is what reached the descriptor.
 ** Every case binds a real fd to a pipe and reads back exactly what was

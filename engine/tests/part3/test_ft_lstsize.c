@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /*
-** ft_lstsize - T5. Cases from _dev/SPEC_MICRO.md section 37.
+** ft_lstsize - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 37.
 **
 ** size counts nodes, not contents - a node holding NULL still counts, and
 ** the fixture is left alive afterward (size only reads the list).

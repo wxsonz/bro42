@@ -94,7 +94,7 @@ MUTANTS = {
         "ft_itoa.c",
         "while (num >= 10)",
         "while (num >= 0)",
-        {f"ft_itoa:{i}": "TIMEOUT" for i in range(1, 13)},
+        {f"ft_itoa:{i}": "TIMEOUT" for i in range(1, 14)},
     ),
     # Freeing the content directly instead of routing it through del. Only the
     # cases that count del calls can see this - which is why they exist.
@@ -115,12 +115,74 @@ MUTANTS = {
         # earlier word to leak when its own allocation fails. Cases 3, 6, 7 and
         # 12 are one-word inputs and are correctly silent here - which is the
         # argument for the depth rebalance in one line.
-        {f"ft_split:{i}": "LEAK" for i in (1, 2, 4, 5, 8, 13, 14)},
+        {f"ft_split:{i}": "LEAK" for i in (1, 2, 4, 5, 8, 13, 14, 15)},
     ),
     # Off by one at the top of the alphabetic range. The reference computes
     # ((unsigned)c | 32) - 'a' < 26; widening it to 27 admits the byte just
     # past 'z' AND the byte just past 'Z', because the | 32 folds them onto
     # the same value. Only the boundary cases can see it.
+    # Scan the front for characters in set, then MIRROR that count off the
+    # back instead of scanning the back independently. This is the bug the
+    # ft_strtrim cases could not see before 2026-08-24: every trimming case was
+    # symmetric - "   hello world   " 3/3, "xxxyyy...yyyxxx" 6/6, "aabaa" 2/2 -
+    # so a front-count-mirrored-to-the-back implementation scored 9/9. Verified
+    # by writing one and watching it pass. Cases 2, 10, 11 and 12 now trim a
+    # different number of bytes off each end.
+    "strtrim_mirrors_back": (
+        "ft_strtrim.c",
+        "\twhile (str[end] && ft_strchr(set, str[end]))\n\t\tend--;",
+        "\tend = end - start;",
+        {"ft_strtrim:2": "KO", "ft_strtrim:10": "KO",
+         "ft_strtrim:11": "KO", "ft_strtrim:12": "KO"},
+    ),
+    # The four missing-terminator mutants below all seed the same defect: the
+    # allocation is one byte short, so the terminating NUL is written past the
+    # end of the block. strcmp cannot see it - the text that comes back is
+    # correct - and the heap usually absorbs a one-byte overflow silently.
+    # Only the allocation-floor cases, which compare live_bytes against what
+    # the result actually needs, tell these apart from a correct version.
+    "substr_no_terminator": (
+        "ft_substr.c",
+        "\tsub = malloc((n + 1) * sizeof(char));",
+        "\tsub = malloc(n * sizeof(char));",
+        # ft_split:15 moves too: the reference builds each word with
+        # ft_substr, so shorting substr's allocation shorts the split total.
+        # Genuine propagation between two functions, not a second seeded bug.
+        {"ft_substr:10": "KO", "ft_substr:11": "KO", "ft_substr:12": "KO",
+         "ft_split:15": "KO"},
+    ),
+    "strjoin_no_terminator": (
+        "ft_strjoin.c",
+        "\tdst = malloc(sizeof(char) * l3 + 1);",
+        "\tdst = malloc(sizeof(char) * l3);",
+        {"ft_strjoin:8": "KO"},
+    ),
+    "itoa_no_terminator": (
+        "ft_itoa.c",
+        "\tbuffer = malloc(sizeof(char) * (size + 1));",
+        "\tbuffer = malloc(sizeof(char) * size);",
+        {"ft_itoa:13": "KO"},
+    ),
+    "strmapi_no_terminator": (
+        "ft_strmapi.c",
+        "\ts2 = malloc(sizeof(char) * (slen + 1));",
+        "\ts2 = malloc(sizeof(char) * slen);",
+        {"ft_strmapi:7": "KO"},
+    ),
+    # The array needs one slot per word AND the NULL that ends it. Allocating
+    # only `size` slots writes that NULL one pointer past the end. Walking the
+    # result never notices - the NULL reads back from memory that still holds
+    # it - so the words all compare equal on a corrupted heap.
+    "split_no_null_slot": (
+        "ft_split.c",
+        "\tnew = malloc((size + 1) * sizeof(char *));",
+        "\tnew = malloc(size * sizeof(char *));",
+        # ft_split:1 SIGABRTs rather than KOs: glibc's own heap checker spots
+        # the overflowed array before the case can compare anything. That is
+        # the corruption being caught one layer down, and the status is named
+        # here so a silent change to KO would be noticed.
+        {"ft_split:1": "SIGABRT", "ft_split:15": "KO"},
+    ),
     "isalpha_off_by_one": (
         "ft_isalpha.c",
         "- 'a' < 26",
@@ -247,6 +309,18 @@ MUTANTS = {
         "\t\ts2[i] = f(i, *s);",
         "\t\ts2[i] = f(i + 1, *s);",
         {"ft_strmapi:1": "KO", "ft_strmapi:4": "KO"},
+    ),
+    # Drop the +1 from strdup's allocation while still copying len + 1 bytes
+    # (the terminator lands one byte past the block). strcmp cannot see this
+    # - cases 1-5 compare content and pointer identity only, and the heap
+    # absorbs a one-byte overflow without complaining - so only the size
+    # actually asked of the allocator, via cases 6-8's live-bytes check,
+    # tells this apart from a correct implementation.
+    "strdup_missing_terminator_byte": (
+        "ft_strdup.c",
+        "\td = malloc(len + 1);",
+        "\td = malloc(len);",
+        {"ft_strdup:6": "KO", "ft_strdup:7": "KO", "ft_strdup:8": "KO"},
     ),
     # Drop the walk-to-tail loop from ft_lstadd_back: it only ever attaches at
     # the CURRENT head's next, so a one-element list still works (head IS the

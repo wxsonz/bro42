@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_strlcpy - T1. Cases transcribed from _dev/SPEC_MICRO.md section 11.
+** ft_strlcpy - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 11.
 ** Oracle: BSD strlcpy(dst, src, size) - glibc has carried it natively
 ** since 2.38.
 **

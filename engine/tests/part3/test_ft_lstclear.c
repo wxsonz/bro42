@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 /*
-** ft_lstclear - T5. Cases from _dev/SPEC_MICRO.md section 41.
+** ft_lstclear - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 41.
 **
 ** The fixtures are built with the WRAPPED allocator on purpose: ft_lstclear
 ** takes ownership of them, so failing to free them has to show up as a leak.

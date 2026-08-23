@@ -63,7 +63,8 @@ class BuildError(Exception):
 
 
 def _run(cmd, cwd=None):
-    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True,
+                          errors="replace")
 
 
 def make_target(target):

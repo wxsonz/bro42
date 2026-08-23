@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_strncmp - T0. Cases from _dev/SPEC_MICRO.md section 17.
+** ft_strncmp - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 17.
 ** Oracle: strncmp(s1, s2, n), SIGN only.
 **
 ** Only the sign is specified. Returning 1, -1 or the byte difference are all

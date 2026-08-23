@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_memchr - T0. Cases from _dev/SPEC_MICRO.md section 18.
+** ft_memchr - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 18.
 ** Oracle: memchr(s, c, n). Compared as an offset into the input.
 */
 

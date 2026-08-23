@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 /*
-** ft_putendl_fd - T4. Cases from _dev/SPEC_MICRO.md section 33.
+** ft_putendl_fd - T4. Cases from _dev/plan/rank00/libft-01-cases.md section 33.
 **
 ** putendl is putstr plus exactly one '\n' - always one, appended
 ** unconditionally, even when the string already ends in a newline (case 3:

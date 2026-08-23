@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_memcmp - T0. Cases transcribed from _dev/SPEC_MICRO.md section 19.
+** ft_memcmp - T0. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 19.
 ** Oracle: memcmp(s1, s2, n), sign equality only.
 **
 ** IDs are permanent addresses (design/04 B7). Append only; never renumber.

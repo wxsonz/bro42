@@ -36,7 +36,7 @@ void	bro_expect_num(t_result *r, long long expected, long long actual)
 /*
 ** Comparison functions specify the SIGN of the result and nothing more, so
 ** testing for an exact 1 or -1 is what makes other testers wrong
-** (SPEC_MICRO ft_strncmp / ft_memcmp, concept `return-contract`).
+** (libft-01-cases.md ft_strncmp / ft_memcmp, concept `return-contract`).
 */
 static int	sign_of(long long v)
 {

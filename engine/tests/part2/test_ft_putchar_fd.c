@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 /*
-** ft_putchar_fd - T4. Cases from _dev/SPEC_MICRO.md section 31.
+** ft_putchar_fd - T4. Cases from _dev/plan/rank00/libft-01-cases.md section 31.
 **
 ** No return value, so the only observable is what reached the descriptor.
 ** '\0' is a legitimate byte here, not a terminator - the comparison is by

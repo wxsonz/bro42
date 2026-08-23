@@ -61,6 +61,7 @@ class Check:
 def run(cmd, cwd, timeout=60):
     try:
         return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True,
+                              errors="replace",
                               timeout=timeout)
     except subprocess.TimeoutExpired:
         return subprocess.CompletedProcess(cmd, 124, "", "timed out")

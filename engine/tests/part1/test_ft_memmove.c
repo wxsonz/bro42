@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_memmove - T1. Cases transcribed from _dev/SPEC_MICRO.md section 10.
+** ft_memmove - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 10.
 ** Oracle: memmove(dest, src, n).
 **
 ** Every case runs against a GUARDED destination, and the oracle writes into

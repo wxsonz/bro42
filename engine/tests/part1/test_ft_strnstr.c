@@ -2,7 +2,7 @@
 #include "libft_proto.h"
 
 /*
-** ft_strnstr - T0. Cases from _dev/SPEC_MICRO.md section 20.
+** ft_strnstr - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 20.
 ** Oracle: bro_ref_strnstr - strnstr is BSD-only and glibc will never have it,
 ** so the engine ships its own (engine/src/oracle.c).
 */

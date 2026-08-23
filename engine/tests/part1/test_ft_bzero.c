@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_bzero - T1. Cases transcribed from _dev/SPEC_MICRO.md section 8.
+** ft_bzero - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 8.
 ** Oracle: memset(s, 0, n), NOT bzero() - bzero was removed from POSIX in
 ** 2008 and is deprecated in glibc. The behaviour tested is identical.
 */

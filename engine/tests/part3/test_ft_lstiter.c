@@ -2,7 +2,7 @@
 #include "libft_proto.h"
 
 /*
-** ft_lstiter - T5. Cases from _dev/SPEC_MICRO.md section 42.
+** ft_lstiter - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 42.
 **
 ** iter owns nothing: it must never free, and the list must stay fully
 ** intact and traversable once it returns. Case 1 checks both that every

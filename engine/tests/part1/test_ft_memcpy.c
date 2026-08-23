@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_memcpy - T1. Cases transcribed from _dev/SPEC_MICRO.md section 9.
+** ft_memcpy - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 9.
 ** Oracle: memcpy(dest, src, n).
 **
 ** Cases 6 and 7 are UB (the standard requires both pointers valid even at

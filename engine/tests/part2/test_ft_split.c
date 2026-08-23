@@ -4,12 +4,20 @@
 #include <string.h>
 
 /*
-** ft_split - T3. Cases from _dev/SPEC_MICRO.md section 27.
+** ft_split - T3. Cases from _dev/plan/rank00/libft-01-cases.md section 27.
 **
 ** The hardest function in the project: two levels of allocation and two levels
 ** of cleanup. The rollback cases are where the real bugs are, and the harness
 ** generates them - one authored case yields one check per allocation the split
 ** makes.
+**
+** Case 15 closes a real hole found by writing a word counter that counts
+** delimiter occurrences plus one instead of transitions into a word, and
+** watching it score 14/14 on the cases above: it overcounts on every leading,
+** trailing or repeated delimiter run, but the placement pass still writes the
+** real words and the real NULL at the right index, so the visible array is
+** identical - only the array is bigger than it needs to be. Only the total
+** allocated byte count, read from the wrapped allocator, catches the extra.
 */
 
 static void	free_split(char **r)
@@ -168,6 +176,42 @@ static void	case_14(t_ctx *c)
 	split_case(c, "a b c d e", ' ', e);
 }
 
+/*
+** Sums exactly what a correct split must allocate: one pointer per word
+** plus the NULL, and one buffer per word sized strlen + 1. An oversized
+** array - the same visible words, more phantom slots after the NULL - is
+** invisible to split_case above but not to this total.
+*/
+static void	case_15(t_ctx *c)
+{
+	static const char *const	e[] = {"hello", "world", NULL};
+	t_alloc						before;
+	t_alloc						after;
+	char						**got;
+	size_t						want;
+	size_t						got_bytes;
+	long						i;
+
+	want = 3 * sizeof(char *);
+	i = 0;
+	while (e[i])
+		want += strlen(e[i++]) + 1;
+	bro_alloc_snapshot(&before);
+	got = ft_split("   hello   world   ", ' ');
+	bro_track(c, got);
+	if (bro_injecting(c))
+		return ;
+	bro_alloc_snapshot(&after);
+	if (!got)
+		return (bro_fail(c->out, "returned NULL"));
+	got_bytes = after.live_bytes - before.live_bytes;
+	if (got_bytes < want)
+		bro_fail(c->out, "the array and its words need at least %zu byte(s), "
+			"only %zu were allocated", want,
+			got_bytes);
+	free_split(got);
+}
+
 static const t_case	g_cases[] = {
 {1, "ft_split(\"hello world 42\", ' ')", BRO_INJECT, case_01},
 {2, "ft_split(\"a b c\", ' ')", BRO_INJECT, case_02},
@@ -183,6 +227,8 @@ static const t_case	g_cases[] = {
 {12, "ft_split(\"hello world\", '\\0')", BRO_INJECT, case_12},
 {13, "ft_split(\"hello world 42\", ' ')", BRO_INJECT, case_13},
 {14, "ft_split(\"a b c d e\", ' ')", BRO_INJECT, case_14},
+{15, "ft_split(\"   hello   world   \", ' '): exact allocation", BRO_INJECT,
+	case_15},
 };
 
 const t_suite	g_suite_ft_split = {

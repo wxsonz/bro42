@@ -3,7 +3,7 @@
 #include <ctype.h>
 
 /*
-** ft_isprint - T0. Cases from _dev/SPEC_MICRO.md section 5.
+** ft_isprint - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 5.
 ** Oracle: isprint(c) != 0 ? 1 : 0
 **
 ** The oracle is normalised to exactly 1 or 0 on purpose: libc promises only

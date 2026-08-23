@@ -41,7 +41,7 @@ bool		bro_status_is_scored(t_status s);
 
 /*
 ** ------------------------------------------------------------------- flags
-** Mirror the `flags:` line in _dev/SPEC_MICRO.md.
+** Mirror the `flags:` line in _dev/plan/rank00/libft-01-cases.md.
 */
 # define BRO_ORACLE		(1u << 0)
 # define BRO_UB_CASE		(1u << 1)

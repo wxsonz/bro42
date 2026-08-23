@@ -4,7 +4,7 @@
 #include <string.h>
 
 /*
-** ft_lstdelone - T5. Cases from _dev/SPEC_MICRO.md section 40.
+** ft_lstdelone - T5. Cases from _dev/plan/rank00/libft-01-cases.md section 40.
 **
 ** delone frees exactly one node: content through del, the node with free,
 ** and it must never follow next - the rest of the list may still be alive.

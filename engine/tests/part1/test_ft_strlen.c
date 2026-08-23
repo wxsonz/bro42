@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_strlen - T0. Cases from _dev/SPEC_MICRO.md section 6.
+** ft_strlen - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 6.
 ** Oracle: strlen(s).
 */
 

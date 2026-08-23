@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_striteri - T1. Cases transcribed from _dev/SPEC_MICRO.md section 30.
+** ft_striteri - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 30.
 **
 ** No oracle: striteri has no libc equivalent, so cases check the result
 ** directly. It writes into a caller-owned buffer through the pointer it is

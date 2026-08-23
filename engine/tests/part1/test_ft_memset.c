@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_memset - T1. Cases transcribed from _dev/SPEC_MICRO.md section 7.
+** ft_memset - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 7.
 ** Oracle: memset(s, c, n).
 **
 ** Every case runs against a GUARDED destination, and the oracle writes into

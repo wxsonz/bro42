@@ -3,7 +3,7 @@
 #include <string.h>
 
 /*
-** ft_strrchr - T0. Cases from _dev/SPEC_MICRO.md section 16.
+** ft_strrchr - T0. Cases from _dev/plan/rank00/libft-01-cases.md section 16.
 ** Oracle: strrchr(s, c). Compared as an offset into the input.
 */
 
