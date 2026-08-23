@@ -75,12 +75,18 @@ def check():
         return 0
     origin = r.stdout.strip()
 
-    if _git("fetch", "--quiet", "--tags", "origin").returncode:
+    # ls-remote, not fetch: a check should not modify the repository it is
+    # checking. Fetching would also mean reading LOCAL tags afterwards, so a
+    # stray v* tag someone made by hand would report an update that does not
+    # exist. This asks the remote and believes only the remote.
+    r = _git("ls-remote", "--tags", "--refs", "origin", "v*")
+    if r.returncode:
         print(f"  could not reach {origin}")
         print("  (offline is fine - bro never needs the network to run)")
         return 0
 
-    tags = _git("tag", "--list", "v*").stdout.split()
+    tags = [line.split("refs/tags/")[-1]
+            for line in r.stdout.splitlines() if "refs/tags/" in line]
     latest = max(tags, key=_parse, default="")
     if not latest:
         print(f"  {origin} has published no release tags yet")
