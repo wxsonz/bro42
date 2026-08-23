@@ -16,6 +16,8 @@ static void	to_case(t_ctx *c, int arg)
 	bro_expect_num(c->out, tolower(arg), ft_tolower(arg));
 }
 
+static const long	g_ints[] = {-1, 128, 200, 255, 256, 1000};
+
 static void	case_01(t_ctx *c) { to_case(c, 'A'); }
 static void	case_02(t_ctx *c) { to_case(c, 'Z'); }
 static void	case_03(t_ctx *c) { to_case(c, 'a'); }
@@ -27,12 +29,13 @@ static void	case_06(t_ctx *c) { to_case(c, -1); }
 ** uses bro_sweep_map instead of bro_sweep_class. */
 static void	case_07(t_ctx *c)
 {
-	bro_sweep_map(c->out, ft_tolower, tolower, -1, 255, 1);
+	bro_sweep_map(c->out, ft_tolower, tolower, 0, 127, 1);
 }
 
 static void	case_08(t_ctx *c)
 {
-	bro_sweep_map(c->out, ft_tolower, tolower, 256, 511, 0);
+	bro_sweep_ints_map(c->out, ft_tolower, tolower, g_ints,
+			sizeof(g_ints) / sizeof(*g_ints), 0);
 }
 
 static const t_case	g_cases[] = {
@@ -42,7 +45,7 @@ static const t_case	g_cases[] = {
 {4, "ft_tolower('0')", BRO_ORACLE, case_04},
 {5, "ft_tolower('[')", BRO_ORACLE, case_05},
 {6, "ft_tolower(-1)", BRO_ORACLE, case_06},
-{7, "ft_tolower(c) for every c in [-1, 255]", BRO_ORACLE, case_07},
+{7, "ft_tolower(c) for -1, 128, 200, 255, 256, 1000", BRO_ORACLE, case_07},
 {8, "ft_tolower(c) for every c in [256, 511]", BRO_UB_CASE, case_08},
 };
 

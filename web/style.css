@@ -140,23 +140,28 @@ input[type=range] { width: 100%; accent-color: var(--accent); margin: 8px 0 4px;
   cursor: help;
 }
 
-/* Range sweep: one block per integer. 32 per row so the ASCII bands line up. */
-.sweep { margin: 6px 0; }
-.sweep .blocks {
-  display: grid;
-  grid-template-columns: repeat(32, 1fr);
-  gap: 1px;
-  margin-top: 4px;
-  max-width: 420px;
-}
+/* Sweep grid. 16 per row so the columns line up with the hex nibble, which is
+   how an ASCII table is normally read. Lit = the function returned true. */
+.sweep { margin: 8px 0; }
+.sweep .blocks { display: grid; gap: 2px; margin-top: 6px; }
+.sweep .blocks.ascii { grid-template-columns: repeat(16, 1fr); max-width: 430px; }
+.sweep .blocks.ints  { grid-template-columns: repeat(6, auto);
+                       justify-content: start; margin-top: 8px; }
 .sweep .blk {
-  aspect-ratio: 1;
-  border-radius: 1px;
-  background: var(--dim);
-  opacity: .25;
-  cursor: help;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 24px; height: 22px; border-radius: 3px;
+  font: 600 11px/1 ui-monospace, monospace;
+  background: var(--dim); color: var(--fg);
+  opacity: .28; cursor: help; user-select: none;
 }
-.sweep .blk.y { background: var(--ok); opacity: .45; }   /* agrees          */
-.sweep .blk.n { background: var(--bad); opacity: 1; }    /* differs         */
-.sweep .blk.t { background: var(--accent, #6aa9ff); opacity: .8; } /* true  */
-.sweep .blk.f { background: var(--dim); opacity: .2; }   /* false, ungraded */
+.sweep .blk.on  { background: var(--ok); color: #08130f; opacity: 1; }
+.sweep .blk.ctrl { font-size: 8px; letter-spacing: -.2px; }
+/* An int is not a character: square off the corners and outline it so the two
+   can never be read as the same kind of thing. */
+.sweep .blk.int {
+  border-radius: 0; padding: 0 6px; opacity: .75;
+  background: transparent; border: 1px dashed var(--dim); color: var(--fg);
+}
+.sweep .blk.int.on { background: var(--ok); border-style: solid; opacity: 1; }
+/* Disagreement rides on top of whatever the block already says. */
+.sweep .blk.wrong { outline: 2px solid var(--bad); outline-offset: -2px; opacity: 1; }

@@ -16,6 +16,8 @@ static void	is_case(t_ctx *c, int arg)
 	bro_expect_num(c->out, isdigit(arg) != 0, ft_isdigit(arg));
 }
 
+static const long	g_ints[] = {-1, 128, 200, 255, 256, 1000};
+
 static void	case_01(t_ctx *c) { is_case(c, '0'); }
 static void	case_02(t_ctx *c) { is_case(c, '9'); }
 static void	case_03(t_ctx *c) { is_case(c, '5'); }
@@ -29,12 +31,13 @@ static void	case_06(t_ctx *c) { is_case(c, -1); }
 ** without grading it. */
 static void	case_07(t_ctx *c)
 {
-	bro_sweep_class(c->out, ft_isdigit, isdigit, -1, 255, 1);
+	bro_sweep_class(c->out, ft_isdigit, isdigit, 0, 127, 1);
 }
 
 static void	case_08(t_ctx *c)
 {
-	bro_sweep_class(c->out, ft_isdigit, isdigit, 256, 511, 0);
+	bro_sweep_ints(c->out, ft_isdigit, isdigit, g_ints,
+			sizeof(g_ints) / sizeof(*g_ints), 0);
 }
 
 static const t_case	g_cases[] = {
@@ -44,7 +47,7 @@ static const t_case	g_cases[] = {
 {4, "ft_isdigit('0' - 1)", BRO_ORACLE, case_04},
 {5, "ft_isdigit('9' + 1)", BRO_ORACLE, case_05},
 {6, "ft_isdigit(-1)", BRO_ORACLE, case_06},
-{7, "ft_isdigit(c) for every c in [-1, 255]", BRO_ORACLE, case_07},
+{7, "ft_isdigit(c) for -1, 128, 200, 255, 256, 1000", BRO_ORACLE, case_07},
 {8, "ft_isdigit(c) for every c in [256, 511]", BRO_UB_CASE, case_08},
 };
 

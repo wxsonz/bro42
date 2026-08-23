@@ -453,31 +453,74 @@ function rollback(c) {
   return d;
 }
 
-/* A range sweep: one block per integer tested, laid out in rows of 32 so the
-   ASCII structure is legible - control bytes, then printable, then the high
-   half each occupy whole rows. The shape of a failure is the point: a solid
-   red band reads as "a whole range is wrong", scattered red as "a table is
-   wrong", and neither is visible from a first-divergence message alone. */
+/* A sweep grid. Blocks are coloured by what the function RETURNED, not by
+   whether it matched - so the grid draws the character class itself and is
+   worth reading when everything passes. Values that disagree with the oracle
+   get a red ring on top, so a fault is still the loudest thing on screen.
+
+   ASCII values show their glyph, control codes their short name, and anything
+   outside 0-127 its raw number in a visibly different block - a character and
+   an integer should never be mistakable for one another. */
+
+const CTRL = ["NUL","SOH","STX","ETX","EOT","ENQ","ACK","BEL","BS","HT","LF",
+  "VT","FF","CR","SO","SI","DLE","DC1","DC2","DC3","DC4","NAK","SYN","ETB",
+  "CAN","EM","SUB","ESC","FS","GS","RS","US"];
+
+function glyph(v) {
+  if (v < 0 || v > 127) return null;
+  if (v === 32) return "SP";
+  if (v === 127) return "DEL";
+  if (v < 32) return CTRL[v];
+  return String.fromCharCode(v);
+}
+
+/* Contiguous runs of `want`, as "'A'-'Z' (65-90)" - the caption that says
+   what the answer is SUPPOSED to look like. */
+function runs(vals, want) {
+  const out = [];
+  for (let i = 0; i < want.length; i++) {
+    if (!want[i]) continue;
+    let j = i; while (j + 1 < want.length && want[j + 1]) j++;
+    const a = vals[i], b = vals[j];
+    /* Quote only where a glyph reads as itself: a printable, non-space byte.
+       "0-'DEL'" mixes two notations and is harder to read than "0-127". */
+    const q = (v) => (v > 32 && v < 127) ? `'${String.fromCharCode(v)}'` : String(v);
+    out.push(a === b ? q(a)
+      : (a > 32 && b < 127) ? `${q(a)}-${q(b)} (${a}-${b})` : `${a}-${b}`);
+    i = j;
+  }
+  return out;
+}
+
 function sweep(c) {
   if (!c.sweep) return null;
+  const { values, got, want, scored } = c.sweep;
   const d = el("div", "sweep");
-  const { base, bits, scored } = c.sweep;
-  const head = el("div", "muted small");
-  const bad = bits.filter(b => !b).length;
-  head.textContent = scored
-    ? `${bits.length} values from ${base} to ${base + bits.length - 1}` +
-      (bad ? ` · ${bad} disagree` : " · all agree")
-    : `${bits.length} values from ${base} to ${base + bits.length - 1}` +
-      ` · not graded · ${bits.filter(Boolean).length} returned true`;
-  d.appendChild(head);
 
-  const grid = el("div", "blocks");
-  bits.forEach((ok, i) => {
-    const v = base + i;
-    const b = el("span", "blk " + (scored ? (ok ? "y" : "n") : (ok ? "t" : "f")));
-    b.title = scored
-      ? `${v}${printable(v)} — ${ok ? "matches" : "DIFFERS"}`
-      : `${v}${printable(v)} — returned ${ok ? "true" : "false"}`;
+  const wrong = values.filter((_, i) => scored && got[i] !== want[i]);
+  const cap = el("div", "muted small");
+  if (scored) {
+    const r = runs(values, want);
+    cap.textContent = (r.length ? `expects true for ${r.join(", ")}` : "expects false for every value")
+      + (wrong.length ? ` · ${wrong.length} wrong` : " · all correct");
+  } else {
+    cap.textContent = `${values.length} value(s) outside what C defines here — shown, not graded`;
+  }
+  d.appendChild(cap);
+
+  const isAscii = values.length > 8 && values[0] >= 0 && values[values.length - 1] <= 127;
+  const grid = el("div", isAscii ? "blocks ascii" : "blocks ints");
+  values.forEach((v, i) => {
+    const g = glyph(v);
+    const b = el("span", "blk"
+      + (got[i] ? " on" : " off")
+      + (scored && got[i] !== want[i] ? " wrong" : "")
+      + (g === null ? " int" : ""));
+    b.textContent = g === null ? String(v) : g;
+    if (g !== null && (v < 32 || v === 127 || v === 32)) b.classList.add("ctrl");
+    b.title = (g === null ? `${v} (int, not a character)` : `${v}  ${g}`)
+      + ` — returned ${got[i] ? "true" : "false"}`
+      + (scored && got[i] !== want[i] ? `, expected ${want[i] ? "true" : "false"}` : "");
     grid.appendChild(b);
   });
   d.appendChild(grid);

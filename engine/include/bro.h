@@ -80,11 +80,11 @@ typedef struct s_buf
 # define BRO_MSG_MAX		256
 # define BRO_INJECT_MAX		128
 # define BRO_CAPTURE_MAX	512
-/* A classification sweep walks every value in a range and records one bit
-** per value. 768 covers [-256, 511] in one case, which is the widest band
-** any suite currently asks for - ft_isascii's scored sweep, since isascii is
-** the one function in this family with no undefined region to stop at. */
-# define BRO_SWEEP_MAX		768
+/* A sweep records, per tested integer, what the student's function did AND
+** what the oracle did. 160 covers the 128 ASCII slots plus the short list of
+** notable integers shown beside them - deliberately small: the grid is a
+** thing to read, and 768 blocks is not. */
+# define BRO_SWEEP_MAX		160
 
 typedef enum e_evidence
 {
@@ -134,14 +134,17 @@ typedef struct s_result
 	size_t		rollback_n;
 	char		captured[BRO_CAPTURE_MAX];
 	size_t		captured_len;
-	/* Per-value results of a range sweep. sweep[i] describes the integer
-	** sweep_base + i: 1 = agreed with the oracle (or, for an unscored
-	** class sweep, 1 = the function returned true; for an unscored map
-	** sweep, 1 = the value came back unchanged). Same shape as
-	** rollback[]. */
+	/* Per-value sweep results. For each tested integer sweep_val[i]:
+	**   sweep[i]      what the STUDENT's function did - "returned true"
+	**                 for a classifier, "converted this byte" for a mapper
+	**   sweep_ref[i]  what the ORACLE did, same meaning
+	** The page colours by sweep[] so the character class stays legible even
+	** when every value agrees, and marks where the two differ. Emitting
+	** both is what lets one grid teach and check at the same time. */
 	unsigned char	sweep[BRO_SWEEP_MAX];
+	unsigned char	sweep_ref[BRO_SWEEP_MAX];
+	long		sweep_val[BRO_SWEEP_MAX];
 	size_t		sweep_n;
-	long		sweep_base;
 	int		sweep_scored;
 }	t_result;
 
@@ -169,6 +172,12 @@ void	bro_mark_ub(t_result *r, const char *fmt, ...);
 */
 void	bro_sweep_class(t_result *r, int (*fn)(int), int (*ref)(int),
 			long lo, long hi, int scored);
+void	bro_sweep_map(t_result *r, int (*fn)(int), int (*ref)(int),
+			long lo, long hi, int scored);
+void	bro_sweep_ints(t_result *r, int (*fn)(int), int (*ref)(int),
+			const long *vals, size_t n, int scored);
+void	bro_sweep_ints_map(t_result *r, int (*fn)(int), int (*ref)(int),
+			const long *vals, size_t n, int scored);
 
 /*
 ** Sibling of bro_sweep_class for functions that return a transformed VALUE

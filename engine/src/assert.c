@@ -1,6 +1,7 @@
 #include "bro.h"
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
 
 /*
 ** Expectation helpers. Each records enough for the renderer to draw evidence
@@ -129,108 +130,159 @@ void	bro_expect_offset(t_result *r, const void *base, const void *expected,
 }
 
 /*
-** Walk [lo, hi] and record one bit per value. See bro.h for why `scored`
-** exists: outside [-1, 255] the libc oracle is itself undefined, so there is
-** nothing to be right or wrong against and the sweep only reports.
+** Sweeps. Two forms - a contiguous range, and an explicit list of integers -
+** and two meanings, chosen by whether the function classifies or converts.
 **
-** The whole range is walked even after the first mismatch - the point of a
-** sweep is the SHAPE of the disagreement. "every byte above 127" and "just
-** the byte after z" are different bugs, and a loop that stopped at the first
-** one would make them look identical.
+** Every sweep records BOTH what the student's function did and what the
+** oracle did. The report colours by the student's answer, so the grid shows
+** the character class itself and stays worth reading when everything passes;
+** the oracle's answer is what turns a difference into a failure. A grid that
+** only showed pass/fail would be a wall of green on correct code, which
+** teaches nothing.
+**
+** The whole range is always walked, never stopping at the first difference:
+** "every byte above 127" and "one byte past z" are different bugs, and a loop
+** that stopped early would report them identically.
 */
+
+static void	sweep_begin(t_result *r, size_t n, int scored)
+{
+	r->sweep_n = 0;
+	r->sweep_scored = scored;
+	(void)n;
+}
+
+static void	sweep_put(t_result *r, long v, int mine, int theirs)
+{
+	if (r->sweep_n >= BRO_SWEEP_MAX)
+		return ;
+	r->sweep_val[r->sweep_n] = v;
+	r->sweep[r->sweep_n] = (unsigned char)(mine != 0);
+	r->sweep_ref[r->sweep_n] = (unsigned char)(theirs != 0);
+	r->sweep_n++;
+}
+
+static void	sweep_verdict(t_result *r, long bad, int mine, int theirs)
+{
+	if (!r->sweep_scored)
+		return (bro_mark_ub(r, "%zu value(s) outside the range C defines "
+				"for this function - shown, not graded",
+				r->sweep_n));
+	if (bad != LONG_MIN)
+		bro_fail(r, "at %ld: expected %d, got %d", bad, theirs, mine);
+}
+
 void	bro_sweep_class(t_result *r, int (*fn)(int), int (*ref)(int),
 		long lo, long hi, int scored)
 {
 	long	v;
-	int	got;
-	int	want;
 	long	bad;
 
-	bad = -1;
 	if (hi - lo + 1 > (long)BRO_SWEEP_MAX)
 		return (bro_fail(r, "range [%ld, %ld] needs %ld slots, "
 				"BRO_SWEEP_MAX is %d - widen it rather than "
 				"testing less than the case claims",
 				lo, hi, hi - lo + 1, BRO_SWEEP_MAX));
-	r->sweep_base = lo;
-	r->sweep_n = 0;
-	r->sweep_scored = scored;
+	bad = LONG_MIN;
+	sweep_begin(r, (size_t)(hi - lo + 1), scored);
 	v = lo;
-	while (v <= hi && r->sweep_n < BRO_SWEEP_MAX)
+	while (v <= hi)
 	{
-		got = fn((int)v);
-		want = scored && ref((int)v) ? 1 : 0;
-		if (!scored)
-			r->sweep[r->sweep_n] = (unsigned char)(got != 0);
-		else
-			r->sweep[r->sweep_n] = (unsigned char)(got == want);
-		if (scored && got != want && bad < 0)
+		sweep_put(r, v, fn((int)v) != 0, scored && ref((int)v) != 0);
+		if (scored && bad == LONG_MIN
+			&& r->sweep[r->sweep_n - 1] != r->sweep_ref[r->sweep_n - 1])
 			bad = v;
-		r->sweep_n++;
 		v++;
 	}
-	if (!scored)
-		return (bro_mark_ub(r, "%ld values in [%ld, %ld] - outside the "
-				"range C defines, so nothing here is graded",
-				(long)r->sweep_n, lo, hi));
-	if (bad >= 0)
-		bro_fail(r, "at %ld: expected %d, got %d", bad,
-			ref((int)bad) ? 1 : 0, fn((int)bad));
+	if (bad != LONG_MIN)
+		return (sweep_verdict(r, bad, fn((int)bad) != 0, ref((int)bad) != 0));
+	sweep_verdict(r, bad, 0, 0);
 }
 
 /*
-** Same walk as bro_sweep_class, but for functions that transform a value
-** instead of classifying one - ft_toupper and ft_tolower return the byte
-** itself, so comparing against ref as a boolean would call 'a' -> 'A' a
-** match against 'a' -> 'a', which is exactly the bug this exists to catch.
-**
-** scored: the recorded bit is exact value equality with ref(v), not
-** truthiness, and the failure message reports the values themselves.
-**
-** unscored: the recorded bit is whether the value passed through UNCHANGED
-** (got == v). These functions promise pass-through for anything outside
-** their conversion range, so "unchanged" is the meaningful default to show
-** the shape of - a band where that flips to "changed" is a band where an
-** unbounded comparison started matching bytes it should not have.
+** The mapper form. "Did this byte change?" is the readable question for
+** toupper and tolower - it lights exactly the letters that get converted -
+** while correctness still compares the returned VALUES, not the flags.
 */
 void	bro_sweep_map(t_result *r, int (*fn)(int), int (*ref)(int),
-			long lo, long hi, int scored)
+		long lo, long hi, int scored)
 {
 	long	v;
-	int	got;
-	int	want;
 	long	bad;
 
-	bad = -1;
 	if (hi - lo + 1 > (long)BRO_SWEEP_MAX)
 		return (bro_fail(r, "range [%ld, %ld] needs %ld slots, "
 				"BRO_SWEEP_MAX is %d - widen it rather than "
 				"testing less than the case claims",
 				lo, hi, hi - lo + 1, BRO_SWEEP_MAX));
-	r->sweep_base = lo;
-	r->sweep_n = 0;
-	r->sweep_scored = scored;
+	bad = LONG_MIN;
+	sweep_begin(r, (size_t)(hi - lo + 1), scored);
 	v = lo;
-	while (v <= hi && r->sweep_n < BRO_SWEEP_MAX)
+	while (v <= hi)
 	{
-		got = fn((int)v);
-		if (!scored)
-			r->sweep[r->sweep_n] = (unsigned char)(got == (int)v);
-		else
-		{
-			want = ref((int)v);
-			r->sweep[r->sweep_n] = (unsigned char)(got == want);
-			if (got != want && bad < 0)
-				bad = v;
-		}
-		r->sweep_n++;
+		sweep_put(r, v, fn((int)v) != (int)v,
+			scored && ref((int)v) != (int)v);
+		if (scored && bad == LONG_MIN && fn((int)v) != ref((int)v))
+			bad = v;
 		v++;
 	}
-	if (!scored)
-		return (bro_mark_ub(r, "%ld values in [%ld, %ld] - outside the "
-				"range C defines, so nothing here is graded",
-				(long)r->sweep_n, lo, hi));
-	if (bad >= 0)
-		bro_fail(r, "at %ld: expected %d, got %d", bad,
-			ref((int)bad), fn((int)bad));
+	if (bad != LONG_MIN)
+		return (sweep_verdict(r, bad, fn((int)bad), ref((int)bad)));
+	sweep_verdict(r, bad, 0, 0);
+}
+
+/*
+** An explicit list instead of a range: the notable integers worth showing
+** beside the ASCII grid. EOF and the high bytes are defined and are checked;
+** anything past unsigned char is undefined, so it is shown and not graded.
+*/
+/*
+** The mapper form of the same list. Split rather than parameterised so a call
+** site cannot silently pick the wrong question: asking "is it non-zero" of
+** toupper lights every value, which looks like data and means nothing.
+*/
+void	bro_sweep_ints_map(t_result *r, int (*fn)(int), int (*ref)(int),
+		const long *vals, size_t n, int scored)
+{
+	size_t	i;
+	long	bad;
+
+	bad = LONG_MIN;
+	sweep_begin(r, n, scored);
+	i = 0;
+	while (i < n)
+	{
+		sweep_put(r, vals[i], fn((int)vals[i]) != (int)vals[i],
+			scored && ref((int)vals[i]) != (int)vals[i]);
+		if (scored && bad == LONG_MIN
+			&& fn((int)vals[i]) != ref((int)vals[i]))
+			bad = vals[i];
+		i++;
+	}
+	if (bad != LONG_MIN)
+		return (sweep_verdict(r, bad, fn((int)bad), ref((int)bad)));
+	sweep_verdict(r, bad, 0, 0);
+}
+
+void	bro_sweep_ints(t_result *r, int (*fn)(int), int (*ref)(int),
+		const long *vals, size_t n, int scored)
+{
+	size_t	i;
+	long	bad;
+
+	bad = LONG_MIN;
+	sweep_begin(r, n, scored);
+	i = 0;
+	while (i < n)
+	{
+		sweep_put(r, vals[i], fn((int)vals[i]) != 0,
+			scored && ref((int)vals[i]) != 0);
+		if (scored && bad == LONG_MIN
+			&& r->sweep[r->sweep_n - 1] != r->sweep_ref[r->sweep_n - 1])
+			bad = vals[i];
+		i++;
+	}
+	if (bad != LONG_MIN)
+		return (sweep_verdict(r, bad, fn((int)bad) != 0, ref((int)bad) != 0));
+	sweep_verdict(r, bad, 0, 0);
 }

@@ -14,7 +14,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 896,
+   "line": 894,
    "note": "",
    "num": 1,
    "ref": "man 3 atoi",
@@ -34,7 +34,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 919,
+   "line": 917,
    "note": "",
    "num": 10,
    "ref": "man 3 atoi",
@@ -54,7 +54,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 920,
+   "line": 918,
    "note": "",
    "num": 11,
    "ref": "man 3 atoi",
@@ -74,7 +74,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 921,
+   "line": 919,
    "note": "",
    "num": 12,
    "ref": "man 3 atoi",
@@ -95,7 +95,7 @@
     "int-min",
     "return-contract"
    ],
-   "line": 930,
+   "line": 928,
    "note": "",
    "num": 13,
    "ref": "man 3 atoi",
@@ -116,7 +116,7 @@
     "int-min",
     "return-contract"
    ],
-   "line": 931,
+   "line": 929,
    "note": "",
    "num": 14,
    "ref": "man 3 atoi",
@@ -137,7 +137,7 @@
     "undefined-behavior",
     "int-min"
    ],
-   "line": 940,
+   "line": 938,
    "note": "glibc wraps. There is no correct answer to reproduce, and the subject does not ask you to detect overflow. Know that it is undefined and say so.",
    "num": 15,
    "ref": "man 3 atoi",
@@ -157,7 +157,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 897,
+   "line": 895,
    "note": "",
    "num": 2,
    "ref": "man 3 atoi",
@@ -177,7 +177,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 898,
+   "line": 896,
    "note": "",
    "num": 3,
    "ref": "man 3 atoi",
@@ -197,7 +197,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 899,
+   "line": 897,
    "note": "",
    "num": 4,
    "ref": "man 3 atoi",
@@ -217,7 +217,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 900,
+   "line": 898,
    "note": "",
    "num": 5,
    "ref": "man 3 atoi",
@@ -237,7 +237,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 901,
+   "line": 899,
    "note": "",
    "num": 6,
    "ref": "man 3 atoi",
@@ -257,7 +257,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 902,
+   "line": 900,
    "note": "",
    "num": 7,
    "ref": "man 3 atoi",
@@ -277,7 +277,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 910,
+   "line": 908,
    "note": "",
    "num": 8,
    "ref": "man 3 atoi",
@@ -297,7 +297,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 918,
+   "line": 916,
    "note": "",
    "num": 9,
    "ref": "man 3 atoi",
@@ -401,7 +401,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 956,
+   "line": 954,
    "note": "",
    "num": 1,
    "ref": "man 3 calloc",
@@ -422,7 +422,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 957,
+   "line": 955,
    "note": "",
    "num": 2,
    "ref": "man 3 calloc",
@@ -442,7 +442,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 966,
+   "line": 964,
    "note": "",
    "num": 3,
    "ref": "man 3 calloc",
@@ -462,7 +462,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 967,
+   "line": 965,
    "note": "",
    "num": 4,
    "ref": "man 3 calloc",
@@ -482,7 +482,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 968,
+   "line": 966,
    "note": "",
    "num": 5,
    "ref": "man 3 calloc",
@@ -503,7 +503,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 978,
+   "line": 976,
    "note": "",
    "num": 6,
    "ref": "man 3 calloc",
@@ -524,7 +524,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 979,
+   "line": 977,
    "note": "",
    "num": 7,
    "ref": "man 3 calloc",
@@ -545,7 +545,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 990,
+   "line": 988,
    "note": "",
    "num": 8,
    "ref": "man 3 calloc",
@@ -693,7 +693,7 @@
   },
   "ft_isalnum:8": {
    "desc": "",
-   "expected": "matches isalnum for all 257",
+   "expected": "matches isalnum across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -701,13 +701,13 @@
    "fn": "ft_isalnum",
    "group": "the whole defined range at once",
    "id": "ft_isalnum:8",
-   "input": "ft_isalnum(c) for every c in [-1, 255]",
+   "input": "ft_isalnum(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
-   "line": 158,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves isalnum undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 9 grades nothing.",
+   "line": 157,
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 8,
    "ref": "man 3 isalnum",
    "why": "the union property means this sweep re-proves ft_isalpha's and ft_isdigit's ranges simultaneously \u2014 a disagreement here whose shape matches one of those two functions' own sweeps means the bug is in the piece being reused, not in the union itself."
@@ -722,12 +722,12 @@
    "fn": "ft_isalnum",
    "group": "past the edge of the definition",
    "id": "ft_isalnum:9",
-   "input": "ft_isalnum(c) for every c in [256, 511]",
+   "input": "ft_isalnum(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 170,
+   "line": 169,
    "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
    "num": 9,
    "ref": "man 3 isalnum",
@@ -755,45 +755,45 @@
   },
   "ft_isalpha:10": {
    "desc": "",
-   "expected": "matches isalpha for all 257",
-   "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
+   "expected": "matches isalpha across the whole ASCII table",
+   "fix": "read WHICH values disagree, not just the first \u2014 a contiguous band points at a range test, scattered values at a lookup table",
    "flags": [
     "ORACLE"
    ],
    "fn": "ft_isalpha",
-   "group": "the whole defined range at once",
+   "group": "the whole ASCII table at once",
    "id": "ft_isalpha:10",
-   "input": "ft_isalpha(c) for every c in [-1, 255]",
+   "input": "ft_isalpha(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
    "line": 54,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves isalpha undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 11 grades nothing.",
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 10,
    "ref": "man 3 isalpha",
-   "why": "nine hand-picked bytes prove nine bytes. Walking every value C defines for this function proves the rule, and \u2014 more usefully \u2014 shows the SHAPE of a disagreement when there is one. \"every byte above 127\" and \"one byte past z\" are different bugs that a handful of samples both report as a single red case."
+   "why": "nine hand-picked bytes prove nine bytes. This walks all 128 of them, and the report draws the result as a grid \u2014 so the answer is not a verdict but a picture of the character class, with the letters lit and everything else dark. Reading your own function's shape off the table is the point; a disagreement then shows as a hole or a smudge in a pattern you already recognise, which no single failing value can convey."
   },
   "ft_isalpha:11": {
    "desc": "",
    "expected": "not graded, shown",
-   "fix": "nothing to fix \u2014 but if the answers here surprise you, that is worth understanding before an evaluator asks",
+   "fix": "nothing to fix \u2014 but if these surprise you, understand why before an evaluator asks",
    "flags": [
     "UB"
    ],
    "fn": "ft_isalpha",
-   "group": "past the edge of the definition",
+   "group": "the integers that are not characters",
    "id": "ft_isalpha:11",
-   "input": "ft_isalpha(c) for every c in [256, 511]",
+   "input": "ft_isalpha(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 68,
-   "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
+   "line": 69,
+   "note": "not scored. There is no correct answer to compare against outside the defined range, so this row stays out of the total.",
    "num": 11,
    "ref": "man 3 isalpha",
-   "why": "the parameter is an int, so a caller can pass 5000, and students do. C says nothing about what happens, the subject says nothing, and libc is undefined there \u2014 so this case asserts NOTHING. It runs the range, shows what your implementation returns, and is excluded from the score. Being able to see your own undefined behaviour is worth more than a verdict invented for it."
+   "why": "the parameter is an int, not a char, so a caller can pass -1, 200 or 1000 \u2014 and students do. These six are shown as raw numbers in their own row, deliberately unlike the character blocks above, because confusing \"the byte 65\" with \"the integer 65\" is the misunderstanding this row exists to prevent. C leaves this function undefined past EOF and unsigned char, so nothing here is graded: the row reports what your code did and nothing more."
   },
   "ft_isalpha:2": {
    "desc": "",
@@ -971,7 +971,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 186,
+   "line": 185,
    "note": "",
    "num": 1,
    "ref": "man 3 isascii",
@@ -991,7 +991,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 187,
+   "line": 186,
    "note": "",
    "num": 2,
    "ref": "man 3 isascii",
@@ -1011,7 +1011,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 188,
+   "line": 187,
    "note": "",
    "num": 3,
    "ref": "man 3 isascii",
@@ -1031,7 +1031,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 189,
+   "line": 188,
    "note": "",
    "num": 4,
    "ref": "man 3 isascii",
@@ -1051,7 +1051,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 190,
+   "line": 189,
    "note": "",
    "num": 5,
    "ref": "man 3 isascii",
@@ -1059,7 +1059,7 @@
   },
   "ft_isascii:6": {
    "desc": "",
-   "expected": "matches isascii for all 768",
+   "expected": "matches isascii across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -1067,7 +1067,7 @@
    "fn": "ft_isascii",
    "group": "the whole range at once, and then some",
    "id": "ft_isascii:6",
-   "input": "ft_isascii(c) for every c in [-256, 511]",
+   "input": "ft_isascii(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
@@ -1076,7 +1076,28 @@
    "note": "",
    "num": 6,
    "ref": "man 3 isascii",
-   "why": "isascii is the one function in this file with no undefined corner at all \u2014 c >= 0 && c <= 127 is a complete answer for every int there is, not just EOF and unsigned char. There is nothing past the edge of its definition to walk unscored, so unlike the other sweeps in this document there is no second, UB-flagged case here: everywhere is graded."
+   "why": "isascii is the one function in this file with no undefined corner at all \u2014 c >= 0 && c <= 127 is a complete answer for every int there is, not just EOF and unsigned char. There is nothing past the edge of its definition to walk unscored, so unlike every other sweep in this document the row of notable integers beside the grid is GRADED here rather than merely shown. -1, 128, 200, 255, 256 and 1000 all have a right answer, and it is 0."
+  },
+  "ft_isascii:7": {
+   "desc": "",
+   "expected": "all 0, and all graded",
+   "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
+   "flags": [
+    "ORACLE"
+   ],
+   "fn": "ft_isascii",
+   "group": "the whole range at once, and then some",
+   "id": "ft_isascii:7",
+   "input": "ft_isascii(c) for -1, 128, 200, 255, 256, 1000",
+   "kw": [
+    "return-contract",
+    "int-promotion"
+   ],
+   "line": 203,
+   "note": "",
+   "num": 7,
+   "ref": "man 3 isascii",
+   "why": "isascii is the one function in this file with no undefined corner at all \u2014 c >= 0 && c <= 127 is a complete answer for every int there is, not just EOF and unsigned char. There is nothing past the edge of its definition to walk unscored, so unlike every other sweep in this document the row of notable integers beside the grid is GRADED here rather than merely shown. -1, 128, 200, 255, 256 and 1000 all have a right answer, and it is 0."
   },
   "ft_isdigit:1": {
    "desc": "",
@@ -1092,7 +1113,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 84,
+   "line": 85,
    "note": "",
    "num": 1,
    "ref": "man 3 isdigit",
@@ -1112,7 +1133,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 85,
+   "line": 86,
    "note": "",
    "num": 2,
    "ref": "man 3 isdigit",
@@ -1132,7 +1153,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 86,
+   "line": 87,
    "note": "",
    "num": 3,
    "ref": "man 3 isdigit",
@@ -1152,7 +1173,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 87,
+   "line": 88,
    "note": "",
    "num": 4,
    "ref": "man 3 isdigit",
@@ -1172,7 +1193,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 88,
+   "line": 89,
    "note": "",
    "num": 5,
    "ref": "man 3 isdigit",
@@ -1193,7 +1214,7 @@
     "int-promotion",
     "return-contract"
    ],
-   "line": 96,
+   "line": 97,
    "note": "",
    "num": 6,
    "ref": "man 3 isdigit",
@@ -1201,7 +1222,7 @@
   },
   "ft_isdigit:7": {
    "desc": "",
-   "expected": "matches isdigit for all 257",
+   "expected": "matches isdigit across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -1209,13 +1230,13 @@
    "fn": "ft_isdigit",
    "group": "the whole defined range at once",
    "id": "ft_isdigit:7",
-   "input": "ft_isdigit(c) for every c in [-1, 255]",
+   "input": "ft_isdigit(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
    "line": 109,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves isdigit undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 8 grades nothing.",
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 7,
    "ref": "man 3 isdigit",
    "why": "the six hand-picked bytes above prove the two boundaries; this sweep proves the whole domain and shows the SHAPE of a disagreement, the same way ft_isalpha's case 10 does."
@@ -1230,7 +1251,7 @@
    "fn": "ft_isdigit",
    "group": "past the edge of the definition",
    "id": "ft_isdigit:8",
-   "input": "ft_isdigit(c) for every c in [256, 511]",
+   "input": "ft_isdigit(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
@@ -1255,7 +1276,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 219,
+   "line": 220,
    "note": "",
    "num": 1,
    "ref": "man 3 isprint",
@@ -1275,7 +1296,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 220,
+   "line": 221,
    "note": "",
    "num": 2,
    "ref": "man 3 isprint",
@@ -1295,7 +1316,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 221,
+   "line": 222,
    "note": "",
    "num": 3,
    "ref": "man 3 isprint",
@@ -1315,7 +1336,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 222,
+   "line": 223,
    "note": "",
    "num": 4,
    "ref": "man 3 isprint",
@@ -1335,7 +1356,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 223,
+   "line": 224,
    "note": "",
    "num": 5,
    "ref": "man 3 isprint",
@@ -1355,7 +1376,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 224,
+   "line": 225,
    "note": "",
    "num": 6,
    "ref": "man 3 isprint",
@@ -1375,7 +1396,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 225,
+   "line": 226,
    "note": "",
    "num": 7,
    "ref": "man 3 isprint",
@@ -1383,7 +1404,7 @@
   },
   "ft_isprint:8": {
    "desc": "",
-   "expected": "matches isprint for all 257",
+   "expected": "matches isprint across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -1391,13 +1412,13 @@
    "fn": "ft_isprint",
    "group": "the whole defined range at once",
    "id": "ft_isprint:8",
-   "input": "ft_isprint(c) for every c in [-1, 255]",
+   "input": "ft_isprint(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
    "line": 239,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves isprint undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 9 grades nothing.",
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 8,
    "ref": "man 3 isprint",
    "why": "nine hand-picked bytes prove nine bytes; this sweep proves the whole domain and shows the SHAPE of a disagreement, the same way ft_isalpha's case 10 does \u2014 a comparison off by one on 32 or 126 shows up as a single value at the edge of a band, not scattered noise."
@@ -1412,7 +1433,7 @@
    "fn": "ft_isprint",
    "group": "past the edge of the definition",
    "id": "ft_isprint:9",
-   "input": "ft_isprint(c) for every c in [256, 511]",
+   "input": "ft_isprint(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
@@ -1437,7 +1458,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1305,
+   "line": 1303,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -1458,7 +1479,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1322,
+   "line": 1320,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -1478,7 +1499,7 @@
    "kw": [
     "int-min"
    ],
-   "line": 1332,
+   "line": 1330,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -1498,7 +1519,7 @@
    "kw": [
     "int-min"
    ],
-   "line": 1333,
+   "line": 1331,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -1518,7 +1539,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1347,
+   "line": 1345,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 13,
    "ref": "Subject IV.3",
@@ -1538,7 +1559,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1306,
+   "line": 1304,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -1558,7 +1579,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1307,
+   "line": 1305,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -1578,7 +1599,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1308,
+   "line": 1306,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -1599,7 +1620,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1317,
+   "line": 1315,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -1620,7 +1641,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1318,
+   "line": 1316,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -1641,7 +1662,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1319,
+   "line": 1317,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -1662,7 +1683,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1320,
+   "line": 1318,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -1683,7 +1704,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1321,
+   "line": 1319,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -1701,7 +1722,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1684,
+   "line": 1682,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1720,7 +1741,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1692,
+   "line": 1690,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1739,7 +1760,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1693,
+   "line": 1691,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1758,7 +1779,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1694,
+   "line": 1692,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -1777,7 +1798,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1695,
+   "line": 1693,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -1795,7 +1816,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1702,
+   "line": 1700,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -1813,7 +1834,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1613,
+   "line": 1611,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1831,7 +1852,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1614,
+   "line": 1612,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1850,7 +1871,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1621,
+   "line": 1619,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1869,7 +1890,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1622,
+   "line": 1620,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -1887,7 +1908,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1629,
+   "line": 1627,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -1906,7 +1927,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1746,
+   "line": 1744,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1925,7 +1946,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1747,
+   "line": 1745,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1944,7 +1965,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1748,
+   "line": 1746,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1963,7 +1984,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1756,
+   "line": 1754,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -1981,7 +2002,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1763,
+   "line": 1761,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -1999,7 +2020,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1764,
+   "line": 1762,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -2018,7 +2039,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1719,
+   "line": 1717,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2037,7 +2058,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1720,
+   "line": 1718,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2056,7 +2077,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1721,
+   "line": 1719,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2075,7 +2096,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1729,
+   "line": 1727,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2094,7 +2115,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1730,
+   "line": 1728,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2113,7 +2134,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1780,
+   "line": 1778,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2132,7 +2153,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1781,
+   "line": 1779,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2151,7 +2172,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1782,
+   "line": 1780,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2169,7 +2190,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1789,
+   "line": 1787,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2187,7 +2208,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1795,
+   "line": 1793,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2206,7 +2227,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1664,
+   "line": 1662,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2225,7 +2246,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1665,
+   "line": 1663,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2244,7 +2265,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1666,
+   "line": 1664,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2263,7 +2284,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1667,
+   "line": 1665,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2282,7 +2303,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1668,
+   "line": 1666,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2304,7 +2325,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1812,
+   "line": 1810,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2326,7 +2347,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1813,
+   "line": 1811,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2348,7 +2369,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1814,
+   "line": 1812,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2370,7 +2391,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1815,
+   "line": 1813,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2390,7 +2411,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1823,
+   "line": 1821,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2412,7 +2433,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1833,
+   "line": 1831,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -2434,7 +2455,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1834,
+   "line": 1832,
    "note": "",
    "num": 7,
    "ref": "Subject IV.4",
@@ -2454,7 +2475,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1844,
+   "line": 1842,
    "note": "",
    "num": 8,
    "ref": "Subject IV.4",
@@ -2475,7 +2496,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1587,
+   "line": 1585,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2496,7 +2517,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1588,
+   "line": 1586,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2516,7 +2537,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1596,
+   "line": 1594,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2536,7 +2557,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1597,
+   "line": 1595,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2554,7 +2575,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1644,
+   "line": 1642,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2572,7 +2593,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1645,
+   "line": 1643,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2590,7 +2611,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1646,
+   "line": 1644,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2608,7 +2629,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1647,
+   "line": 1645,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2626,7 +2647,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1648,
+   "line": 1646,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2646,7 +2667,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 782,
+   "line": 780,
    "note": "",
    "num": 1,
    "ref": "man 3 memchr",
@@ -2666,7 +2687,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 783,
+   "line": 781,
    "note": "",
    "num": 2,
    "ref": "man 3 memchr",
@@ -2686,7 +2707,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 784,
+   "line": 782,
    "note": "",
    "num": 3,
    "ref": "man 3 memchr",
@@ -2706,7 +2727,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 785,
+   "line": 783,
    "note": "",
    "num": 4,
    "ref": "man 3 memchr",
@@ -2726,7 +2747,7 @@
    "kw": [
     "size-t-wrap"
    ],
-   "line": 793,
+   "line": 791,
    "note": "",
    "num": 5,
    "ref": "man 3 memchr",
@@ -2746,7 +2767,7 @@
    "kw": [
     "size-t-wrap"
    ],
-   "line": 794,
+   "line": 792,
    "note": "",
    "num": 6,
    "ref": "man 3 memchr",
@@ -2767,7 +2788,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 802,
+   "line": 800,
    "note": "",
    "num": 7,
    "ref": "man 3 memchr",
@@ -2788,7 +2809,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 803,
+   "line": 801,
    "note": "",
    "num": 8,
    "ref": "man 3 memchr",
@@ -2809,7 +2830,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 819,
+   "line": 817,
    "note": "",
    "num": 1,
    "ref": "man 3 memcmp",
@@ -2830,7 +2851,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 820,
+   "line": 818,
    "note": "",
    "num": 2,
    "ref": "man 3 memcmp",
@@ -2851,7 +2872,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 821,
+   "line": 819,
    "note": "",
    "num": 3,
    "ref": "man 3 memcmp",
@@ -2872,7 +2893,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 829,
+   "line": 827,
    "note": "",
    "num": 4,
    "ref": "man 3 memcmp",
@@ -2893,7 +2914,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 830,
+   "line": 828,
    "note": "",
    "num": 5,
    "ref": "man 3 memcmp",
@@ -2914,7 +2935,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 831,
+   "line": 829,
    "note": "",
    "num": 6,
    "ref": "man 3 memcmp",
@@ -3404,7 +3425,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1457,
+   "line": 1455,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3424,7 +3445,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1458,
+   "line": 1456,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3444,7 +3465,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1459,
+   "line": 1457,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3464,7 +3485,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1468,
+   "line": 1466,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3484,7 +3505,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1518,
+   "line": 1516,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3504,7 +3525,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1519,
+   "line": 1517,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3524,7 +3545,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1520,
+   "line": 1518,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3544,7 +3565,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1527,
+   "line": 1525,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3564,7 +3585,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1543,
+   "line": 1541,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3584,7 +3605,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1544,
+   "line": 1542,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3604,7 +3625,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1545,
+   "line": 1543,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3624,7 +3645,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1546,
+   "line": 1544,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3644,7 +3665,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1547,
+   "line": 1545,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -3665,7 +3686,7 @@
     "int-min",
     "fd-io"
    ],
-   "line": 1556,
+   "line": 1554,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -3686,7 +3707,7 @@
     "int-min",
     "fd-io"
    ],
-   "line": 1557,
+   "line": 1555,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -3706,7 +3727,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1564,
+   "line": 1562,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -3727,7 +3748,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1484,
+   "line": 1482,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3748,7 +3769,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1485,
+   "line": 1483,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3769,7 +3790,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1486,
+   "line": 1484,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3789,7 +3810,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1493,
+   "line": 1491,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3810,7 +3831,7 @@
     "undefined-behavior",
     "fd-io"
    ],
-   "line": 1501,
+   "line": 1499,
    "note": "some implementations print \"(null)\", some crash, some do nothing. All three are defensible; know which one yours does.",
    "num": 5,
    "ref": "Subject IV.3",
@@ -3831,7 +3852,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1226,
+   "line": 1224,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3852,7 +3873,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1252,
+   "line": 1250,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -3873,7 +3894,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1253,
+   "line": 1251,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -3894,7 +3915,7 @@
     "signed-char",
     "null-terminator"
    ],
-   "line": 1261,
+   "line": 1259,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -3915,7 +3936,7 @@
     "malloc-rollback",
     "double-pointer"
    ],
-   "line": 1271,
+   "line": 1269,
    "note": "",
    "num": 13,
    "ref": "Subject IV.3",
@@ -3936,7 +3957,7 @@
     "malloc-rollback",
     "double-pointer"
    ],
-   "line": 1272,
+   "line": 1270,
    "note": "",
    "num": 14,
    "ref": "Subject IV.3",
@@ -3957,7 +3978,7 @@
     "null-terminator",
     "double-pointer"
    ],
-   "line": 1287,
+   "line": 1285,
    "note": "the check is a floor over the array and its words together, not an exact figure. Allocating more than you need is wasteful, not wrong.",
    "num": 15,
    "ref": "Subject IV.3",
@@ -3978,7 +3999,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1227,
+   "line": 1225,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3999,7 +4020,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1228,
+   "line": 1226,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4020,7 +4041,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1229,
+   "line": 1227,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4041,7 +4062,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1239,
+   "line": 1237,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4062,7 +4083,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1240,
+   "line": 1238,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4083,7 +4104,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1241,
+   "line": 1239,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -4104,7 +4125,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1242,
+   "line": 1240,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -4125,7 +4146,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1251,
+   "line": 1249,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -4146,7 +4167,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 659,
+   "line": 657,
    "note": "",
    "num": 1,
    "ref": "man 3 strchr",
@@ -4167,7 +4188,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 660,
+   "line": 658,
    "note": "",
    "num": 2,
    "ref": "man 3 strchr",
@@ -4188,7 +4209,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 661,
+   "line": 659,
    "note": "",
    "num": 3,
    "ref": "man 3 strchr",
@@ -4209,7 +4230,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 670,
+   "line": 668,
    "note": "",
    "num": 4,
    "ref": "man 3 strchr",
@@ -4230,7 +4251,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 671,
+   "line": 669,
    "note": "",
    "num": 5,
    "ref": "man 3 strchr",
@@ -4251,7 +4272,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 672,
+   "line": 670,
    "note": "",
    "num": 6,
    "ref": "man 3 strchr",
@@ -4272,7 +4293,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 680,
+   "line": 678,
    "note": "",
    "num": 7,
    "ref": "man 3 strchr",
@@ -4293,7 +4314,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 681,
+   "line": 679,
    "note": "",
    "num": 8,
    "ref": "man 3 strchr",
@@ -4314,7 +4335,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1008,
+   "line": 1006,
    "note": "",
    "num": 1,
    "ref": "man 3 strdup",
@@ -4335,7 +4356,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1009,
+   "line": 1007,
    "note": "",
    "num": 2,
    "ref": "man 3 strdup",
@@ -4356,7 +4377,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1010,
+   "line": 1008,
    "note": "",
    "num": 3,
    "ref": "man 3 strdup",
@@ -4376,7 +4397,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1018,
+   "line": 1016,
    "note": "",
    "num": 4,
    "ref": "man 3 strdup",
@@ -4396,7 +4417,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1026,
+   "line": 1024,
    "note": "",
    "num": 5,
    "ref": "man 3 strdup",
@@ -4416,7 +4437,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1039,
+   "line": 1037,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 6,
    "ref": "man 3 strdup",
@@ -4436,7 +4457,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1040,
+   "line": 1038,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 7,
    "ref": "man 3 strdup",
@@ -4456,7 +4477,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1041,
+   "line": 1039,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 8,
    "ref": "man 3 strdup",
@@ -4475,7 +4496,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1414,
+   "line": 1412,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -4494,7 +4515,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1415,
+   "line": 1413,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -4513,7 +4534,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1416,
+   "line": 1414,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4531,7 +4552,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1422,
+   "line": 1420,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4549,7 +4570,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1429,
+   "line": 1427,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4570,7 +4591,7 @@
     "string-literal-ro",
     "undefined-behavior"
    ],
-   "line": 1440,
+   "line": 1438,
    "note": "the standard leaves this undefined; in practice it is a fault on every platform 42 uses. Nothing is required of your implementation. Recognising the crash is what matters.",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4590,7 +4611,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1121,
+   "line": 1119,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -4610,7 +4631,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1122,
+   "line": 1120,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -4630,7 +4651,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1123,
+   "line": 1121,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4650,7 +4671,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1124,
+   "line": 1122,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4670,7 +4691,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1125,
+   "line": 1123,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4690,7 +4711,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1134,
+   "line": 1132,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4710,7 +4731,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1135,
+   "line": 1133,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -4730,7 +4751,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1149,
+   "line": 1147,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 8,
    "ref": "Subject IV.3",
@@ -5217,7 +5238,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1364,
+   "line": 1362,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -5238,7 +5259,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1365,
+   "line": 1363,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -5259,7 +5280,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1366,
+   "line": 1364,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -5279,7 +5300,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1375,
+   "line": 1373,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -5300,7 +5321,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1383,
+   "line": 1381,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -5321,7 +5342,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1384,
+   "line": 1382,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -5341,7 +5362,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1398,
+   "line": 1396,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 7,
    "ref": "Subject IV.3",
@@ -5361,7 +5382,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 744,
+   "line": 742,
    "note": "",
    "num": 1,
    "ref": "man 3 strncmp",
@@ -5381,7 +5402,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 745,
+   "line": 743,
    "note": "",
    "num": 2,
    "ref": "man 3 strncmp",
@@ -5401,7 +5422,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 746,
+   "line": 744,
    "note": "",
    "num": 3,
    "ref": "man 3 strncmp",
@@ -5421,7 +5442,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 747,
+   "line": 745,
    "note": "",
    "num": 4,
    "ref": "man 3 strncmp",
@@ -5442,7 +5463,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 755,
+   "line": 753,
    "note": "",
    "num": 5,
    "ref": "man 3 strncmp",
@@ -5463,7 +5484,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 756,
+   "line": 754,
    "note": "",
    "num": 6,
    "ref": "man 3 strncmp",
@@ -5484,7 +5505,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 765,
+   "line": 763,
    "note": "",
    "num": 7,
    "ref": "man 3 strncmp",
@@ -5505,7 +5526,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 766,
+   "line": 764,
    "note": "",
    "num": 8,
    "ref": "man 3 strncmp",
@@ -5525,7 +5546,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 848,
+   "line": 846,
    "note": "",
    "num": 1,
    "ref": "man 3 strnstr` (BSD)",
@@ -5545,7 +5566,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 849,
+   "line": 847,
    "note": "",
    "num": 2,
    "ref": "man 3 strnstr` (BSD)",
@@ -5565,7 +5586,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 850,
+   "line": 848,
    "note": "",
    "num": 3,
    "ref": "man 3 strnstr` (BSD)",
@@ -5585,7 +5606,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 851,
+   "line": 849,
    "note": "",
    "num": 4,
    "ref": "man 3 strnstr` (BSD)",
@@ -5605,7 +5626,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 860,
+   "line": 858,
    "note": "",
    "num": 5,
    "ref": "man 3 strnstr` (BSD)",
@@ -5625,7 +5646,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 861,
+   "line": 859,
    "note": "",
    "num": 6,
    "ref": "man 3 strnstr` (BSD)",
@@ -5646,7 +5667,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 870,
+   "line": 868,
    "note": "",
    "num": 7,
    "ref": "man 3 strnstr` (BSD)",
@@ -5667,7 +5688,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 871,
+   "line": 869,
    "note": "",
    "num": 8,
    "ref": "man 3 strnstr` (BSD)",
@@ -5688,7 +5709,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 879,
+   "line": 877,
    "note": "",
    "num": 9,
    "ref": "man 3 strnstr` (BSD)",
@@ -5709,7 +5730,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 698,
+   "line": 696,
    "note": "",
    "num": 1,
    "ref": "man 3 strrchr",
@@ -5730,7 +5751,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 699,
+   "line": 697,
    "note": "",
    "num": 2,
    "ref": "man 3 strrchr",
@@ -5751,7 +5772,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 700,
+   "line": 698,
    "note": "",
    "num": 3,
    "ref": "man 3 strrchr",
@@ -5772,7 +5793,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 708,
+   "line": 706,
    "note": "",
    "num": 4,
    "ref": "man 3 strrchr",
@@ -5793,7 +5814,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 709,
+   "line": 707,
    "note": "",
    "num": 5,
    "ref": "man 3 strrchr",
@@ -5814,7 +5835,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 710,
+   "line": 708,
    "note": "",
    "num": 6,
    "ref": "man 3 strrchr",
@@ -5834,7 +5855,7 @@
    "kw": [
     "int-promotion"
    ],
-   "line": 717,
+   "line": 715,
    "note": "",
    "num": 7,
    "ref": "man 3 strrchr",
@@ -5855,7 +5876,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 727,
+   "line": 725,
    "note": "",
    "num": 8,
    "ref": "man 3 strrchr",
@@ -5875,7 +5896,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1170,
+   "line": 1168,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -5895,7 +5916,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1206,
+   "line": 1204,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -5915,7 +5936,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1207,
+   "line": 1205,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -5935,7 +5956,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1208,
+   "line": 1206,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -5955,7 +5976,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1171,
+   "line": 1169,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -5975,7 +5996,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1172,
+   "line": 1170,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -5995,7 +6016,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1173,
+   "line": 1171,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -6016,7 +6037,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1183,
+   "line": 1181,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -6037,7 +6058,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1184,
+   "line": 1182,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -6058,7 +6079,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1185,
+   "line": 1183,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -6078,7 +6099,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1194,
+   "line": 1192,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -6098,7 +6119,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1195,
+   "line": 1193,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -6119,7 +6140,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1062,
+   "line": 1060,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -6139,7 +6160,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1103,
+   "line": 1101,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 10,
    "ref": "Subject IV.3",
@@ -6159,7 +6180,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1104,
+   "line": 1102,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 11,
    "ref": "Subject IV.3",
@@ -6179,7 +6200,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1105,
+   "line": 1103,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 12,
    "ref": "Subject IV.3",
@@ -6200,7 +6221,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1063,
+   "line": 1061,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -6221,7 +6242,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1064,
+   "line": 1062,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -6242,7 +6263,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1074,
+   "line": 1072,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -6263,7 +6284,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1075,
+   "line": 1073,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -6284,7 +6305,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1076,
+   "line": 1074,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -6305,7 +6326,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1086,
+   "line": 1084,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -6326,7 +6347,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1087,
+   "line": 1085,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -6347,7 +6368,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1088,
+   "line": 1086,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -6368,7 +6389,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 611,
+   "line": 610,
    "note": "",
    "num": 1,
    "ref": "man 3 tolower",
@@ -6389,7 +6410,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 612,
+   "line": 611,
    "note": "",
    "num": 2,
    "ref": "man 3 tolower",
@@ -6410,7 +6431,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 613,
+   "line": 612,
    "note": "",
    "num": 3,
    "ref": "man 3 tolower",
@@ -6431,7 +6452,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 614,
+   "line": 613,
    "note": "",
    "num": 4,
    "ref": "man 3 tolower",
@@ -6452,7 +6473,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 615,
+   "line": 614,
    "note": "",
    "num": 5,
    "ref": "man 3 tolower",
@@ -6473,7 +6494,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 616,
+   "line": 615,
    "note": "",
    "num": 6,
    "ref": "man 3 tolower",
@@ -6481,7 +6502,7 @@
   },
   "ft_tolower:7": {
    "desc": "",
-   "expected": "matches tolower for all 257",
+   "expected": "matches tolower across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -6489,13 +6510,13 @@
    "fn": "ft_tolower",
    "group": "the whole defined range at once",
    "id": "ft_tolower:7",
-   "input": "ft_tolower(c) for every c in [-1, 255]",
+   "input": "ft_tolower(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
-   "line": 629,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves tolower undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 8 grades nothing.",
+   "line": 627,
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 7,
    "ref": "man 3 tolower",
    "why": "the mirror of ft_toupper's sweep, with the same reason for comparing values rather than truthiness: 'A' -> 'a' and 'A' -> 'A' both look like a match to a boolean check, and only a value comparison tells them apart."
@@ -6510,12 +6531,12 @@
    "fn": "ft_tolower",
    "group": "past the edge of the definition",
    "id": "ft_tolower:8",
-   "input": "ft_tolower(c) for every c in [256, 511]",
+   "input": "ft_tolower(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 643,
+   "line": 641,
    "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
    "num": 8,
    "ref": "man 3 tolower",
@@ -6649,7 +6670,7 @@
   },
   "ft_toupper:7": {
    "desc": "",
-   "expected": "matches toupper for all 257",
+   "expected": "matches toupper across the whole ASCII table",
    "fix": "when this fails, read which values disagree rather than only the first \u2014 a contiguous band points at a range test, scattered values at a table",
    "flags": [
     "ORACLE"
@@ -6657,13 +6678,13 @@
    "fn": "ft_toupper",
    "group": "the whole defined range at once",
    "id": "ft_toupper:7",
-   "input": "ft_toupper(c) for every c in [-1, 255]",
+   "input": "ft_toupper(c) for every c in [0, 127]",
    "kw": [
     "return-contract",
     "int-promotion"
    ],
-   "line": 581,
-   "note": "the sweep stops at 255 because that is where the ORACLE stops. C leaves toupper undefined outside EOF and unsigned char, so beyond this there is nothing to be right against, and case 8 grades nothing.",
+   "line": 580,
+   "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 7,
    "ref": "man 3 toupper",
    "why": "ft_toupper returns a transformed byte, not a classification, so proving it over a range means comparing the VALUE it returns against toupper's value at every point, not just whether both are \"truthy\" \u2014 'a' -> 'A' and 'a' -> 'a' both look like a match to a boolean check, and only a value comparison tells them apart."
@@ -6678,12 +6699,12 @@
    "fn": "ft_toupper",
    "group": "past the edge of the definition",
    "id": "ft_toupper:8",
-   "input": "ft_toupper(c) for every c in [256, 511]",
+   "input": "ft_toupper(c) for -1, 128, 200, 255, 256, 1000",
    "kw": [
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 595,
+   "line": 594,
    "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
    "num": 8,
    "ref": "man 3 toupper",

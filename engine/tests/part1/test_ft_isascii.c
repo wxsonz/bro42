@@ -25,14 +25,20 @@ static void	case_05(t_ctx *c) { is_case(c, 128); }
 /* The sweep. isascii is the one function in this family with no undefined
 ** region at all - isascii(c) is c >= 0 && c <= 127 for every int there is,
 ** not just EOF and unsigned char - so unlike ft_isalpha's pair (section 1)
-** there is no second, unscored case: there is nowhere left that is not
-** graded. The scored range is widened well past [-1, 255] accordingly, to
-** [-256, 511], so the sweep also proves the boundary holds for values a
-** naive bitmask (e.g. c & ~0x7f on a negative c) is most likely to get
-** wrong. */
+** isascii is the one function in this family that is defined for EVERY int -
+** it is simply c >= 0 && c <= 127 - so the notable-int row beside the grid is
+** SCORED here, where for isalpha and friends it can only be shown. */
 static void	case_06(t_ctx *c)
 {
-	bro_sweep_class(c->out, ft_isascii, isascii, -256, 511, 1);
+	bro_sweep_class(c->out, ft_isascii, isascii, 0, 127, 1);
+}
+
+static const long	g_ints[] = {-1, 128, 200, 255, 256, 1000};
+
+static void	case_07(t_ctx *c)
+{
+	bro_sweep_ints(c->out, ft_isascii, isascii, g_ints,
+			sizeof(g_ints) / sizeof(*g_ints), 1);
 }
 
 static const t_case	g_cases[] = {
@@ -41,7 +47,8 @@ static const t_case	g_cases[] = {
 {3, "ft_isascii('A')", BRO_ORACLE, case_03},
 {4, "ft_isascii(-1)", BRO_ORACLE, case_04},
 {5, "ft_isascii(128)", BRO_ORACLE, case_05},
-{6, "ft_isascii(c) for every c in [-256, 511]", BRO_ORACLE, case_06},
+{6, "ft_isascii(c) for every c in [0, 127]", BRO_ORACLE, case_06},
+{7, "ft_isascii(c) for -1, 128, 200, 255, 256, 1000", BRO_ORACLE, case_07},
 };
 
 const t_suite	g_suite_ft_isascii = {

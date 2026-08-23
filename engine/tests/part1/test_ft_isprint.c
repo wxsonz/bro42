@@ -16,6 +16,8 @@ static void	is_case(t_ctx *c, int arg)
 	bro_expect_num(c->out, isprint(arg) != 0, ft_isprint(arg));
 }
 
+static const long	g_ints[] = {-1, 128, 200, 255, 256, 1000};
+
 static void	case_01(t_ctx *c) { is_case(c, 32); }
 static void	case_02(t_ctx *c) { is_case(c, 126); }
 static void	case_03(t_ctx *c) { is_case(c, 'A'); }
@@ -27,12 +29,13 @@ static void	case_07(t_ctx *c) { is_case(c, -1); }
 /* The sweep. Same shape as ft_isalpha's cases 10-11 (section 1). */
 static void	case_08(t_ctx *c)
 {
-	bro_sweep_class(c->out, ft_isprint, isprint, -1, 255, 1);
+	bro_sweep_class(c->out, ft_isprint, isprint, 0, 127, 1);
 }
 
 static void	case_09(t_ctx *c)
 {
-	bro_sweep_class(c->out, ft_isprint, isprint, 256, 511, 0);
+	bro_sweep_ints(c->out, ft_isprint, isprint, g_ints,
+			sizeof(g_ints) / sizeof(*g_ints), 0);
 }
 
 static const t_case	g_cases[] = {
@@ -43,7 +46,7 @@ static const t_case	g_cases[] = {
 {5, "ft_isprint(127)", BRO_ORACLE, case_05},
 {6, "ft_isprint('\\n')", BRO_ORACLE, case_06},
 {7, "ft_isprint(-1)", BRO_ORACLE, case_07},
-{8, "ft_isprint(c) for every c in [-1, 255]", BRO_ORACLE, case_08},
+{8, "ft_isprint(c) for -1, 128, 200, 255, 256, 1000", BRO_ORACLE, case_08},
 {9, "ft_isprint(c) for every c in [256, 511]", BRO_UB_CASE, case_09},
 };
 

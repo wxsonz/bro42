@@ -89,12 +89,26 @@ static void	emit_sweep(const t_result *r)
 
 	if (r->sweep_n == 0)
 		return ;
-	printf(",\"sweep\":{\"base\":%ld,\"scored\":%s,\"bits\":[",
-		r->sweep_base, r->sweep_scored ? "true" : "false");
+	printf(",\"sweep\":{\"scored\":%s,\"values\":[",
+		r->sweep_scored ? "true" : "false");
+	i = 0;
+	while (i < r->sweep_n)
+	{
+		printf("%s%ld", i ? "," : "", r->sweep_val[i]);
+		i++;
+	}
+	printf("],\"got\":[");
 	i = 0;
 	while (i < r->sweep_n)
 	{
 		printf("%s%s", i ? "," : "", r->sweep[i] ? "true" : "false");
+		i++;
+	}
+	printf("],\"want\":[");
+	i = 0;
+	while (i < r->sweep_n)
+	{
+		printf("%s%s", i ? "," : "", r->sweep_ref[i] ? "true" : "false");
 		i++;
 	}
 	printf("]}");
