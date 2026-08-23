@@ -16,6 +16,20 @@ static void	is_case(t_ctx *c, int arg)
 	bro_expect_num(c->out, isalpha(arg) != 0, ft_isalpha(arg));
 }
 
+/* The sweep. Nine hand-picked bytes prove nine bytes; this walks the whole
+** defined domain and shows the SHAPE of any disagreement - "every byte above
+** 127" and "one byte past z" are different bugs that a handful of samples
+** report identically. */
+static void	case_10(t_ctx *c)
+{
+	bro_sweep_class(c->out, ft_isalpha, isalpha, -1, 255, 1);
+}
+
+static void	case_11(t_ctx *c)
+{
+	bro_sweep_class(c->out, ft_isalpha, isalpha, 256, 511, 0);
+}
+
 static void	case_01(t_ctx *c) { is_case(c, 'a'); }
 static void	case_02(t_ctx *c) { is_case(c, 'Z'); }
 static void	case_03(t_ctx *c) { is_case(c, '0'); }
@@ -36,6 +50,8 @@ static const t_case	g_cases[] = {
 {7, "ft_isalpha('Z' + 1)", BRO_ORACLE, case_07},
 {8, "ft_isalpha(-1)", BRO_ORACLE, case_08},
 {9, "ft_isalpha(128)", BRO_ORACLE, case_09},
+{10, "ft_isalpha(c) for every c in [-1, 255]", BRO_ORACLE, case_10},
+{11, "ft_isalpha(c) for every c in [256, 511]", BRO_UB_CASE, case_11},
 };
 
 const t_suite	g_suite_ft_isalpha = {

@@ -190,7 +190,16 @@ MUTANTS = {
         # ft_isalnum:6 goes too, because the reference implements isalnum as
         # isalpha || isdigit - so the bug propagates. That is the union
         # property the spec's `why` describes, showing up as a test result.
-        {"ft_isalpha:5": "KO", "ft_isalpha:7": "KO", "ft_isalnum:6": "KO"},
+        # ft_isalpha:10 is the full [-1, 255] sweep, so it necessarily sees
+        # anything a single boundary case sees. It is listed rather than
+        # excluded: a sweep that did NOT move here would mean the sweep had
+        # stopped covering the boundary bytes.
+        # ft_isalnum:8 is isalnum's own [-1, 255] sweep (added alongside
+        # ft_isalpha's), and it inherits both the sweep coverage AND the
+        # union propagation at once - confirmed by actually running this
+        # mutant, not assumed from the other three.
+        {"ft_isalpha:5": "KO", "ft_isalpha:7": "KO", "ft_isalpha:10": "KO",
+         "ft_isalnum:6": "KO", "ft_isalnum:8": "KO"},
     ),
     # atoi that skips only ' ' instead of all six isspace characters. Exercises
     # the oracle-compared scalar path with a bug students actually write.

@@ -453,6 +453,41 @@ function rollback(c) {
   return d;
 }
 
+/* A range sweep: one block per integer tested, laid out in rows of 32 so the
+   ASCII structure is legible - control bytes, then printable, then the high
+   half each occupy whole rows. The shape of a failure is the point: a solid
+   red band reads as "a whole range is wrong", scattered red as "a table is
+   wrong", and neither is visible from a first-divergence message alone. */
+function sweep(c) {
+  if (!c.sweep) return null;
+  const d = el("div", "sweep");
+  const { base, bits, scored } = c.sweep;
+  const head = el("div", "muted small");
+  const bad = bits.filter(b => !b).length;
+  head.textContent = scored
+    ? `${bits.length} values from ${base} to ${base + bits.length - 1}` +
+      (bad ? ` · ${bad} disagree` : " · all agree")
+    : `${bits.length} values from ${base} to ${base + bits.length - 1}` +
+      ` · not graded · ${bits.filter(Boolean).length} returned true`;
+  d.appendChild(head);
+
+  const grid = el("div", "blocks");
+  bits.forEach((ok, i) => {
+    const v = base + i;
+    const b = el("span", "blk " + (scored ? (ok ? "y" : "n") : (ok ? "t" : "f")));
+    b.title = scored
+      ? `${v}${printable(v)} — ${ok ? "matches" : "DIFFERS"}`
+      : `${v}${printable(v)} — returned ${ok ? "true" : "false"}`;
+    grid.appendChild(b);
+  });
+  d.appendChild(grid);
+  return d;
+}
+
+function printable(v) {
+  return (v >= 32 && v < 127) ? ` '${String.fromCharCode(v)}'` : "";
+}
+
 /* ------------------------------------------------------------ case card */
 function caseCard(c) {
   const d = el("details", "card");
@@ -467,6 +502,7 @@ function caseCard(c) {
   const b = el("div", "body");
   const g = byteGrid(c); if (g) b.appendChild(g);
   const r = rollback(c); if (r) b.appendChild(r);
+  const sw = sweep(c); if (sw) b.appendChild(sw);
   if (c.expected !== undefined && !c.expected_bytes)
     b.appendChild(el("div", "mono small", `expected ${c.expected}   got ${c.actual}`));
   const kv = el("div", "kv");

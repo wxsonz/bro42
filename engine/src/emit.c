@@ -83,6 +83,23 @@ static void	emit_alloc(const t_result *r)
 	printf("]");
 }
 
+static void	emit_sweep(const t_result *r)
+{
+	size_t	i;
+
+	if (r->sweep_n == 0)
+		return ;
+	printf(",\"sweep\":{\"base\":%ld,\"scored\":%s,\"bits\":[",
+		r->sweep_base, r->sweep_scored ? "true" : "false");
+	i = 0;
+	while (i < r->sweep_n)
+	{
+		printf("%s%s", i ? "," : "", r->sweep[i] ? "true" : "false");
+		i++;
+	}
+	printf("]}");
+}
+
 static const char	*kind_name(t_evidence k)
 {
 	static const char	*names[] = {
@@ -108,6 +125,7 @@ void	bro_emit(const t_suite *s, const t_case *c, const t_result *r,
 	json_str(r->msg);
 	emit_evidence(r);
 	emit_alloc(r);
+	emit_sweep(r);
 	printf("}\n");
 	fflush(stdout);
 }

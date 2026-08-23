@@ -127,3 +127,110 @@ void	bro_expect_offset(t_result *r, const void *base, const void *expected,
 		bro_fail(r, "expected &s[%lld], got &s[%lld]",
 			r->expected_num, r->actual_num);
 }
+
+/*
+** Walk [lo, hi] and record one bit per value. See bro.h for why `scored`
+** exists: outside [-1, 255] the libc oracle is itself undefined, so there is
+** nothing to be right or wrong against and the sweep only reports.
+**
+** The whole range is walked even after the first mismatch - the point of a
+** sweep is the SHAPE of the disagreement. "every byte above 127" and "just
+** the byte after z" are different bugs, and a loop that stopped at the first
+** one would make them look identical.
+*/
+void	bro_sweep_class(t_result *r, int (*fn)(int), int (*ref)(int),
+		long lo, long hi, int scored)
+{
+	long	v;
+	int	got;
+	int	want;
+	long	bad;
+
+	bad = -1;
+	if (hi - lo + 1 > (long)BRO_SWEEP_MAX)
+		return (bro_fail(r, "range [%ld, %ld] needs %ld slots, "
+				"BRO_SWEEP_MAX is %d - widen it rather than "
+				"testing less than the case claims",
+				lo, hi, hi - lo + 1, BRO_SWEEP_MAX));
+	r->sweep_base = lo;
+	r->sweep_n = 0;
+	r->sweep_scored = scored;
+	v = lo;
+	while (v <= hi && r->sweep_n < BRO_SWEEP_MAX)
+	{
+		got = fn((int)v);
+		want = scored && ref((int)v) ? 1 : 0;
+		if (!scored)
+			r->sweep[r->sweep_n] = (unsigned char)(got != 0);
+		else
+			r->sweep[r->sweep_n] = (unsigned char)(got == want);
+		if (scored && got != want && bad < 0)
+			bad = v;
+		r->sweep_n++;
+		v++;
+	}
+	if (!scored)
+		return (bro_mark_ub(r, "%ld values in [%ld, %ld] - outside the "
+				"range C defines, so nothing here is graded",
+				(long)r->sweep_n, lo, hi));
+	if (bad >= 0)
+		bro_fail(r, "at %ld: expected %d, got %d", bad,
+			ref((int)bad) ? 1 : 0, fn((int)bad));
+}
+
+/*
+** Same walk as bro_sweep_class, but for functions that transform a value
+** instead of classifying one - ft_toupper and ft_tolower return the byte
+** itself, so comparing against ref as a boolean would call 'a' -> 'A' a
+** match against 'a' -> 'a', which is exactly the bug this exists to catch.
+**
+** scored: the recorded bit is exact value equality with ref(v), not
+** truthiness, and the failure message reports the values themselves.
+**
+** unscored: the recorded bit is whether the value passed through UNCHANGED
+** (got == v). These functions promise pass-through for anything outside
+** their conversion range, so "unchanged" is the meaningful default to show
+** the shape of - a band where that flips to "changed" is a band where an
+** unbounded comparison started matching bytes it should not have.
+*/
+void	bro_sweep_map(t_result *r, int (*fn)(int), int (*ref)(int),
+			long lo, long hi, int scored)
+{
+	long	v;
+	int	got;
+	int	want;
+	long	bad;
+
+	bad = -1;
+	if (hi - lo + 1 > (long)BRO_SWEEP_MAX)
+		return (bro_fail(r, "range [%ld, %ld] needs %ld slots, "
+				"BRO_SWEEP_MAX is %d - widen it rather than "
+				"testing less than the case claims",
+				lo, hi, hi - lo + 1, BRO_SWEEP_MAX));
+	r->sweep_base = lo;
+	r->sweep_n = 0;
+	r->sweep_scored = scored;
+	v = lo;
+	while (v <= hi && r->sweep_n < BRO_SWEEP_MAX)
+	{
+		got = fn((int)v);
+		if (!scored)
+			r->sweep[r->sweep_n] = (unsigned char)(got == (int)v);
+		else
+		{
+			want = ref((int)v);
+			r->sweep[r->sweep_n] = (unsigned char)(got == want);
+			if (got != want && bad < 0)
+				bad = v;
+		}
+		r->sweep_n++;
+		v++;
+	}
+	if (!scored)
+		return (bro_mark_ub(r, "%ld values in [%ld, %ld] - outside the "
+				"range C defines, so nothing here is graded",
+				(long)r->sweep_n, lo, hi));
+	if (bad >= 0)
+		bro_fail(r, "at %ld: expected %d, got %d", bad,
+			ref((int)bad), fn((int)bad));
+}

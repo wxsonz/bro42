@@ -24,6 +24,17 @@ static void	case_05(t_ctx *c) { is_case(c, 127); }
 static void	case_06(t_ctx *c) { is_case(c, '\n'); }
 static void	case_07(t_ctx *c) { is_case(c, -1); }
 
+/* The sweep. Same shape as ft_isalpha's cases 10-11 (section 1). */
+static void	case_08(t_ctx *c)
+{
+	bro_sweep_class(c->out, ft_isprint, isprint, -1, 255, 1);
+}
+
+static void	case_09(t_ctx *c)
+{
+	bro_sweep_class(c->out, ft_isprint, isprint, 256, 511, 0);
+}
+
 static const t_case	g_cases[] = {
 {1, "ft_isprint(32)", BRO_ORACLE, case_01},
 {2, "ft_isprint(126)", BRO_ORACLE, case_02},
@@ -32,6 +43,8 @@ static const t_case	g_cases[] = {
 {5, "ft_isprint(127)", BRO_ORACLE, case_05},
 {6, "ft_isprint('\\n')", BRO_ORACLE, case_06},
 {7, "ft_isprint(-1)", BRO_ORACLE, case_07},
+{8, "ft_isprint(c) for every c in [-1, 255]", BRO_ORACLE, case_08},
+{9, "ft_isprint(c) for every c in [256, 511]", BRO_UB_CASE, case_09},
 };
 
 const t_suite	g_suite_ft_isprint = {

@@ -139,3 +139,24 @@ input[type=range] { width: 100%; accent-color: var(--accent); margin: 8px 0 4px;
   color: var(--warn, #b8860b);
   cursor: help;
 }
+
+/* Range sweep: one block per integer. 32 per row so the ASCII bands line up. */
+.sweep { margin: 6px 0; }
+.sweep .blocks {
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  gap: 1px;
+  margin-top: 4px;
+  max-width: 420px;
+}
+.sweep .blk {
+  aspect-ratio: 1;
+  border-radius: 1px;
+  background: var(--dim);
+  opacity: .25;
+  cursor: help;
+}
+.sweep .blk.y { background: var(--ok); opacity: .45; }   /* agrees          */
+.sweep .blk.n { background: var(--bad); opacity: 1; }    /* differs         */
+.sweep .blk.t { background: var(--accent, #6aa9ff); opacity: .8; } /* true  */
+.sweep .blk.f { background: var(--dim); opacity: .2; }   /* false, ungraded */

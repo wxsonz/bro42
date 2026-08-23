@@ -80,6 +80,11 @@ typedef struct s_buf
 # define BRO_MSG_MAX		256
 # define BRO_INJECT_MAX		128
 # define BRO_CAPTURE_MAX	512
+/* A classification sweep walks every value in a range and records one bit
+** per value. 768 covers [-256, 511] in one case, which is the widest band
+** any suite currently asks for - ft_isascii's scored sweep, since isascii is
+** the one function in this family with no undefined region to stop at. */
+# define BRO_SWEEP_MAX		768
 
 typedef enum e_evidence
 {
@@ -129,6 +134,15 @@ typedef struct s_result
 	size_t		rollback_n;
 	char		captured[BRO_CAPTURE_MAX];
 	size_t		captured_len;
+	/* Per-value results of a range sweep. sweep[i] describes the integer
+	** sweep_base + i: 1 = agreed with the oracle (or, for an unscored
+	** class sweep, 1 = the function returned true; for an unscored map
+	** sweep, 1 = the value came back unchanged). Same shape as
+	** rollback[]. */
+	unsigned char	sweep[BRO_SWEEP_MAX];
+	size_t		sweep_n;
+	long		sweep_base;
+	int		sweep_scored;
 }	t_result;
 
 void	bro_fail(t_result *r, const char *fmt, ...);
@@ -139,6 +153,42 @@ void	bro_expect_bytes(t_result *r, const void *expected, const void *actual,
 void	bro_expect_offset(t_result *r, const void *base, const void *expected,
 			const void *actual);
 void	bro_mark_ub(t_result *r, const char *fmt, ...);
+
+/*
+** Sweep a classification function across [lo, hi] instead of poking a handful
+** of hand-picked bytes. `fn` is the student's, `ref` the libc oracle.
+**
+** scored != 0: every value is compared against ref and must match exactly 1
+** or 0 (Subject IV.2 pins the return values, not merely truthiness). Only
+** valid where ref itself is defined - C leaves isalpha and friends undefined
+** outside EOF and unsigned char, so a scored sweep must stay in [-1, 255].
+**
+** scored == 0: nothing is asserted. The sweep runs, records what came back,
+** and the case is marked UB so it shows in the report without being scored -
+** the shape of an answer nobody specified is worth SEEING, never grading.
+*/
+void	bro_sweep_class(t_result *r, int (*fn)(int), int (*ref)(int),
+			long lo, long hi, int scored);
+
+/*
+** Sibling of bro_sweep_class for functions that return a transformed VALUE
+** rather than a boolean classification (ft_toupper, ft_tolower). Comparing
+** fn(v) and ref(v) as booleans would be wrong here - 'a' and 'A' are both
+** non-zero, so a toupper that returned the input untouched would look
+** "correct" to bro_sweep_class on every letter it should have changed.
+** bro_sweep_map compares the returned values themselves instead.
+**
+** scored != 0: every value must produce exactly ref(v). Same domain rule as
+** bro_sweep_class - only valid where ref itself is defined, [-1, 255].
+**
+** scored == 0: nothing is asserted. The bit recorded is whether the value
+** came back UNCHANGED (fn(v) == v) - the "pass-through" case these functions
+** promise for anything they do not convert, so the sweep's shape shows
+** exactly where an unbounded implementation starts transforming bytes it
+** was never told to.
+*/
+void	bro_sweep_map(t_result *r, int (*fn)(int), int (*ref)(int),
+			long lo, long hi, int scored);
 
 /*
 ** --------------------------------------------------------------- t_ctx (A1)
