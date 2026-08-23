@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Generate bro/data/cases.json from _dev/SPEC_MICRO.md.
+"""Generate bro/data/cases.json from _dev/plan/rank00/libft-01-cases.md.
 
 The spec is the single authored source for case prose (decision A14): why / fix /
 kw / ref are written once, there, and this turns them into the sidecar the engine's
 NDJSON output is joined against at render time.
 
-Grammar (see "How to read this document" in SPEC_MICRO.md):
+Grammar (see "How to read this document" in plan/rank00/libft-01-cases.md):
 
     ### <n>. `ft_name`
     - **Prototype:** ... **Part** 1 . **Level** 3 . **Tier** T0
@@ -29,8 +29,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "_dev" / "SPEC_MICRO.md"
-LEARN = ROOT / "_dev" / "SPEC_LEARNING.md"
+SPEC = ROOT / "_dev" / "plan/rank00/libft-01-cases.md"
+LEARN = ROOT / "_dev" / "plan/rank00/libft-02-learning.md"
 OUT = Path(__file__).resolve().parent / "cases.json"
 
 FN_RE = re.compile(r"^### \d+\. `(ft_\w+)`")
@@ -296,7 +296,7 @@ def main():
 
     if not check_only:
         payload = {
-            "source": "_dev/SPEC_MICRO.md",
+            "source": "_dev/plan/rank00/libft-01-cases.md",
             "functions": functions,
             "cases": cases,
         }

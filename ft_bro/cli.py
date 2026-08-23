@@ -219,7 +219,7 @@ def cmd_clean(target):
 
 
 def cmd_next(target, st, binary, info):
-    """`bro next` (SPEC_LEARNING.md): the first unwritten function in the
+    """`bro next` (plan/rank00/libft-02-learning.md): the first unwritten function in the
     progressive track whose prerequisites are already written, with its
     concept cards."""
     present = info.get("present") or set()
@@ -252,7 +252,7 @@ def cmd_next(target, st, binary, info):
 
 
 def cmd_debug(target, st, binary, argv_rest):
-    """`bro debug <fn> <id>` (design/06_TERMINAL_UX.md): the gdb and
+    """`bro debug <fn> <id>` (plan/platform/06-terminal-ux.md): the gdb and
     valgrind command lines that reproduce exactly this case."""
     if len(argv_rest) < 2:
         sys.stderr.write("bro: usage: bro debug <function> <id>\n")

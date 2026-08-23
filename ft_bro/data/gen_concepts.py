@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate ft_bro/data/concepts.json from _dev/SPEC_LEARNING.md.
+"""Generate ft_bro/data/concepts.json from _dev/plan/rank00/libft-02-learning.md.
 
 Same principle as gen_cases.py (decision A14): the teaching content is authored
 once, in the spec, and the tool reads it. A concept card that lived in both
@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "_dev" / "SPEC_LEARNING.md"
+SPEC = ROOT / "_dev" / "plan/rank00/libft-02-learning.md"
 OUT = Path(__file__).resolve().parent / "concepts.json"
 
 CARD_RE = re.compile(r"^## \d+ · `([a-z-]+)`\s*$")
@@ -167,7 +167,7 @@ def main():
         return 1
     if not check_only:
         OUT.write_text(json.dumps(
-            {"source": "_dev/SPEC_LEARNING.md", "concepts": cards,
+            {"source": "_dev/plan/rank00/libft-02-learning.md", "concepts": cards,
              "defense": defense}, indent=1, sort_keys=True) + "\n")
         print(f"wrote {OUT.relative_to(ROOT)}")
     else:

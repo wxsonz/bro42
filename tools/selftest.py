@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The handoff gate (design/09_SELFTEST.md, decision B15).
+"""The handoff gate (plan/platform/09-selftest.md, decision B15).
 
 A tester's failure mode is silent: it reports 43/43 forever and the student
 finds out at evaluation. So the only question worth asking is whether it
@@ -229,7 +229,7 @@ def check_static():
 def check_dashboard():
     """A2: the page must be self-contained. It has to render on a cluster
     machine with no internet and be safe to hand to a peer, and the previous
-    SPEC_FRONTEND revision promised a file:// mode that could not work."""
+    revision of plan/platform/07-dashboard.md promised a file:// mode that could not work."""
     target = REFERENCE
     subprocess.run([str(ROOT / "bro"), "--target", str(target), "--no-web",
                     "--no-history"], capture_output=True, cwd=str(ROOT))
@@ -276,8 +276,14 @@ def check_dashboard():
 
 
 def check_tier_agreement():
-    """cases.json (generated from SPEC_MICRO.md) vs the table in 04_TESTDESIGN.md."""
-    doc = (ROOT / "_dev" / "design" / "04_TESTDESIGN.md").read_text()
+    """cases.json (generated from plan/rank00/libft-01-cases.md) vs the hand-
+    maintained tier table in plan/platform/04-testdesign.md.
+
+    That table stays hand-written on purpose. rank00/libft-03-inventory.md also
+    lists every tier, but it is GENERATED from cases.json - checking one against
+    the other would compare cases.json with itself and pass no matter what.
+    """
+    doc = (ROOT / "_dev" / "plan" / "platform" / "04-testdesign.md").read_text()
     declared = {}
     for row in re.finditer(r"^\| \*\*T(\d)\*\* \|.*?\| (.+?) — \*\*\d+\*\* \|$",
                            doc, re.M):
@@ -285,9 +291,9 @@ def check_tier_agreement():
         for fn in re.findall(r"`(ft_\w+)`", row.group(2)):
             declared[fn] = tier
     if not declared:
-        return ["could not parse the tier table out of 04_TESTDESIGN.md"]
+        return ["could not parse the tier table out of plan/platform/04-testdesign.md"]
     funcs = json.loads((ROOT / "ft_bro" / "data" / "cases.json").read_text())["functions"]
-    bad = [f"{fn}: spec says T{m['tier']}, 04_TESTDESIGN says T{declared[fn]}"
+    bad = [f"{fn}: spec says T{m['tier']}, 04-testdesign says T{declared[fn]}"
            for fn, m in sorted(funcs.items())
            if fn in declared and declared[fn] != m["tier"]]
     unlisted = sorted(set(funcs) - set(declared))

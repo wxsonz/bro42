@@ -1,4 +1,4 @@
-"""`bro --serve` (design/07_WEB_UX.md).
+"""`bro --serve` (plan/platform/07-dashboard.md).
 
 A local dashboard server whose only purpose is to give the ⚡ Re-run buttons
 something to talk to - everything else the dashboard shows works from the
@@ -59,7 +59,7 @@ def _run_records(target, only=None):
 
 
 def do_run(target, filt=None):
-    """Mirrors cli.py's `restricted` distinction (04_TESTDESIGN.md /
+    """Mirrors cli.py's `restricted` distinction (plan/platform/04-testdesign.md /
     03_ORCHESTRATOR.md): selecting one function is a view over a full run,
     not a suite of its own, so it does not get to redefine history."""
     existing = _existing_report(target)

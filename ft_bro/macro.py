@@ -1,7 +1,7 @@
 """The macro suite: everything about a Libft that is not a function's behaviour.
 
-Checks come from _dev/SPEC_MACRO.md, which states WHAT is asserted and cites the
-subject clause. The methods here are design/08_MACRO.md's, and three of them are
+Checks come from _dev/plan/platform/08-macro.md, which states WHAT is asserted and cites the
+subject clause. The methods here are plan/platform/08-macro.md's, and three of them are
 deliberately not the obvious ones:
 
   B12  flags are read from the real compilation command lines
@@ -318,7 +318,7 @@ def check_prototypes(target, work, out):
     evaluator's main does.
 
     So: compile each source against a header generated from the prototypes in
-    SPEC_MICRO.md, with the student's own header out of the include path, and
+    plan/rank00/libft-01-cases.md, with the student's own header out of the include path, and
     report the conflicts.
     """
     from . import build
@@ -518,15 +518,15 @@ def check_readme(target, out):
 
 # ---------------------------------------------------------- pitfalls scanner
 #
-# SPEC_LEARNING.md's "Common pitfalls (P1-P5)", implemented per
-# design/08_MACRO.md's "Pitfalls scanner" section. These are heuristics over
+# libft-02-learning.md's "Common pitfalls (P1-P5)", implemented per
+# plan/platform/08-macro.md's "Pitfalls scanner" section. These are heuristics over
 # the student's own source, not build checks: every one of them can produce
 # a false positive, so every finding is sev="warn" (never scored, see
 # render.py - only "FAIL" checks ever count toward an exit code), phrased as
 # a question rather than a verdict, and named the file/line it came from.
 #
 # Conservative by construction: each scan is scoped as narrowly as the table
-# in SPEC_LEARNING.md describes it (a named function, a specific file), so a
+# in plan/rank00/libft-02-learning.md describes it (a named function, a specific file), so a
 # heuristic that is merely broad cannot fire on code the narrower rule was
 # never about. Tested against _dev/reference/libft42git, which is clean -
 # see the generator/selftest notes for what that run actually showed.
@@ -676,7 +676,7 @@ def scan_p2(path, text):
 def scan_p3(path, text):
     """P3: byte subtraction in a *comparison* function with no
     `unsigned char` anywhere in it. Scoped to functions whose name contains
-    "cmp" (SPEC_LEARNING.md: "in a comparison function") and to dereference/
+    "cmp" (plan/rank00/libft-02-learning.md: "in a comparison function") and to dereference/
     index subtraction specifically, so plain pointer arithmetic like
     `end - start` - a different, legitimate idea - never matches."""
     out = []

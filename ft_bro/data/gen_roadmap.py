@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """Generate ft_bro/data/roadmap.json from the progressive track in
-_dev/SPEC_LEARNING.md.
+_dev/plan/rank00/libft-02-learning.md.
 
 Same principle as gen_cases.py / gen_concepts.py (decision A14): the order to
 write functions in is authored once, as prose and ASCII-art in
-SPEC_LEARNING.md, and this turns it into the sidecar `bro next` walks.
+plan/rank00/libft-02-learning.md, and this turns it into the sidecar `bro next` walks.
 
 NOTE — level / part / tier for a function already come from cases.json
-(generated from SPEC_MICRO.md's `**Part** N . **Level** N . **Tier** TN`
-line). This file carries only the one thing SPEC_MICRO cannot express:
+(generated from libft-01-cases.md's `**Part** N . **Level** N . **Tier** TN`
+line). This file carries only the one thing libft-01-cases.md cannot express:
 *prerequisites* — which other functions a student should have already
 written. `level` is duplicated here too (see below), purely so `bro next`
 does not have to load two sidecars to explain itself, but cases.json remains
 the source of truth for it and this generator cross-checks against it.
 
-Grammar (see "Progressive track" in SPEC_LEARNING.md):
+Grammar (see "Progressive track" in plan/rank00/libft-02-learning.md):
 
     Level 2 · Pointer traversal                       read memory, write nothing
     ├── ft_strlen → ft_strchr → ft_strrchr → ft_memchr
@@ -62,7 +62,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "_dev" / "SPEC_LEARNING.md"
+SPEC = ROOT / "_dev" / "plan/rank00/libft-02-learning.md"
 CASES = ROOT / "ft_bro" / "data" / "cases.json"
 OUT = Path(__file__).resolve().parent / "roadmap.json"
 
@@ -80,7 +80,7 @@ def parse_track(text):
     """Returns {level: [[fn, fn, ...], ...]} — chains, in source order."""
     m = BLOCK_RE.search(text)
     if not m:
-        raise SpecError("no fenced progressive-track block found in SPEC_LEARNING.md")
+        raise SpecError("no fenced progressive-track block found in plan/rank00/libft-02-learning.md")
     levels = {}
     level = None
     for line in m.group(1).splitlines():
@@ -141,7 +141,7 @@ def validate(levels, functions):
     if len(functions) != 43:
         errors.append(f"expected 43 functions in the track, found {len(functions)}")
 
-    # Cross-check against cases.json's own Level annotation (SPEC_MICRO), so
+    # Cross-check against cases.json's own Level annotation (libft-01-cases.md), so
     # the two specs cannot silently disagree about where a function sits.
     if CASES.is_file():
         cases_meta = json.loads(CASES.read_text()).get("functions", {})
@@ -149,8 +149,8 @@ def validate(levels, functions):
             other = cases_meta.get(fn, {}).get("level")
             if other is not None and other != meta["level"]:
                 errors.append(
-                    f"{fn}: SPEC_LEARNING's track puts it in level {meta['level']}, "
-                    f"SPEC_MICRO's Level annotation says {other}")
+                    f"{fn}: libft-02-learning.md's track puts it in level {meta['level']}, "
+                    f"libft-01-cases.md's Level annotation says {other}")
     return errors
 
 
@@ -194,7 +194,8 @@ def main():
         return 1
 
     if not check_only:
-        payload = {"source": "_dev/SPEC_LEARNING.md", "functions": functions}
+        payload = {"source": "_dev/plan/rank00/libft-02-learning.md",
+                   "functions": functions}
         OUT.write_text(json.dumps(payload, indent=1, sort_keys=True) + "\n")
         print(f"wrote {OUT.relative_to(ROOT)}")
     else:

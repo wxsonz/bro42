@@ -378,5 +378,5 @@
    "question": "Your `ft_strchr` returns a pointer into my string. Is that safe?"
   }
  ],
- "source": "_dev/SPEC_LEARNING.md"
+ "source": "_dev/plan/rank00/libft-02-learning.md"
 }

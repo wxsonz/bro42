@@ -1,7 +1,7 @@
 """Build the target, audit its symbols, link the engine against it.
 
 Two of the reference implementation's defects live here (see the audit in
-design/01_DECISIONS.md):
+plan/platform/01-decisions.md):
 
   #5  its launcher ran `find -maxdepth 3 -name '*.c'` and ar'd everything it
       found, sweeping up the student's own main.c -> duplicate `main`, link
@@ -81,7 +81,7 @@ def find_archive(target):
 
 
 def synth_header(out_dir):
-    """A stand-in libft.h, built from the prototypes in SPEC_MICRO.md.
+    """A stand-in libft.h, built from the prototypes in plan/rank00/libft-01-cases.md.
 
     A repository can have perfectly good ft_*.c files and no header - the
     student has not written it yet, or it lives somewhere else. Refusing to

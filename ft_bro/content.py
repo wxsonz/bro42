@@ -1,7 +1,7 @@
 """Join engine facts to spec prose by fn:id.
 
 The engine emits {"fn":..,"id":..,"status":..} and nothing else. why / fix /
-kw / ref come from cases.json, generated from _dev/SPEC_MICRO.md (A14), so
+kw / ref come from cases.json, generated from _dev/plan/rank00/libft-01-cases.md (A14), so
 rewording an explanation rebuilds nothing.
 """
 
@@ -40,7 +40,7 @@ def defense_bank():
 
 
 def roadmap():
-    """{fn: {"level":, "prereqs":[...], "order":}} - _dev/SPEC_LEARNING.md's
+    """{fn: {"level":, "prereqs":[...], "order":}} - _dev/plan/rank00/libft-02-learning.md's
     progressive track. Prerequisites only; level/part/tier for rendering
     come from cases.json (03_ORCHESTRATOR.md)."""
     return _load("roadmap", "gen_roadmap")["functions"]

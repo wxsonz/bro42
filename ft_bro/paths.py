@@ -2,7 +2,7 @@
 
 Decision A9: `make` creates .o and libft.a in their tree - that is their own
 build - and everything else lives here, so `git status` stays clean and bro
-cannot trip SPEC_MACRO section 1's "no unused files" check with its own output.
+cannot trip plan/platform/08-macro.md section 1's "no unused files" check with its own output.
 """
 
 import hashlib
@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SPEC_DIR = ROOT / "_dev"
+SPEC_DIR = ROOT / "_dev" / "plan"
 
 
 def cache_root():

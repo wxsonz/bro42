@@ -1,4 +1,4 @@
-"""Terminal output (design/06_TERMINAL_UX.md).
+"""Terminal output (plan/platform/06-terminal-ux.md).
 
 Quiet by default: the shape of the project, then only what is wrong, in full.
 Colour is decoration and never the only signal - every status carries a word.
@@ -179,7 +179,7 @@ def bar(passed, total, filled=7):
 
 def summary(records, st):
     """One bar per LEARNING LEVEL, not per function - a level is the unit a
-    student works through (SPEC_LEARNING progressive track)."""
+    student works through (libft-02-learning.md progressive track)."""
     by_level = {}
     for r in records:
         level = content.function(r["fn"]).get("level", 0)
@@ -445,7 +445,7 @@ def concept_card(slug, st, records=None):
 
 
 def next_block(fn, level, satisfied, st):
-    """`bro next` (SPEC_LEARNING.md): the chosen function and why it is ready.
+    """`bro next` (plan/rank00/libft-02-learning.md): the chosen function and why it is ready.
     The concept cards themselves are appended by the caller via concept_card -
     this renderer only draws the "here is what's next, and why" part."""
     out = ["", f"  {st.bold('next')} → {st.cyan(fn)}   {st.dim('level ' + str(level))}"]
@@ -488,7 +488,7 @@ def _pretty_path(p):
 
 
 def debug_block(fn, cid, desc, binary, st):
-    """`bro debug <fn> <id>` (design/06_TERMINAL_UX.md) - printed verbatim
+    """`bro debug <fn> <id>` (plan/platform/06-terminal-ux.md) - printed verbatim
     there, down to the column where the valgrind continuation line lines up
     under its own command name. Both command lines must be pasteable as-is,
     so no colour goes inside them even when colour is on."""

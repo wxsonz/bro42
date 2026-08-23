@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate mutant libfts: one copy of the reference with one seeded bug.
 
-design/09_SELFTEST.md, decision B15. A tester's failure mode is silent - it
+plan/platform/09-selftest.md, decision B15. A tester's failure mode is silent - it
 reports 43/43 forever - so the only way to know it works is to show it code
 that is wrong and check it says so, for the RIGHT case and the right reason.
 

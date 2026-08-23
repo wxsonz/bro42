@@ -2,7 +2,7 @@
 # ft_bro launcher. Deliberately tiny: resolve where we live, resolve the
 # target, hand off to Python. The reference implementation's launcher grew to
 # 140 lines of bash doing compilation logic and acquired a duplicate-main bug
-# in the process (design/03_ORCHESTRATOR.md).
+# in the process (plan/platform/03-orchestrator.md).
 
 set -euo pipefail
 

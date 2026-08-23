@@ -3,7 +3,7 @@
 Decision A2: the data is inlined at generation, so the page opens by
 double-click, works from file://, and can be handed to a peer as one file.
 
-The previous SPEC_FRONTEND revision specified a "Static Standalone Mode" where
+An earlier revision of plan/platform/07-dashboard.md specified a "Static Standalone Mode" where
 index.html fetches report.json - which cannot work, because fetch() against a
 file:// URL is CORS-blocked in every current browser. Inlining is what makes
 the offline promise real.
@@ -46,10 +46,10 @@ def build_report(records, target, checks=None, hist=None, hist_delta=None):
         sc = [c for c in s["cases"] if c["status"] not in UNSCORED]
         s["test_count"] = len(sc)
         s["pass_count"] = sum(1 for c in sc if c["status"] == "OK")
-        # SPEC_FRONTEND #2: the roadmap draws prerequisite edges so a red node
+        # plan/platform/07-dashboard.md #2: the roadmap draws prerequisite edges so a red node
         # whose prerequisite is also red sits visibly downstream of it. The
         # engine never sees this - it is the progressive track from
-        # SPEC_LEARNING.md, joined on here the same way why/fix/kw are.
+        # plan/rank00/libft-02-learning.md, joined on here the same way why/fix/kw are.
         s["prereqs"] = road.get(s["func_name"], {}).get("prereqs", [])
 
     counts = {}
