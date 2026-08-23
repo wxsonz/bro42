@@ -357,12 +357,31 @@ MUTANTS = {
     # ft_lstmap_bonus.c until it was fixed on 2026-08-23 (see selftest.py's
     # REFERENCE_KNOWN_BAD history). Seeded by removing exactly the del(content)
     # line the fix added, so it restores this defect and nothing else.
+    # ft_lstmap:8 moves too: dropping the call outright means del ran zero
+    # times, which case 8's own allocator-arming counter catches directly -
+    # it does not need the sweep at all to see this one.
     "lstmap_orphans_content": (
         "ft_lstmap_bonus.c",
         "\t\t\tdel(content);\n\t\t\tft_lstclear(&newl, del);",
         "\t\t\tft_lstclear(&newl, del);",
         {"ft_lstmap:1": "LEAK", "ft_lstmap:2": "LEAK", "ft_lstmap:3": "LEAK",
-         "ft_lstmap:4": "LEAK", "ft_lstmap:6": "LEAK", "ft_lstmap:7": "LEAK"},
+         "ft_lstmap:4": "LEAK", "ft_lstmap:6": "LEAK", "ft_lstmap:7": "LEAK",
+         "ft_lstmap:8": "KO"},
+    ),
+    # Route the orphaned content through free() instead of del(). Every byte
+    # is still released, so cases 1-7 (the BRO_INJECT sweep) see 0 bytes live
+    # and a non-NULL check that never fires - free(content) satisfies both of
+    # harness.c's check_injected() invariants exactly as well as del(content)
+    # does, and case-level assertions made during that sweep are discarded
+    # by check_injected() regardless, not just outvoted. Passed all of
+    # ft_lstmap:1-315 until case 8 was added, which arms the allocator
+    # itself outside BRO_INJECT specifically so its own bro_fail() is not
+    # the one being discarded.
+    "lstmap_free_not_del": (
+        "ft_lstmap_bonus.c",
+        "\t\t\tdel(content);\n\t\t\tft_lstclear(&newl, del);",
+        "\t\t\tfree(content);\n\t\t\tft_lstclear(&newl, del);",
+        {"ft_lstmap:8": "KO"},
     ),
     # free(content) instead of routing it through del: undetectable by a case
     # that only checks the node/content were released (free does that just as

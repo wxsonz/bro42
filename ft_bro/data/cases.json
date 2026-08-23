@@ -2251,6 +2251,26 @@
    "ref": "Subject IV.4",
    "why": "when node 3 fails, the two nodes already built are orphaned \u2014 and so are the contents f produced for them, which is why del is a parameter. Freeing the nodes but not their contents is the half-correct answer that leaks silently."
   },
+  "ft_lstmap:8": {
+   "desc": "",
+   "expected": "del was called, not a bare free",
+   "fix": "force the single node's own allocation to fail and confirm del \u2014 not a bare free \u2014 is what released the orphaned content",
+   "flags": [],
+   "fn": "ft_lstmap",
+   "group": "del is not a synonym for free",
+   "id": "ft_lstmap:8",
+   "input": "lstmap(n1, f, del), 2nd allocation forced to fail",
+   "kw": [
+    "malloc-rollback",
+    "list-ownership",
+    "function-pointer"
+   ],
+   "line": 1670,
+   "note": "",
+   "num": 8,
+   "ref": "Subject IV.4",
+   "why": "the sweep above only proves 0 bytes stay live when node 3 fails \u2014 and a rollback that frees the orphaned content directly, instead of handing it to del, leaves exactly as few bytes live. Byte count cannot tell the two apart; only whether del itself ran can."
+  },
   "ft_lstnew:1": {
    "desc": "",
    "expected": "node->content == p, the identical pointer",
