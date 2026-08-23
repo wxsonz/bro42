@@ -14,7 +14,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 894,
+   "line": 913,
    "note": "",
    "num": 1,
    "ref": "man 3 atoi",
@@ -34,7 +34,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 917,
+   "line": 936,
    "note": "",
    "num": 10,
    "ref": "man 3 atoi",
@@ -54,7 +54,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 918,
+   "line": 937,
    "note": "",
    "num": 11,
    "ref": "man 3 atoi",
@@ -74,7 +74,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 919,
+   "line": 938,
    "note": "",
    "num": 12,
    "ref": "man 3 atoi",
@@ -95,7 +95,7 @@
     "int-min",
     "return-contract"
    ],
-   "line": 928,
+   "line": 947,
    "note": "",
    "num": 13,
    "ref": "man 3 atoi",
@@ -116,7 +116,7 @@
     "int-min",
     "return-contract"
    ],
-   "line": 929,
+   "line": 948,
    "note": "",
    "num": 14,
    "ref": "man 3 atoi",
@@ -137,7 +137,7 @@
     "undefined-behavior",
     "int-min"
    ],
-   "line": 938,
+   "line": 957,
    "note": "glibc wraps. There is no correct answer to reproduce, and the subject does not ask you to detect overflow. Know that it is undefined and say so.",
    "num": 15,
    "ref": "man 3 atoi",
@@ -157,7 +157,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 895,
+   "line": 914,
    "note": "",
    "num": 2,
    "ref": "man 3 atoi",
@@ -177,7 +177,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 896,
+   "line": 915,
    "note": "",
    "num": 3,
    "ref": "man 3 atoi",
@@ -197,7 +197,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 897,
+   "line": 916,
    "note": "",
    "num": 4,
    "ref": "man 3 atoi",
@@ -217,7 +217,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 898,
+   "line": 917,
    "note": "",
    "num": 5,
    "ref": "man 3 atoi",
@@ -237,7 +237,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 899,
+   "line": 918,
    "note": "",
    "num": 6,
    "ref": "man 3 atoi",
@@ -257,7 +257,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 900,
+   "line": 919,
    "note": "",
    "num": 7,
    "ref": "man 3 atoi",
@@ -277,7 +277,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 908,
+   "line": 927,
    "note": "",
    "num": 8,
    "ref": "man 3 atoi",
@@ -297,7 +297,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 916,
+   "line": 935,
    "note": "",
    "num": 9,
    "ref": "man 3 atoi",
@@ -401,7 +401,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 954,
+   "line": 973,
    "note": "",
    "num": 1,
    "ref": "man 3 calloc",
@@ -422,7 +422,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 955,
+   "line": 974,
    "note": "",
    "num": 2,
    "ref": "man 3 calloc",
@@ -442,7 +442,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 964,
+   "line": 983,
    "note": "",
    "num": 3,
    "ref": "man 3 calloc",
@@ -462,7 +462,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 965,
+   "line": 984,
    "note": "",
    "num": 4,
    "ref": "man 3 calloc",
@@ -482,7 +482,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 966,
+   "line": 985,
    "note": "",
    "num": 5,
    "ref": "man 3 calloc",
@@ -503,7 +503,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 976,
+   "line": 995,
    "note": "",
    "num": 6,
    "ref": "man 3 calloc",
@@ -524,7 +524,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 977,
+   "line": 996,
    "note": "",
    "num": 7,
    "ref": "man 3 calloc",
@@ -545,7 +545,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 988,
+   "line": 1007,
    "note": "",
    "num": 8,
    "ref": "man 3 calloc",
@@ -1458,7 +1458,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1303,
+   "line": 1322,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -1479,7 +1479,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1320,
+   "line": 1339,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -1499,7 +1499,7 @@
    "kw": [
     "int-min"
    ],
-   "line": 1330,
+   "line": 1349,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -1519,7 +1519,7 @@
    "kw": [
     "int-min"
    ],
-   "line": 1331,
+   "line": 1350,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -1539,7 +1539,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1345,
+   "line": 1364,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 13,
    "ref": "Subject IV.3",
@@ -1559,7 +1559,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1304,
+   "line": 1323,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -1579,7 +1579,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1305,
+   "line": 1324,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -1599,7 +1599,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1306,
+   "line": 1325,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -1620,7 +1620,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1315,
+   "line": 1334,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -1641,7 +1641,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1316,
+   "line": 1335,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -1662,7 +1662,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1317,
+   "line": 1336,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -1683,7 +1683,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1318,
+   "line": 1337,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -1704,7 +1704,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 1319,
+   "line": 1338,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -1722,7 +1722,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1682,
+   "line": 1701,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1741,7 +1741,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1690,
+   "line": 1709,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1760,7 +1760,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1691,
+   "line": 1710,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1779,7 +1779,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1692,
+   "line": 1711,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -1798,7 +1798,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1693,
+   "line": 1712,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -1816,7 +1816,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1700,
+   "line": 1719,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -1834,7 +1834,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1611,
+   "line": 1630,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1852,7 +1852,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1612,
+   "line": 1631,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1871,7 +1871,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1619,
+   "line": 1638,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1890,7 +1890,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1620,
+   "line": 1639,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -1908,7 +1908,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1627,
+   "line": 1646,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -1927,7 +1927,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1744,
+   "line": 1763,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -1946,7 +1946,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1745,
+   "line": 1764,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -1965,7 +1965,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1746,
+   "line": 1765,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -1984,7 +1984,7 @@
     "double-pointer",
     "list-ownership"
    ],
-   "line": 1754,
+   "line": 1773,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2002,7 +2002,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1761,
+   "line": 1780,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2020,7 +2020,7 @@
    "kw": [
     "double-pointer"
    ],
-   "line": 1762,
+   "line": 1781,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -2039,7 +2039,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1717,
+   "line": 1736,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2058,7 +2058,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1718,
+   "line": 1737,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2077,7 +2077,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1719,
+   "line": 1738,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2096,7 +2096,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1727,
+   "line": 1746,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2115,7 +2115,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1728,
+   "line": 1747,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2134,7 +2134,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1778,
+   "line": 1797,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2153,7 +2153,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1779,
+   "line": 1798,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2172,7 +2172,7 @@
     "function-pointer",
     "list-ownership"
    ],
-   "line": 1780,
+   "line": 1799,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2190,7 +2190,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1787,
+   "line": 1806,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2208,7 +2208,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1793,
+   "line": 1812,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2227,7 +2227,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1662,
+   "line": 1681,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2246,7 +2246,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1663,
+   "line": 1682,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2265,7 +2265,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1664,
+   "line": 1683,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2284,7 +2284,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1665,
+   "line": 1684,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2303,7 +2303,7 @@
     "pointer-arith",
     "list-ownership"
    ],
-   "line": 1666,
+   "line": 1685,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2325,7 +2325,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1810,
+   "line": 1829,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2347,7 +2347,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1811,
+   "line": 1830,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2369,7 +2369,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1812,
+   "line": 1831,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2391,7 +2391,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1813,
+   "line": 1832,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2411,7 +2411,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1821,
+   "line": 1840,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2433,7 +2433,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1831,
+   "line": 1850,
    "note": "",
    "num": 6,
    "ref": "Subject IV.4",
@@ -2455,7 +2455,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1832,
+   "line": 1851,
    "note": "",
    "num": 7,
    "ref": "Subject IV.4",
@@ -2475,7 +2475,7 @@
     "list-ownership",
     "function-pointer"
    ],
-   "line": 1842,
+   "line": 1861,
    "note": "",
    "num": 8,
    "ref": "Subject IV.4",
@@ -2496,7 +2496,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1585,
+   "line": 1604,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2517,7 +2517,7 @@
     "list-ownership",
     "double-pointer"
    ],
-   "line": 1586,
+   "line": 1605,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2537,7 +2537,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1594,
+   "line": 1613,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2557,7 +2557,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1595,
+   "line": 1614,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2575,7 +2575,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1642,
+   "line": 1661,
    "note": "",
    "num": 1,
    "ref": "Subject IV.4",
@@ -2593,7 +2593,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1643,
+   "line": 1662,
    "note": "",
    "num": 2,
    "ref": "Subject IV.4",
@@ -2611,7 +2611,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1644,
+   "line": 1663,
    "note": "",
    "num": 3,
    "ref": "Subject IV.4",
@@ -2629,7 +2629,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1645,
+   "line": 1664,
    "note": "",
    "num": 4,
    "ref": "Subject IV.4",
@@ -2647,7 +2647,7 @@
    "kw": [
     "list-ownership"
    ],
-   "line": 1646,
+   "line": 1665,
    "note": "",
    "num": 5,
    "ref": "Subject IV.4",
@@ -2667,7 +2667,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 780,
+   "line": 799,
    "note": "",
    "num": 1,
    "ref": "man 3 memchr",
@@ -2687,7 +2687,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 781,
+   "line": 800,
    "note": "",
    "num": 2,
    "ref": "man 3 memchr",
@@ -2707,7 +2707,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 782,
+   "line": 801,
    "note": "",
    "num": 3,
    "ref": "man 3 memchr",
@@ -2727,7 +2727,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 783,
+   "line": 802,
    "note": "",
    "num": 4,
    "ref": "man 3 memchr",
@@ -2747,7 +2747,7 @@
    "kw": [
     "size-t-wrap"
    ],
-   "line": 791,
+   "line": 810,
    "note": "",
    "num": 5,
    "ref": "man 3 memchr",
@@ -2767,7 +2767,7 @@
    "kw": [
     "size-t-wrap"
    ],
-   "line": 792,
+   "line": 811,
    "note": "",
    "num": 6,
    "ref": "man 3 memchr",
@@ -2788,7 +2788,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 800,
+   "line": 819,
    "note": "",
    "num": 7,
    "ref": "man 3 memchr",
@@ -2809,7 +2809,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 801,
+   "line": 820,
    "note": "",
    "num": 8,
    "ref": "man 3 memchr",
@@ -2830,7 +2830,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 817,
+   "line": 836,
    "note": "",
    "num": 1,
    "ref": "man 3 memcmp",
@@ -2851,7 +2851,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 818,
+   "line": 837,
    "note": "",
    "num": 2,
    "ref": "man 3 memcmp",
@@ -2872,7 +2872,7 @@
     "return-contract",
     "pointer-arith"
    ],
-   "line": 819,
+   "line": 838,
    "note": "",
    "num": 3,
    "ref": "man 3 memcmp",
@@ -2893,7 +2893,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 827,
+   "line": 846,
    "note": "",
    "num": 4,
    "ref": "man 3 memcmp",
@@ -2914,7 +2914,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 828,
+   "line": 847,
    "note": "",
    "num": 5,
    "ref": "man 3 memcmp",
@@ -2935,7 +2935,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 829,
+   "line": 848,
    "note": "",
    "num": 6,
    "ref": "man 3 memcmp",
@@ -3088,6 +3088,27 @@
    "ref": "man 3 memcpy",
    "why": "the standard requires both pointers to be valid even when n is 0, and says nothing at all about what happens when they are not. There is no correct answer here to match \u2014 only your answer and glibc's."
   },
+  "ft_memcpy:8": {
+   "desc": "overlapping \u2014 compare with ft_memmove 03",
+   "expected": "UB",
+   "fix": "nothing to fix in ft_memcpy \u2014 the lesson is which function to reach for. If your ft_memmove simply calls ft_memcpy, this is the case that explains why that cannot be correct",
+   "flags": [
+    "UB"
+   ],
+   "fn": "ft_memcpy",
+   "group": "why ft_memmove exists",
+   "id": "ft_memcpy:8",
+   "input": "ft_memcpy(buf + 2, buf, 5)",
+   "kw": [
+    "overlap",
+    "undefined-behavior"
+   ],
+   "line": 415,
+   "note": "not scored. There is no right answer for an overlapping memcpy, so the case shows what yours did beside what memmove is obliged to produce. \"What is the difference between memcpy and memmove?\" is the first question in the defense bank; this is that question as a picture.",
+   "num": 8,
+   "ref": "man 3 memcpy",
+   "why": "this is the same buffer, the same offsets and the same length as ft_memmove case 3, on purpose \u2014 read the two reports side by side and the difference between the functions stops being a definition you memorised. memcpy is ALLOWED to assume its regions do not overlap, and real implementations exploit that to copy in whatever order is fastest, so a forward copy can overwrite bytes it has not read yet. memmove is required to get the same call right."
+  },
   "ft_memmove:1": {
    "desc": "",
    "expected": "dest, \"hello\\0\"",
@@ -3104,7 +3125,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 412,
+   "line": 431,
    "note": "",
    "num": 1,
    "ref": "man 3 memmove",
@@ -3126,7 +3147,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 413,
+   "line": 432,
    "note": "",
    "num": 2,
    "ref": "man 3 memmove",
@@ -3148,7 +3169,7 @@
     "overlap",
     "pointer-arith"
    ],
-   "line": 422,
+   "line": 441,
    "note": "",
    "num": 3,
    "ref": "man 3 memmove",
@@ -3170,7 +3191,7 @@
     "overlap",
     "pointer-arith"
    ],
-   "line": 423,
+   "line": 442,
    "note": "",
    "num": 4,
    "ref": "man 3 memmove",
@@ -3192,7 +3213,7 @@
     "overlap",
     "pointer-arith"
    ],
-   "line": 434,
+   "line": 453,
    "note": "",
    "num": 5,
    "ref": "man 3 memmove",
@@ -3214,7 +3235,7 @@
     "size-t-wrap",
     "overlap"
    ],
-   "line": 442,
+   "line": 461,
    "note": "",
    "num": 6,
    "ref": "man 3 memmove",
@@ -3236,7 +3257,7 @@
     "size-t-wrap",
     "overlap"
    ],
-   "line": 443,
+   "line": 462,
    "note": "",
    "num": 7,
    "ref": "man 3 memmove",
@@ -3257,7 +3278,7 @@
     "null-terminator",
     "overlap"
    ],
-   "line": 451,
+   "line": 470,
    "note": "",
    "num": 8,
    "ref": "man 3 memmove",
@@ -3425,7 +3446,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1455,
+   "line": 1474,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3445,7 +3466,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1456,
+   "line": 1475,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3465,7 +3486,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1457,
+   "line": 1476,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3485,7 +3506,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1466,
+   "line": 1485,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3505,7 +3526,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1516,
+   "line": 1535,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3525,7 +3546,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1517,
+   "line": 1536,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3545,7 +3566,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1518,
+   "line": 1537,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3565,7 +3586,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1525,
+   "line": 1544,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3585,7 +3606,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1541,
+   "line": 1560,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3605,7 +3626,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1542,
+   "line": 1561,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3625,7 +3646,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1543,
+   "line": 1562,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3645,7 +3666,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1544,
+   "line": 1563,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3665,7 +3686,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1545,
+   "line": 1564,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -3686,7 +3707,7 @@
     "int-min",
     "fd-io"
    ],
-   "line": 1554,
+   "line": 1573,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -3707,7 +3728,7 @@
     "int-min",
     "fd-io"
    ],
-   "line": 1555,
+   "line": 1574,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -3727,7 +3748,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1562,
+   "line": 1581,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -3748,7 +3769,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1482,
+   "line": 1501,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3769,7 +3790,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1483,
+   "line": 1502,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -3790,7 +3811,7 @@
     "fd-io",
     "null-terminator"
    ],
-   "line": 1484,
+   "line": 1503,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -3810,7 +3831,7 @@
    "kw": [
     "fd-io"
    ],
-   "line": 1491,
+   "line": 1510,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -3831,7 +3852,7 @@
     "undefined-behavior",
     "fd-io"
    ],
-   "line": 1499,
+   "line": 1518,
    "note": "some implementations print \"(null)\", some crash, some do nothing. All three are defensible; know which one yours does.",
    "num": 5,
    "ref": "Subject IV.3",
@@ -3852,7 +3873,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1224,
+   "line": 1243,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -3873,7 +3894,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1250,
+   "line": 1269,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -3894,7 +3915,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1251,
+   "line": 1270,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -3915,7 +3936,7 @@
     "signed-char",
     "null-terminator"
    ],
-   "line": 1259,
+   "line": 1278,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -3936,7 +3957,7 @@
     "malloc-rollback",
     "double-pointer"
    ],
-   "line": 1269,
+   "line": 1288,
    "note": "",
    "num": 13,
    "ref": "Subject IV.3",
@@ -3957,7 +3978,7 @@
     "malloc-rollback",
     "double-pointer"
    ],
-   "line": 1270,
+   "line": 1289,
    "note": "",
    "num": 14,
    "ref": "Subject IV.3",
@@ -3978,7 +3999,7 @@
     "null-terminator",
     "double-pointer"
    ],
-   "line": 1285,
+   "line": 1304,
    "note": "the check is a floor over the array and its words together, not an exact figure. Allocating more than you need is wasteful, not wrong.",
    "num": 15,
    "ref": "Subject IV.3",
@@ -3999,7 +4020,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1225,
+   "line": 1244,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -4020,7 +4041,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1226,
+   "line": 1245,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4041,7 +4062,7 @@
     "double-pointer",
     "null-terminator"
    ],
-   "line": 1227,
+   "line": 1246,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4062,7 +4083,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1237,
+   "line": 1256,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4083,7 +4104,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1238,
+   "line": 1257,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4104,7 +4125,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1239,
+   "line": 1258,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -4125,7 +4146,7 @@
     "pointer-arith",
     "double-pointer"
    ],
-   "line": 1240,
+   "line": 1259,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -4146,7 +4167,7 @@
     "double-pointer",
     "return-contract"
    ],
-   "line": 1249,
+   "line": 1268,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -4167,7 +4188,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 657,
+   "line": 676,
    "note": "",
    "num": 1,
    "ref": "man 3 strchr",
@@ -4188,7 +4209,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 658,
+   "line": 677,
    "note": "",
    "num": 2,
    "ref": "man 3 strchr",
@@ -4209,7 +4230,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 659,
+   "line": 678,
    "note": "",
    "num": 3,
    "ref": "man 3 strchr",
@@ -4230,7 +4251,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 668,
+   "line": 687,
    "note": "",
    "num": 4,
    "ref": "man 3 strchr",
@@ -4251,7 +4272,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 669,
+   "line": 688,
    "note": "",
    "num": 5,
    "ref": "man 3 strchr",
@@ -4272,7 +4293,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 670,
+   "line": 689,
    "note": "",
    "num": 6,
    "ref": "man 3 strchr",
@@ -4293,7 +4314,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 678,
+   "line": 697,
    "note": "",
    "num": 7,
    "ref": "man 3 strchr",
@@ -4314,7 +4335,7 @@
     "int-promotion",
     "signed-char"
    ],
-   "line": 679,
+   "line": 698,
    "note": "",
    "num": 8,
    "ref": "man 3 strchr",
@@ -4335,7 +4356,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1006,
+   "line": 1025,
    "note": "",
    "num": 1,
    "ref": "man 3 strdup",
@@ -4356,7 +4377,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1007,
+   "line": 1026,
    "note": "",
    "num": 2,
    "ref": "man 3 strdup",
@@ -4377,7 +4398,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1008,
+   "line": 1027,
    "note": "",
    "num": 3,
    "ref": "man 3 strdup",
@@ -4397,7 +4418,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1016,
+   "line": 1035,
    "note": "",
    "num": 4,
    "ref": "man 3 strdup",
@@ -4417,7 +4438,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1024,
+   "line": 1043,
    "note": "",
    "num": 5,
    "ref": "man 3 strdup",
@@ -4437,7 +4458,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1037,
+   "line": 1056,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 6,
    "ref": "man 3 strdup",
@@ -4457,7 +4478,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1038,
+   "line": 1057,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 7,
    "ref": "man 3 strdup",
@@ -4477,7 +4498,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1039,
+   "line": 1058,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 8,
    "ref": "man 3 strdup",
@@ -4496,7 +4517,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1412,
+   "line": 1431,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -4515,7 +4536,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1413,
+   "line": 1432,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -4534,7 +4555,7 @@
     "function-pointer",
     "double-pointer"
    ],
-   "line": 1414,
+   "line": 1433,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4552,7 +4573,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1420,
+   "line": 1439,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4570,7 +4591,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1427,
+   "line": 1446,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4591,7 +4612,7 @@
     "string-literal-ro",
     "undefined-behavior"
    ],
-   "line": 1438,
+   "line": 1457,
    "note": "the standard leaves this undefined; in practice it is a fault on every platform 42 uses. Nothing is required of your implementation. Recognising the crash is what matters.",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4611,7 +4632,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1119,
+   "line": 1138,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -4631,7 +4652,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1120,
+   "line": 1139,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -4651,7 +4672,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1121,
+   "line": 1140,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -4671,7 +4692,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1122,
+   "line": 1141,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -4691,7 +4712,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1123,
+   "line": 1142,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -4711,7 +4732,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1132,
+   "line": 1151,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -4731,7 +4752,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 1133,
+   "line": 1152,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -4751,7 +4772,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1147,
+   "line": 1166,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 8,
    "ref": "Subject IV.3",
@@ -4772,7 +4793,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 514,
+   "line": 533,
    "note": "",
    "num": 1,
    "ref": "man 3 strlcat",
@@ -4793,7 +4814,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 515,
+   "line": 534,
    "note": "",
    "num": 2,
    "ref": "man 3 strlcat",
@@ -4814,7 +4835,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 516,
+   "line": 535,
    "note": "",
    "num": 3,
    "ref": "man 3 strlcat",
@@ -4835,7 +4856,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 517,
+   "line": 536,
    "note": "",
    "num": 4,
    "ref": "man 3 strlcat",
@@ -4857,7 +4878,7 @@
     "return-contract",
     "size-t-wrap"
    ],
-   "line": 527,
+   "line": 546,
    "note": "",
    "num": 5,
    "ref": "man 3 strlcat",
@@ -4879,7 +4900,7 @@
     "return-contract",
     "size-t-wrap"
    ],
-   "line": 528,
+   "line": 547,
    "note": "",
    "num": 6,
    "ref": "man 3 strlcat",
@@ -4901,7 +4922,7 @@
     "return-contract",
     "size-t-wrap"
    ],
-   "line": 529,
+   "line": 548,
    "note": "",
    "num": 7,
    "ref": "man 3 strlcat",
@@ -4922,7 +4943,7 @@
    "kw": [
     "size-t-wrap"
    ],
-   "line": 538,
+   "line": 557,
    "note": "",
    "num": 8,
    "ref": "man 3 strlcat",
@@ -4943,7 +4964,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 545,
+   "line": 564,
    "note": "",
    "num": 9,
    "ref": "man 3 strlcat",
@@ -4964,7 +4985,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 468,
+   "line": 487,
    "note": "",
    "num": 1,
    "ref": "man 3 strlcpy",
@@ -4985,7 +5006,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 469,
+   "line": 488,
    "note": "",
    "num": 2,
    "ref": "man 3 strlcpy",
@@ -5006,7 +5027,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 470,
+   "line": 489,
    "note": "",
    "num": 3,
    "ref": "man 3 strlcpy",
@@ -5027,7 +5048,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 471,
+   "line": 490,
    "note": "",
    "num": 4,
    "ref": "man 3 strlcpy",
@@ -5049,7 +5070,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 481,
+   "line": 500,
    "note": "",
    "num": 5,
    "ref": "man 3 strlcpy",
@@ -5071,7 +5092,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 489,
+   "line": 508,
    "note": "",
    "num": 6,
    "ref": "man 3 strlcpy",
@@ -5093,7 +5114,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 490,
+   "line": 509,
    "note": "",
    "num": 7,
    "ref": "man 3 strlcpy",
@@ -5113,7 +5134,7 @@
    "kw": [
     "undefined-behavior"
    ],
-   "line": 498,
+   "line": 517,
    "note": "glibc 2.38+ dereferences nothing when size is 0 but does not promise it. There is no right answer to reproduce.",
    "num": 8,
    "ref": "man 3 strlcpy",
@@ -5238,7 +5259,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1362,
+   "line": 1381,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -5259,7 +5280,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1363,
+   "line": 1382,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -5280,7 +5301,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1364,
+   "line": 1383,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -5300,7 +5321,7 @@
    "kw": [
     "function-pointer"
    ],
-   "line": 1373,
+   "line": 1392,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -5321,7 +5342,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1381,
+   "line": 1400,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -5342,7 +5363,7 @@
     "function-pointer",
     "null-terminator"
    ],
-   "line": 1382,
+   "line": 1401,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -5362,7 +5383,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1396,
+   "line": 1415,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 7,
    "ref": "Subject IV.3",
@@ -5382,7 +5403,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 742,
+   "line": 761,
    "note": "",
    "num": 1,
    "ref": "man 3 strncmp",
@@ -5402,7 +5423,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 743,
+   "line": 762,
    "note": "",
    "num": 2,
    "ref": "man 3 strncmp",
@@ -5422,7 +5443,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 744,
+   "line": 763,
    "note": "",
    "num": 3,
    "ref": "man 3 strncmp",
@@ -5442,7 +5463,7 @@
    "kw": [
     "return-contract"
    ],
-   "line": 745,
+   "line": 764,
    "note": "",
    "num": 4,
    "ref": "man 3 strncmp",
@@ -5463,7 +5484,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 753,
+   "line": 772,
    "note": "",
    "num": 5,
    "ref": "man 3 strncmp",
@@ -5484,7 +5505,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 754,
+   "line": 773,
    "note": "",
    "num": 6,
    "ref": "man 3 strncmp",
@@ -5505,7 +5526,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 763,
+   "line": 782,
    "note": "",
    "num": 7,
    "ref": "man 3 strncmp",
@@ -5526,7 +5547,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 764,
+   "line": 783,
    "note": "",
    "num": 8,
    "ref": "man 3 strncmp",
@@ -5546,7 +5567,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 846,
+   "line": 865,
    "note": "",
    "num": 1,
    "ref": "man 3 strnstr` (BSD)",
@@ -5566,7 +5587,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 847,
+   "line": 866,
    "note": "",
    "num": 2,
    "ref": "man 3 strnstr` (BSD)",
@@ -5586,7 +5607,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 848,
+   "line": 867,
    "note": "",
    "num": 3,
    "ref": "man 3 strnstr` (BSD)",
@@ -5606,7 +5627,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 849,
+   "line": 868,
    "note": "",
    "num": 4,
    "ref": "man 3 strnstr` (BSD)",
@@ -5626,7 +5647,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 858,
+   "line": 877,
    "note": "",
    "num": 5,
    "ref": "man 3 strnstr` (BSD)",
@@ -5646,7 +5667,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 859,
+   "line": 878,
    "note": "",
    "num": 6,
    "ref": "man 3 strnstr` (BSD)",
@@ -5667,7 +5688,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 868,
+   "line": 887,
    "note": "",
    "num": 7,
    "ref": "man 3 strnstr` (BSD)",
@@ -5688,7 +5709,7 @@
     "null-terminator",
     "return-contract"
    ],
-   "line": 869,
+   "line": 888,
    "note": "",
    "num": 8,
    "ref": "man 3 strnstr` (BSD)",
@@ -5709,7 +5730,7 @@
     "size-t-wrap",
     "null-terminator"
    ],
-   "line": 877,
+   "line": 896,
    "note": "",
    "num": 9,
    "ref": "man 3 strnstr` (BSD)",
@@ -5730,7 +5751,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 696,
+   "line": 715,
    "note": "",
    "num": 1,
    "ref": "man 3 strrchr",
@@ -5751,7 +5772,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 697,
+   "line": 716,
    "note": "",
    "num": 2,
    "ref": "man 3 strrchr",
@@ -5772,7 +5793,7 @@
     "pointer-arith",
     "return-contract"
    ],
-   "line": 698,
+   "line": 717,
    "note": "",
    "num": 3,
    "ref": "man 3 strrchr",
@@ -5793,7 +5814,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 706,
+   "line": 725,
    "note": "",
    "num": 4,
    "ref": "man 3 strrchr",
@@ -5814,7 +5835,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 707,
+   "line": 726,
    "note": "",
    "num": 5,
    "ref": "man 3 strrchr",
@@ -5835,7 +5856,7 @@
     "null-terminator",
     "pointer-arith"
    ],
-   "line": 708,
+   "line": 727,
    "note": "",
    "num": 6,
    "ref": "man 3 strrchr",
@@ -5855,7 +5876,7 @@
    "kw": [
     "int-promotion"
    ],
-   "line": 715,
+   "line": 734,
    "note": "",
    "num": 7,
    "ref": "man 3 strrchr",
@@ -5876,7 +5897,7 @@
     "signed-char",
     "int-promotion"
    ],
-   "line": 725,
+   "line": 744,
    "note": "",
    "num": 8,
    "ref": "man 3 strrchr",
@@ -5896,7 +5917,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1168,
+   "line": 1187,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -5916,7 +5937,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1204,
+   "line": 1223,
    "note": "",
    "num": 10,
    "ref": "Subject IV.3",
@@ -5936,7 +5957,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1205,
+   "line": 1224,
    "note": "",
    "num": 11,
    "ref": "Subject IV.3",
@@ -5956,7 +5977,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1206,
+   "line": 1225,
    "note": "",
    "num": 12,
    "ref": "Subject IV.3",
@@ -5976,7 +5997,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1169,
+   "line": 1188,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -5996,7 +6017,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1170,
+   "line": 1189,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -6016,7 +6037,7 @@
    "kw": [
     "pointer-arith"
    ],
-   "line": 1171,
+   "line": 1190,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -6037,7 +6058,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1181,
+   "line": 1200,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -6058,7 +6079,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1182,
+   "line": 1201,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -6079,7 +6100,7 @@
     "size-t-wrap",
     "return-contract"
    ],
-   "line": 1183,
+   "line": 1202,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -6099,7 +6120,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1192,
+   "line": 1211,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -6119,7 +6140,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1193,
+   "line": 1212,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -6140,7 +6161,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1060,
+   "line": 1079,
    "note": "",
    "num": 1,
    "ref": "Subject IV.3",
@@ -6160,7 +6181,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1101,
+   "line": 1120,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 10,
    "ref": "Subject IV.3",
@@ -6180,7 +6201,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1102,
+   "line": 1121,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 11,
    "ref": "Subject IV.3",
@@ -6200,7 +6221,7 @@
    "kw": [
     "null-terminator"
    ],
-   "line": 1103,
+   "line": 1122,
    "note": "the check is a floor, not an exact figure. Asking for more memory than you need is wasteful, not wrong, and the subject does not forbid it.",
    "num": 12,
    "ref": "Subject IV.3",
@@ -6221,7 +6242,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1061,
+   "line": 1080,
    "note": "",
    "num": 2,
    "ref": "Subject IV.3",
@@ -6242,7 +6263,7 @@
     "pointer-arith",
     "null-terminator"
    ],
-   "line": 1062,
+   "line": 1081,
    "note": "",
    "num": 3,
    "ref": "Subject IV.3",
@@ -6263,7 +6284,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1072,
+   "line": 1091,
    "note": "",
    "num": 4,
    "ref": "Subject IV.3",
@@ -6284,7 +6305,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1073,
+   "line": 1092,
    "note": "",
    "num": 5,
    "ref": "Subject IV.3",
@@ -6305,7 +6326,7 @@
     "return-contract",
     "null-terminator"
    ],
-   "line": 1074,
+   "line": 1093,
    "note": "",
    "num": 6,
    "ref": "Subject IV.3",
@@ -6326,7 +6347,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1084,
+   "line": 1103,
    "note": "",
    "num": 7,
    "ref": "Subject IV.3",
@@ -6347,7 +6368,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1085,
+   "line": 1104,
    "note": "",
    "num": 8,
    "ref": "Subject IV.3",
@@ -6368,7 +6389,7 @@
     "over-allocation",
     "size-t-wrap"
    ],
-   "line": 1086,
+   "line": 1105,
    "note": "",
    "num": 9,
    "ref": "Subject IV.3",
@@ -6389,7 +6410,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 610,
+   "line": 629,
    "note": "",
    "num": 1,
    "ref": "man 3 tolower",
@@ -6410,7 +6431,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 611,
+   "line": 630,
    "note": "",
    "num": 2,
    "ref": "man 3 tolower",
@@ -6431,7 +6452,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 612,
+   "line": 631,
    "note": "",
    "num": 3,
    "ref": "man 3 tolower",
@@ -6452,7 +6473,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 613,
+   "line": 632,
    "note": "",
    "num": 4,
    "ref": "man 3 tolower",
@@ -6473,7 +6494,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 614,
+   "line": 633,
    "note": "",
    "num": 5,
    "ref": "man 3 tolower",
@@ -6494,7 +6515,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 615,
+   "line": 634,
    "note": "",
    "num": 6,
    "ref": "man 3 tolower",
@@ -6515,7 +6536,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 627,
+   "line": 646,
    "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 7,
    "ref": "man 3 tolower",
@@ -6536,7 +6557,7 @@
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 641,
+   "line": 660,
    "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
    "num": 8,
    "ref": "man 3 tolower",
@@ -6557,7 +6578,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 561,
+   "line": 580,
    "note": "",
    "num": 1,
    "ref": "man 3 toupper",
@@ -6578,7 +6599,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 562,
+   "line": 581,
    "note": "",
    "num": 2,
    "ref": "man 3 toupper",
@@ -6599,7 +6620,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 563,
+   "line": 582,
    "note": "",
    "num": 3,
    "ref": "man 3 toupper",
@@ -6620,7 +6641,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 564,
+   "line": 583,
    "note": "",
    "num": 4,
    "ref": "man 3 toupper",
@@ -6641,7 +6662,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 565,
+   "line": 584,
    "note": "",
    "num": 5,
    "ref": "man 3 toupper",
@@ -6662,7 +6683,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 566,
+   "line": 585,
    "note": "",
    "num": 6,
    "ref": "man 3 toupper",
@@ -6683,7 +6704,7 @@
     "return-contract",
     "int-promotion"
    ],
-   "line": 580,
+   "line": 599,
    "note": "the grid stops at 127 because that is the ASCII table. Bytes above it, and EOF, are on the row beneath it, where there is room to label them.",
    "num": 7,
    "ref": "man 3 toupper",
@@ -6704,7 +6725,7 @@
     "undefined-behavior",
     "int-promotion"
    ],
-   "line": 594,
+   "line": 613,
    "note": "not scored. There is no correct answer to compare against, so this case reports what your code does and stays out of the total.",
    "num": 8,
    "ref": "man 3 toupper",

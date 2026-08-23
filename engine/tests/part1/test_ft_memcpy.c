@@ -93,6 +93,37 @@ static void	case_07(t_ctx *c)
 		(long)((unsigned char *)got - dst->ptr));
 }
 
+/*
+** The same overlap as ft_memmove case 3 - deliberately the same buffer, the
+** same offsets, the same length - so the two reports can be read side by side.
+** memcpy is ALLOWED to assume its regions do not overlap and real
+** implementations exploit that to copy in whatever order is fastest, so there
+** is no correct answer here to grade against. Shown, never scored: what the
+** student needs to see is that the two functions answer this differently, and
+** that is the first question the defense bank asks.
+*/
+static void	case_08(t_ctx *c)
+{
+	t_buf	*dst;
+	char	want[10];
+	char	got[10];
+
+	dst = bro_ctx_dst(c, SCRATCH);
+	if (!dst)
+		return (bro_fail(c->out, "engine: out of memory"));
+	memcpy(dst->ptr, "abcdefgh", 9);
+	memcpy(want, "abcdefgh", 9);
+	memmove(want + 2, want, 5);
+	ft_memcpy((char *)dst->ptr + 2, dst->ptr, 5);
+	memcpy(got, dst->ptr, 9);
+	got[9] = '\0';
+	want[9] = '\0';
+	bro_mark_ub(c->out, "overlapping by 3 bytes: yours gives \"%s\", "
+		"ft_memmove is required to give \"%s\" - memcpy never promises "
+		"to handle overlap, and that is the whole reason memmove exists",
+		got, want);
+}
+
 static const t_case	g_cases[] = {
 {1, "ft_memcpy(dest, \"hello\", 6)", BRO_ORACLE | BRO_GUARDED, case_01},
 {2, "ft_memcpy(dest, \"ab\\0cd\\0f\", 7)", BRO_ORACLE | BRO_GUARDED, case_02},
@@ -101,6 +132,7 @@ static const t_case	g_cases[] = {
 {5, "ft_memcpy(dest4, \"abcd\", 4)", BRO_GUARDED, case_05},
 {6, "ft_memcpy(NULL, NULL, 0)", BRO_UB_CASE, case_06},
 {7, "ft_memcpy(buf, buf, 5)", BRO_UB_CASE, case_07},
+{8, "ft_memcpy(buf + 2, buf, 5) - overlapping", BRO_UB_CASE, case_08},
 };
 
 const t_suite	g_suite_ft_memcpy = {
