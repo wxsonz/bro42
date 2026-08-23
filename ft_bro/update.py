@@ -1,4 +1,4 @@
-"""Opt-in update check (decision A18).
+"""Opt-in update check (decision A18), and the passive notice it leaves behind.
 
 Deliberately NOT automatic. An update check on every run would contradict two
 things already committed to - the dashboard's "nothing loads from the network"
@@ -6,11 +6,25 @@ rule (A2) and the requirement that bro work on a cluster machine with no
 internet (A8) - and would put latency in front of a tool whose whole point is
 fast feedback.
 
-So: it runs only when asked, it uses git rather than an HTTP endpoint (there is
-no server to run), and it fails quietly and usefully when there is no network.
+So the network call and the notice are separate things:
+
+  check()    talks to the remote. Runs only when asked, via --check-update,
+             and writes what it learned to paths.update_cache().
+  pending()  reads that file. No network, no subprocess, no failure mode
+             beyond "there is nothing cached". Every run calls this, and the
+             terminal footer and the dashboard show the result.
+
+A student who never runs --check-update is never nagged and never delayed.
+One who runs it once keeps seeing the notice until they actually update.
+
+Releases, not commits (B33). A tagged version is a deliberate act; a typo fix
+pushed to main is not, and should not tell everyone they are out of date.
 """
 
+import json
+import re
 import subprocess
+import time
 
 from . import VERSION, paths
 
@@ -19,6 +33,35 @@ def _git(*args):
     return subprocess.run(["git", "-C", str(paths.ROOT), *args],
                           capture_output=True, text=True, timeout=20,
                           errors="replace")
+
+
+def _parse(tag):
+    """'v1.2.3' -> (1, 2, 3). Anything unparseable sorts lowest."""
+    m = re.match(r"v?(\d+)\.(\d+)\.(\d+)", tag or "")
+    return tuple(int(g) for g in m.groups()) if m else (0, 0, 0)
+
+
+def _write(**fields):
+    path = paths.update_cache()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"checked": time.time(), **fields}))
+
+
+def pending():
+    """The cached verdict, or None. Never touches the network.
+
+    Returns the newer version string only while it is still newer than what is
+    running - so updating makes the notice disappear on its own, without
+    needing the cache to be cleared or re-checked.
+    """
+    try:
+        data = json.loads(paths.update_cache().read_text())
+    except (OSError, ValueError):
+        return None
+    latest = data.get("latest")
+    if latest and _parse(latest) > _parse(VERSION):
+        return latest
+    return None
 
 
 def check():
@@ -31,17 +74,24 @@ def check():
         print("  no origin remote configured")
         return 0
     origin = r.stdout.strip()
-    if _git("fetch", "--quiet", "origin").returncode:
+
+    if _git("fetch", "--quiet", "--tags", "origin").returncode:
         print(f"  could not reach {origin}")
         print("  (offline is fine - bro never needs the network to run)")
         return 0
-    local = _git("rev-parse", "HEAD").stdout.strip()[:8]
-    remote = _git("rev-parse", "@{u}").stdout.strip()[:8]
-    if not remote or local == remote:
-        print(f"  up to date with {origin} ({local})")
+
+    tags = _git("tag", "--list", "v*").stdout.split()
+    latest = max(tags, key=_parse, default="")
+    if not latest:
+        print(f"  {origin} has published no release tags yet")
+        _write(latest=None, origin=origin)
         return 0
-    behind = _git("rev-list", "--count", "HEAD..@{u}").stdout.strip()
-    print(f"  {behind} commit(s) behind {origin}")
-    print(f"  local {local}, remote {remote}")
-    print("  update with:  git pull && make")
+
+    _write(latest=latest.lstrip("v"), origin=origin)
+    if _parse(latest) <= _parse(VERSION):
+        print(f"  up to date - {origin} is at {latest}")
+        return 0
+
+    print(f"  {latest} is available (you have {VERSION})")
+    print("  update with:  git -C %s pull && make" % paths.ROOT)
     return 0

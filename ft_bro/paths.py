@@ -28,3 +28,13 @@ def cache_dir(target):
     d = cache_root() / target_key(target)
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+
+def update_cache():
+    """Where `bro --check-update` leaves what it learned.
+
+    Kept at the cache ROOT, not under a target: the answer is about ft_bro
+    itself, so checking it once from one libft should tell you about every
+    other one.
+    """
+    return cache_root() / "update.json"

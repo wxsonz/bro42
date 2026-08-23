@@ -15,7 +15,7 @@ import shutil
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import VERSION, content, history, paths
+from . import VERSION, content, history, paths, update
 
 SCHEMA = 1
 UNSCORED = {"UB", "MISSING", "SKIP"}
@@ -61,6 +61,10 @@ def build_report(records, target, checks=None, hist=None, hist_delta=None):
         "generated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "target": str(target),
         "bro_version": VERSION,
+        # Read from the local cache --check-update leaves behind, never
+        # fetched: the page must stay self-contained (A2) and must render on
+        # a machine with no network (A8). None when nothing newer is known.
+        "update_available": update.pending(),
         "platform": {
             "os": platform.system().lower(),
             "norminette": bool(shutil.which("norminette")),

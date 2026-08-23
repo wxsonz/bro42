@@ -46,7 +46,8 @@ function elem(tag) {
 }
 
 const byId = {};
-["target", "c-cases", "c-funcs", "c-extra", "theme", "search", "nav", "main"]
+["target", "c-cases", "c-funcs", "c-extra", "theme", "search", "nav", "main",
+ "version"]
   .forEach(id => { byId[id] = elem("div"); byId[id].id = id; });
 byId["bro-data"] = elem("script");
 byId["bro-data"]._text = dataMatch[1];
@@ -84,6 +85,18 @@ if (!nav.children.length) problems.push("nav rendered no entries");
 if (!main.children.length) problems.push("default view rendered nothing");
 if (!byId["c-cases"].textContent.match(/\d+\/\d+/))
   problems.push("case counter is empty: " + JSON.stringify(byId["c-cases"].textContent));
+
+/* The version is provenance: a report with no version on it cannot be placed
+   in time. When the cache says something newer exists, the notice has to be
+   visible in the page too, not only in the terminal. */
+const ver = byId["version"];
+const payload = JSON.parse(dataMatch[1]);
+if (!ver || !ver.textContent.includes(payload.bro_version))
+  problems.push("version is missing from the header: "
+    + JSON.stringify(ver && ver.textContent));
+if (payload.update_available && !ver.textContent.includes(payload.update_available))
+  problems.push("report carries update_available=" + payload.update_available
+    + " but the header does not show it: " + JSON.stringify(ver.textContent));
 
 /* every view must render without throwing and produce content */
 if (handle.VIEWS && handle.go) {

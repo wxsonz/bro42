@@ -130,3 +130,12 @@ input[type=range] { width: 100%; accent-color: var(--accent); margin: 8px 0 4px;
   .layout { flex-direction: column; }
   nav { position: static; width: 100%; display: flex; flex-wrap: wrap; }
 }
+
+/* Version, and the update notice when one is cached. Muted by default - it is
+   provenance, not news - and only picks up colour when something is newer. */
+.version { font-size: 11px; opacity: .55; letter-spacing: .2px; }
+.version.stale {
+  opacity: 1;
+  color: var(--warn, #b8860b);
+  cursor: help;
+}

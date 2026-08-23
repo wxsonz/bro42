@@ -197,10 +197,11 @@ def main(argv=None):
         print(render.report(records, target, st, verbose=verbose,
                             macro=checks, hist_delta=hist_delta))
         if page:
-            print(f"  {st.dim('→ ' + str(page))}\n")
-            if not args.no_web:
-                import webbrowser
-                webbrowser.open(page.as_uri())
+            print(f"  {st.dim('→ ' + str(page))}")
+        print(render.version_line(st))
+        if page and not args.no_web:
+            import webbrowser
+            webbrowser.open(page.as_uri())
 
     return min(125, sum(1 for r in records if r["status"] in render.SCORED_BAD))
 

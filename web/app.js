@@ -18,7 +18,23 @@ const allCases = () => DATA.suites.flatMap(s => s.cases.map(c => ({...c, suite: 
 function header() {
   const s = DATA.summary;
   document.getElementById("target").textContent = DATA.target;
-  document.querySelector(".brand").title = "ft_bro " + (DATA.bro_version || "");
+  const version = DATA.bro_version || "";
+  document.querySelector(".brand").title = "ft_bro " + version;
+  const ver = document.getElementById("version");
+  if (ver) {
+    ver.textContent = "v" + version;
+    /* DATA.update_available is filled in by report.py from the cache that
+       `bro --check-update` writes. The page never asks the network itself:
+       it has to render on a cluster machine with no internet (A2, A8). */
+    if (DATA.update_available) {
+      ver.textContent = "v" + version + " → " + DATA.update_available;
+      ver.classList.add("stale");
+      ver.title = "ft_bro " + DATA.update_available
+        + " is available. Update with: git pull && make";
+    } else {
+      ver.title = "ft_bro " + version;
+    }
+  }
   document.getElementById("c-cases").innerHTML =
     `<b>${s.passed}/${s.total_cases}</b> cases`;
   document.getElementById("c-funcs").innerHTML =

@@ -525,3 +525,21 @@ def defense_cards(st, concept_filter=None, function_filter=None):
         out += wrap(plain(q["answer"], st) or "", "      ", "")
         out.append("")
     return "\n".join(out)
+
+
+def version_line(st):
+    """The closing line of every run: which bro this is, and whether a newer
+    release is known to exist.
+
+    `update.pending()` only ever reads a local file left by --check-update
+    (A18): no network call happens here, so this costs nothing and works
+    unchanged on a machine with no internet.
+    """
+    from . import VERSION, paths, update
+
+    latest = update.pending()
+    if not latest:
+        return f"  {st.dim('ft_bro ' + VERSION)}\n"
+    return (f"  {st.dim('ft_bro ' + VERSION)}   "
+            f"{st.yellow(latest + ' is available')} "
+            f"{st.dim('· git -C ' + str(paths.ROOT) + ' pull && make')}\n")

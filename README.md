@@ -79,6 +79,23 @@ bro --check-update       # opt-in; bro never touches the network on its own
 
 `-v` expands passing cases, `-q` prints the score line only, `--no-web` skips the browser.
 
+### Versions and updates
+
+Every run ends with the version it used, and the dashboard header carries it too — a report you
+keep is a report you can place in time.
+
+`bro` never contacts the network on its own. `bro --check-update` is the only thing that does,
+and it compares your version against the newest release tag; ordinary commits do not count, so
+you are told when there is a release, not when a typo was fixed. It remembers what it found, and
+until you update, later runs remind you:
+
+```
+  ft_bro 1.0.0   1.1.0 is available · git -C /path/to/bro pull && make
+```
+
+Run it whenever you like — nothing expires, and `bro` works exactly the same with no internet at
+all.
+
 ---
 
 ## Resources
