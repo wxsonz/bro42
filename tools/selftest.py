@@ -412,6 +412,45 @@ def check_subject_19_2_layout():
     return problems
 
 
+def check_mutant_docs():
+    """The mutant catalogue in 09-selftest.md vs the mutants that exist.
+
+    That table was written before the mutants were and drifted badly: it named
+    ten that had never been built and omitted twenty-three that had. It is the
+    document describing how this project knows its own tester works, so a
+    mutant listed there is a claim about the gate - and an unchecked claim is
+    exactly what the rest of this file exists to prevent (B32).
+
+    Names under "Considered, not built" are deliberately absent from the code
+    and are skipped; that section is the honest record of what was NOT done.
+    """
+    doc = (ROOT / "_dev" / "plan" / "platform" / "09-selftest.md").read_text()
+    catalogue, _, considered = doc.partition("### Considered, not built")
+    catalogue = catalogue.split("| Mutant | Seeded bug")[-1]
+    documented = set(re.findall(r"^\| `([a-z_0-9]+)`", catalogue, re.M))
+    skipped = set(re.findall(r"^\| `([a-z_0-9]+)`", considered, re.M))
+    if not documented:
+        return ["could not parse the mutant table out of 09-selftest.md"]
+
+    # A name in the catalogue is a claim about the gate, whatever else
+    # mentions it - do NOT let an entry in "Considered, not built" excuse one.
+    real = set(mutants.MUTANTS)
+    phantom = sorted(documented - real)
+    undocumented = sorted(real - documented)
+    resurrected = sorted(skipped & real)
+    problems = []
+    if phantom:
+        problems.append(f"09-selftest.md documents mutants that do not exist: {phantom}")
+    if undocumented:
+        problems.append(f"mutants missing from 09-selftest.md: {undocumented}")
+    if resurrected:
+        problems.append(f"listed as not built, but they exist: {resurrected}")
+    if not problems:
+        print(f"  ok   mutant docs         {len(documented)} documented, "
+              f"{len(skipped)} recorded as not built")
+    return problems
+
+
 def main():
     print("selftest")
     if not REFERENCE.is_dir():
@@ -427,6 +466,7 @@ def main():
     problems += check_static()
     problems += check_dashboard()
     problems += check_determinism()
+    problems += check_mutant_docs()
     problems += check_subject_19_2_layout()
     problems += check_valgrind()
     if problems:
