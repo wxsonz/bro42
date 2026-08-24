@@ -10,8 +10,41 @@ const LEVELS = {1:"ASCII & classification",2:"Pointer traversal",3:"Copying & co
   4:"Sized buffers & parsing",5:"Allocation",6:"Double & function pointers",
   7:"File descriptors",8:"Linked lists"};
 
+/* Every status code the engine or the macro/build checks can produce, in
+   plain language - someone reading this dashboard for the first time (a
+   peer evaluator, a student who has never used ft_bro) should not have to
+   already know what "KO" or "UB" means. Shown as a hover tooltip on every
+   pill AND as a standing legend (the #legend popover), because hover does
+   nothing on a touch screen. */
+const STATUS_INFO = {
+  OK:       "Correct — matches the expected result.",
+  KO:       "Wrong — the output did not match what was expected.",
+  SIGSEGV:  "Crashed — segmentation fault (invalid memory access).",
+  SIGBUS:   "Crashed — bus error (misaligned or invalid memory access).",
+  SIGABRT:  "Crashed — aborted, usually a heap-corruption check " +
+            "(e.g. glibc) catching a bug.",
+  TIMEOUT:  "Never returned — most likely an infinite loop.",
+  LEAK:     "Ran and returned the right value, but leaked memory that " +
+            "should have been freed.",
+  UB:       "Undefined behaviour — the C standard defines no correct " +
+            "answer here, so this is shown for reference and not scored.",
+  MISSING:  "Not written yet — the function was not found, so this case " +
+            "could not run.",
+  SKIP:     "Skipped — not run (tool unavailable, or not applicable here).",
+  FAIL:     "Fails a subject requirement.",
+  WARN:     "Worth a look, but not scored — a style/best-practice note, " +
+            "not a subject violation.",
+};
+
 const el = (t, cls, txt) => { const n = document.createElement(t);
   if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+/* A status pill with its meaning as a native tooltip - use everywhere a bare
+   `el("span", "pill s-" + status, status)` would otherwise appear. */
+const statusPill = (status, extraCls) => {
+  const p = el("span", ("pill s-" + status + " " + (extraCls || "")).trim(), status);
+  if (STATUS_INFO[status]) p.title = STATUS_INFO[status];
+  return p;
+};
 const allCases = () => DATA.suites.flatMap(s => s.cases.map(c => ({...c, suite: s})));
 
 /* ---------------------------------------------------------------- header */
@@ -39,13 +72,17 @@ function header() {
     `<b>${s.passed}/${s.total_cases}</b> cases`;
   document.getElementById("c-funcs").innerHTML =
     `<b>${s.present_funcs}/${s.total_funcs}</b> written`;
-  const extra = Object.entries(s.counts)
-    .filter(([k]) => UNSCORED.has(k)).map(([k, v]) => `${v} ${k}`).join(" · ");
-  document.getElementById("c-extra").textContent = extra || "nothing skipped";
+  const extraKV = Object.entries(s.counts).filter(([k]) => UNSCORED.has(k));
+  const extraEl = document.getElementById("c-extra");
+  extraEl.textContent = extraKV.map(([k, v]) => `${v} ${k}`).join(" · ") || "nothing skipped";
+  extraEl.title = extraKV.length
+    ? extraKV.map(([k]) => `${k}: ${STATUS_INFO[k]}`).join("\n")
+    : "";
   document.getElementById("theme").onclick = () => {
     const r = document.documentElement;
     r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark";
   };
+  wireLegend();
   wireRerun();
 }
 
@@ -57,6 +94,33 @@ function applyReport(fresh) {
   Object.assign(DATA, fresh);
   header();
   render();
+}
+/* A standing glossary, not just a hover tooltip: hover does nothing on a
+   touch screen, and someone unfamiliar with these codes (a peer evaluator,
+   a first-time user) may not think to hover in the first place. Built once
+   and toggled, same pattern as the theme button. */
+function wireLegend() {
+  const btn = document.getElementById("legend");
+  if (!btn) return;
+  let panel = document.getElementById("legend-panel");
+  if (!panel) {
+    panel = el("div", "legend-panel");
+    panel.id = "legend-panel";
+    panel.hidden = true;
+    Object.entries(STATUS_INFO).forEach(([code, desc]) => {
+      const row = el("div", "legend-row");
+      row.appendChild(statusPill(code));
+      row.appendChild(el("span", "small", desc));
+      panel.appendChild(row);
+    });
+    document.body.appendChild(panel);
+    document.addEventListener("click", ev => {
+      if (!panel.hidden && ev.target !== btn && !panel.contains(ev.target)) {
+        panel.hidden = true;
+      }
+    });
+  }
+  btn.onclick = () => { panel.hidden = !panel.hidden; };
 }
 function wireRerun() {
   if (typeof location === "undefined" || location.protocol !== "http:") return;
@@ -536,7 +600,7 @@ function caseCard(c) {
   const d = el("details", "card");
   d.id = `${c.fn}:${c.id}`;
   const sum = el("summary");
-  sum.appendChild(el("span", "pill s-" + c.status, c.status));
+  sum.appendChild(statusPill(c.status));
   sum.appendChild(el("span", "mono small", `${String(c.id).padStart(2,"0")}`));
   sum.appendChild(el("span", "mono", c.input || ""));
   if (c.msg) { const m = el("span", "small muted", c.msg); m.style.marginLeft = "auto"; sum.appendChild(m); }
@@ -684,7 +748,7 @@ function viewMacro(main) {
       const d = el("details", "card");
       d.id = "macro/" + c.name.replace(/\s+/g, "-");
       const sum = el("summary");
-      sum.appendChild(el("span", "pill s-" + c.status, c.status));
+      sum.appendChild(statusPill(c.status));
       sum.appendChild(el("b", "", c.name));
       sum.appendChild(el("span", "small muted", c.desc));
       d.appendChild(sum);

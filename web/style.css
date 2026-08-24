@@ -75,6 +75,21 @@ h2:first-child { margin-top: 0; }
 .s-TIMEOUT, .s-LEAK, .s-FAIL { color: var(--bad); }
 .s-UB, .s-WARN { color: var(--warn); }
 .s-MISSING, .s-SKIP { color: var(--dim); }
+.pill { cursor: help; }
+
+/* The "? legend" popover: what every pill code means, for anyone who does
+   not already know this tool. */
+.legend-panel {
+  position: fixed; top: 54px; right: 18px; z-index: 10;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  max-width: 340px; max-height: 70vh; overflow-y: auto;
+}
+.legend-row {
+  display: flex; align-items: baseline; gap: 10px; padding: 4px 0;
+}
+.legend-row .pill { flex: none; width: 62px; text-align: center; cursor: default; }
+.legend-row .small { color: var(--fg); }
 
 .bar { height: 6px; border-radius: 3px; background: var(--line); width: 110px; flex: none; }
 .bar > i { display: block; height: 100%; border-radius: 3px; background: var(--ok); }
