@@ -1526,7 +1526,7 @@
    "why": "INT_MIN has no positive counterpart, so n = -n as the first line overflows \u2014 undefined behaviour, and in practice the number stays negative and the digit loop never terminates or writes garbage. This is the most common crash in Libft."
   },
   "ft_itoa:13": {
-   "desc": "\"-42\" plus the terminator",
+   "desc": "\"-73\" plus the terminator",
    "expected": "at least 4 bytes allocated",
    "fix": "allocate the digit count, plus one for a minus sign if there is one, plus one for the terminator, and satisfy yourself that the last write lands inside that block",
    "flags": [
@@ -1535,7 +1535,7 @@
    "fn": "ft_itoa",
    "group": "the byte count, not just the text",
    "id": "ft_itoa:13",
-   "input": "ft_itoa(-42)",
+   "input": "ft_itoa(-73)",
    "kw": [
     "null-terminator"
    ],

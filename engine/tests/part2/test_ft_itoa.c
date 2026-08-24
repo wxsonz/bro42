@@ -55,7 +55,7 @@ static void	case_13(t_ctx *c)
 	size_t	got_bytes;
 
 	bro_alloc_snapshot(&before);
-	got = ft_itoa(-42);
+	got = ft_itoa(-73);
 	bro_track(c, got);
 	if (bro_injecting(c))
 		return ;
@@ -82,7 +82,7 @@ static const t_case	g_cases[] = {
 {10, "ft_itoa(-10)", BRO_INJECT, case_10},
 {11, "ft_itoa(2147483647)", BRO_INJECT, case_11},
 {12, "ft_itoa(-2147483648)", BRO_INJECT, case_12},
-{13, "ft_itoa(-42): exact allocation", BRO_INJECT, case_13},
+{13, "ft_itoa(-73): exact allocation", BRO_INJECT, case_13},
 };
 
 const t_suite	g_suite_ft_itoa = {
