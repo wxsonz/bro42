@@ -90,7 +90,7 @@ def tracked_artifacts(root):
 def source_of(root, fn):
     """The file a function lives in, under either subject revision.
 
-    19.2 makes Part 3 mandatory, so `ft_lstnew.c` is the current name. Repos
+    19.3 makes Part 3 mandatory, so `ft_lstnew.c` is the current name. Repos
     started under an older subject use `ft_lstnew_bonus.c`. Both are real
     submissions; neither is an error.
     """
@@ -141,7 +141,7 @@ def check_structure(target, out):
         hint=("not written yet: " + ", ".join(missing[:8])) if missing else
              "Subject IV: every mandatory function has its own .c file"))
 
-    # Part 3 is mandatory under subject 19.2 and is already counted above.
+    # Part 3 is mandatory under subject 19.3 and is already counted above.
     # All this reports is WHICH naming the repo uses, because it changes what
     # `make` has to build - it is not a pass/fail judgement either way.
     legacy = [f for f in libft.PART3 if (root / f"{f}_bonus.c").is_file()]
@@ -149,7 +149,7 @@ def check_structure(target, out):
         out.append(Check(
             1, "Part 3 naming", "OK",
             f"{len(legacy)}/{len(libft.PART3)} in _bonus.c files",
-            hint="An older subject made the list functions a bonus. 19.2 puts "
+            hint="An older subject made the list functions a bonus. 19.3 puts "
                  "them in the mandatory part (IV.4), so plain .c names are "
                  "current - but nothing here requires you to rename them."))
 
@@ -196,7 +196,7 @@ def check_rules(work, out):
                      command="make fclean",
                      hint="fclean is clean plus the build product"))
 
-    # Part 3 is mandatory (19.2 IV.4), so a plain `make` has to produce the
+    # Part 3 is mandatory (19.3 IV.4), so a plain `make` has to produce the
     # list functions. A repo written against an older subject gates them
     # behind a `bonus` rule instead; that is a valid layout, so the rule is
     # run when it exists and its absence is not a finding.

@@ -24,7 +24,7 @@ PART3 = [
     "ft_lstadd_back", "ft_lstdelone", "ft_lstclear", "ft_lstiter", "ft_lstmap",
 ]
 
-# Subject 19.2 puts Part 3 in Chapter IV, the MANDATORY part - "IV.4 Part 3 -
+# Subject 19.3 puts Part 3 in Chapter IV, the MANDATORY part - "IV.4 Part 3 -
 # linked list". Libft has no bonus part at all: every "bonus" in the document
 # is in the Chapter II boilerplate that ships with every 42 subject.
 #

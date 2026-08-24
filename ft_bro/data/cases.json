@@ -6899,7 +6899,7 @@
    "name": "ft_lstsize",
    "order": 37,
    "part": 3,
-   "prototype": "int ft_lstsize(t_list *lst);",
+   "prototype": "unsigned int ft_lstsize(t_list *lst);",
    "ref": "Subject IV.4",
    "tier": 5
   },
