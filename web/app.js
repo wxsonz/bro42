@@ -17,32 +17,50 @@ const LEVELS = {1:"ASCII & classification",2:"Pointer traversal",3:"Copying & co
    pill AND as a standing legend (the #legend popover), because hover does
    nothing on a touch screen. */
 const STATUS_INFO = {
-  OK:       "Correct — matches the expected result.",
-  KO:       "Wrong — the output did not match what was expected.",
-  SIGSEGV:  "Crashed — segmentation fault (invalid memory access).",
-  SIGBUS:   "Crashed — bus error (misaligned or invalid memory access).",
-  SIGABRT:  "Crashed — aborted, usually a heap-corruption check " +
-            "(e.g. glibc) catching a bug.",
-  TIMEOUT:  "Never returned — most likely an infinite loop.",
-  LEAK:     "Ran and returned the right value, but leaked memory that " +
-            "should have been freed.",
-  UB:       "Undefined behaviour — the C standard defines no correct " +
-            "answer here, so this is shown for reference and not scored.",
-  MISSING:  "Not written yet — the function was not found, so this case " +
-            "could not run.",
-  SKIP:     "Skipped — not run (tool unavailable, or not applicable here).",
-  FAIL:     "Fails a subject requirement.",
-  WARN:     "Worth a look, but not scored — a style/best-practice note, " +
-            "not a subject violation.",
+  OK:       {label: "Correct",
+             desc: "Matches the expected result."},
+  KO:       {label: "Wrong",
+             desc: "The output did not match what was expected."},
+  SIGSEGV:  {label: "Crashed (segfault)",
+             desc: "Segmentation fault — invalid memory access."},
+  SIGBUS:   {label: "Crashed (bus error)",
+             desc: "Bus error — misaligned or invalid memory access."},
+  SIGABRT:  {label: "Crashed (aborted)",
+             desc: "Aborted — usually a heap-corruption check " +
+                   "(e.g. glibc) catching a bug."},
+  TIMEOUT:  {label: "Timed out",
+             desc: "Never returned — most likely an infinite loop."},
+  LEAK:     {label: "Memory leak",
+             desc: "Ran and returned the right value, but leaked memory " +
+                   "that should have been freed."},
+  UB:       {label: "Undefined behaviour",
+             desc: "The C standard defines no correct answer here, so " +
+                   "this is shown for reference and not scored."},
+  MISSING:  {label: "Not written",
+             desc: "The function was not found, so this case could not " +
+                   "run."},
+  SKIP:     {label: "Skipped",
+             desc: "Not run — tool unavailable, or not applicable here."},
+  FAIL:     {label: "Failed",
+             desc: "Fails a subject requirement."},
+  WARN:     {label: "Warning",
+             desc: "Worth a look, but not scored — a style/best-practice " +
+                   "note, not a subject violation."},
 };
+/* Full word for a status code, for anywhere it is shown to a person - the
+   raw code (used in CSS classes, ids, and every internal comparison) stays
+   what it always was, only the visible text changes. */
+const statusLabel = status => (STATUS_INFO[status] || {}).label || status;
 
 const el = (t, cls, txt) => { const n = document.createElement(t);
   if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
-/* A status pill with its meaning as a native tooltip - use everywhere a bare
-   `el("span", "pill s-" + status, status)` would otherwise appear. */
+/* A status pill showing the full word, coloured and classed by the raw
+   code, with the fuller explanation as a hover tooltip - use everywhere a
+   bare `el("span", "pill s-" + status, status)` would otherwise appear. */
 const statusPill = (status, extraCls) => {
-  const p = el("span", ("pill s-" + status + " " + (extraCls || "")).trim(), status);
-  if (STATUS_INFO[status]) p.title = STATUS_INFO[status];
+  const p = el("span", ("pill s-" + status + " " + (extraCls || "")).trim(),
+    statusLabel(status));
+  if (STATUS_INFO[status]) p.title = STATUS_INFO[status].desc;
   return p;
 };
 const allCases = () => DATA.suites.flatMap(s => s.cases.map(c => ({...c, suite: s})));
@@ -74,9 +92,10 @@ function header() {
     `<b>${s.present_funcs}/${s.total_funcs}</b> written`;
   const extraKV = Object.entries(s.counts).filter(([k]) => UNSCORED.has(k));
   const extraEl = document.getElementById("c-extra");
-  extraEl.textContent = extraKV.map(([k, v]) => `${v} ${k}`).join(" · ") || "nothing skipped";
+  extraEl.textContent = extraKV.map(([k, v]) => `${v} ${statusLabel(k)}`).join(" · ")
+    || "nothing skipped";
   extraEl.title = extraKV.length
-    ? extraKV.map(([k]) => `${k}: ${STATUS_INFO[k]}`).join("\n")
+    ? extraKV.map(([k]) => `${statusLabel(k)}: ${STATUS_INFO[k].desc}`).join("\n")
     : "";
   document.getElementById("theme").onclick = () => {
     const r = document.documentElement;
@@ -107,10 +126,16 @@ function wireLegend() {
     panel = el("div", "legend-panel");
     panel.id = "legend-panel";
     panel.hidden = true;
-    Object.entries(STATUS_INFO).forEach(([code, desc]) => {
+    Object.entries(STATUS_INFO).forEach(([code, info]) => {
       const row = el("div", "legend-row");
       row.appendChild(statusPill(code));
-      row.appendChild(el("span", "small", desc));
+      const text = el("span", "small");
+      /* The raw code (KO, UB, ...) still appears verbatim in the terminal
+         and in --json output, so it is worth keeping here too - this is
+         the one place in the whole tool where someone can look it up. */
+      text.appendChild(el("span", "mono muted", code));
+      text.appendChild(document.createTextNode(" — " + info.desc));
+      row.appendChild(text);
       panel.appendChild(row);
     });
     document.body.appendChild(panel);
@@ -462,7 +487,8 @@ function viewMemory(main, focus) {
   suite.cases.forEach(c => {
     const opt = el("option");
     opt.value = String(c.id);
-    opt.textContent = `${String(c.id).padStart(2, "0")}  ${c.status}  ${c.input || ""}`;
+    opt.textContent =
+      `${String(c.id).padStart(2, "0")}  ${statusLabel(c.status)}  ${c.input || ""}`;
     if (fid === c.id) opt.selected = true;
     sel.appendChild(opt);
   });
