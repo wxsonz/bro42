@@ -68,7 +68,21 @@ def _run(cmd, cwd=None):
 
 
 def make_target(target):
-    """make bonus, falling back to all, then to a bare make. Never fatal."""
+    """make bonus, falling back to all, then to a bare make. Never fatal.
+
+    Subject IV: Files to Submit names the file "Makefile" - not "makefile"
+    or "GNUmakefile". A bare `make` invocation does not care about that; GNU
+    make's own search order accepts either lowercase variant just as
+    happily. Left unchecked, a submission that fails the naming requirement
+    still builds, links and passes every per-function test - the
+    macro/structure audit already refuses to run its own Makefile checks
+    without the exact name (macro.py's audit()), and this has to agree with
+    it or a passing functional run and a failed structure check contradict
+    each other.
+    """
+    if not (Path(target) / "Makefile").is_file():
+        return {"ok": False, "cmd": "make",
+                "output": "no Makefile (exact name) at the target root"}
     for args in (["make", "bonus"], ["make", "all"], ["make"]):
         r = _run(args, cwd=target)
         if r.returncode == 0:
