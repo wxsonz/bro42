@@ -728,12 +728,22 @@ function viewConcepts(main, focus) {
     if (focus === card.slug) d.open = true;
     const tagged = cases.filter(c => (c.kw || []).includes(card.slug));
     const ok = tagged.filter(c => c.status === "OK").length;
+    /* UB is not a failure - the standard defines no correct answer, so a
+       concept where every non-UB case passes should read as green, not red.
+       The warning icon is what tells the reader "look closer" instead. */
+    const hasUB = tagged.some(c => c.status === "UB");
+    const passing = tagged.every(c => c.status === "OK" || c.status === "UB");
     const sum = el("summary");
     sum.appendChild(el("b", "", card.slug));
     sum.appendChild(el("span", "small muted", card.title));
     sum.appendChild(el("span", "spacer"));
-    if (tagged.length) sum.appendChild(el("span",
-      "pill " + (ok === tagged.length ? "s-OK" : "s-KO"), `${ok}/${tagged.length}`));
+    if (tagged.length) {
+      const p = el("span", "pill " + (passing ? "s-OK" : "s-KO"),
+        (hasUB ? "⚠️ " : "") + `${ok}/${tagged.length}`);
+      if (hasUB) p.title = "Includes undefined-behaviour case(s) - " +
+        "not scored, shown for reference.";
+      sum.appendChild(p);
+    }
     d.appendChild(sum);
     const b = el("div", "body");
     b.appendChild(el("pre", "", card.body));
@@ -743,9 +753,11 @@ function viewConcepts(main, focus) {
         `${new Set(tagged.map(c => c.fn)).size} function(s)`));
       const g = el("div", "grid");
       tagged.forEach(c => {
+        const label = `${c.fn.replace("ft_","")} ${String(c.id).padStart(2,"0")}`;
         const n = el("div", "node " + (c.status === "OK" ? "ok" :
           UNSCORED.has(c.status) ? "none" : "bad"),
-          `${c.fn.replace("ft_","")} ${String(c.id).padStart(2,"0")}`);
+          c.status === "UB" ? "⚠️ " + label : label);
+        if (STATUS_INFO[c.status]) n.title = STATUS_INFO[c.status].desc;
         n.onclick = () => go("tests", c.fn, `${c.fn}:${c.id}`);
         g.appendChild(n);
       });
