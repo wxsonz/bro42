@@ -174,6 +174,38 @@ def failure_block(rec, st, pack):
     return lines
 
 
+_QUOTED = re.compile(r"'[^']*'")
+
+
+def _error_signature(msg):
+    """Same diagnosis, different file: 'unknown type name 'size_t'' in
+    ft_memset.c and ft_memchr.c is one bug, not two - generalise away the
+    one thing that legitimately differs per call site (the quoted name)."""
+    return _QUOTED.sub("'…'", msg)
+
+
+def shared_compile_errors(records):
+    """Broken functions grouped by root cause, most-shared first. A single
+    header mistake (a missing #include, an absent t_list) fails every
+    function that happens to need it, and without this a student sees N
+    unrelated-looking 'does not compile' names instead of the one line of
+    libft.h to go fix."""
+    groups = {}
+    for r in records:
+        if r.get("missing_reason") != "does not compile":
+            continue
+        err = r.get("compile_error")
+        if not err:
+            continue
+        sig = _error_signature(err)
+        group = groups.setdefault(sig, {"example": err, "fns": set()})
+        group["fns"].add(r["fn"])
+    shared = [(g["example"], sorted(g["fns"])) for g in groups.values()
+             if len(g["fns"]) >= 2]
+    shared.sort(key=lambda pair: -len(pair[1]))
+    return shared
+
+
 def bar(passed, total, filled=7):
     if not total:
         return "░" * filled
@@ -390,6 +422,9 @@ def report(records, target, st, pack, verbose=0, macro=None, hist_delta=None):
         out.append("  " + " · ".join(parts) + f"  of {len(fn_state)}")
         if broke:
             out.append(st.red("  fix first:  " + " ".join(broke)))
+            for msg, fns in shared_compile_errors(records):
+                names = " ".join(f.replace("ft_", "") for f in fns)
+                out.append(st.dim(f"    {len(fns)}x same error: {msg}  ({names})"))
         if blocked:
             # name the dependency, not just the blocked function - the whole
             # point is that the thing to go write is the one NOT listed here

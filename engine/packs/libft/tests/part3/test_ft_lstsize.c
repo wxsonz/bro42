@@ -10,14 +10,14 @@
 ** the fixture is left alive afterward (size only reads the list).
 */
 
-static void	size_case(t_ctx *c, t_list *lst, int expected)
+static void	size_case(t_ctx *c, t_list *lst, unsigned int expected)
 {
-	int	got;
+	unsigned int	got;
 
 	bro_ready(c);
 	got = ft_lstsize(lst);
 	if (got != expected)
-		bro_fail(c->out, "expected %d, got %d", expected, got);
+		bro_fail(c->out, "expected %u, got %u", expected, got);
 	bro_list_free(lst);
 }
 

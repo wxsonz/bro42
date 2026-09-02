@@ -62,6 +62,7 @@ def annotate_missing(pack, records, info):
     """Say WHICH kind of missing. See build.prepare()."""
     broken = set(info.get("not_compiling") or ())
     blocked = info.get("blocked") or {}
+    errors = info.get("compile_errors") or {}
     for r in records:
         if r.get("status") != "MISSING":
             continue
@@ -73,7 +74,12 @@ def annotate_missing(pack, records, info):
                         f"write that first and this unblocks itself")
         elif r["fn"] in broken:
             r["missing_reason"] = "does not compile"
-            r["msg"] = f"{r['fn']}.c exists but did not compile"
+            err = errors.get(r["fn"])
+            if err:
+                r["compile_error"] = err
+                r["msg"] = f"{r['fn']}.c exists but did not compile: {err}"
+            else:
+                r["msg"] = f"{r['fn']}.c exists but did not compile"
         else:
             r["missing_reason"] = "not written"
             r["msg"] = f"{r['fn']} is not written yet"

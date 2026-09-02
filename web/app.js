@@ -10,8 +10,59 @@ const LEVELS = {1:"ASCII & classification",2:"Pointer traversal",3:"Copying & co
   4:"Sized buffers & parsing",5:"Allocation",6:"Double & function pointers",
   7:"File descriptors",8:"Linked lists"};
 
+/* Every status code the engine or the macro/build checks can produce, in
+   plain language - someone reading this dashboard for the first time (a
+   peer evaluator, a student who has never used ft_bro) should not have to
+   already know what "KO" or "UB" means. Shown as a hover tooltip on every
+   pill AND as a standing legend (the #legend popover), because hover does
+   nothing on a touch screen. */
+const STATUS_INFO = {
+  OK:       {label: "Correct",
+             desc: "Matches the expected result."},
+  KO:       {label: "Wrong",
+             desc: "The output did not match what was expected."},
+  SIGSEGV:  {label: "Crashed (segfault)",
+             desc: "Segmentation fault — invalid memory access."},
+  SIGBUS:   {label: "Crashed (bus error)",
+             desc: "Bus error — misaligned or invalid memory access."},
+  SIGABRT:  {label: "Crashed (aborted)",
+             desc: "Aborted — usually a heap-corruption check " +
+                   "(e.g. glibc) catching a bug."},
+  TIMEOUT:  {label: "Timed out",
+             desc: "Never returned — most likely an infinite loop."},
+  LEAK:     {label: "Memory leak",
+             desc: "Ran and returned the right value, but leaked memory " +
+                   "that should have been freed."},
+  UB:       {label: "Undefined behaviour",
+             desc: "The C standard defines no correct answer here, so " +
+                   "this is shown for reference and not scored."},
+  MISSING:  {label: "Not written",
+             desc: "The function was not found, so this case could not " +
+                   "run."},
+  SKIP:     {label: "Skipped",
+             desc: "Not run — tool unavailable, or not applicable here."},
+  FAIL:     {label: "Failed",
+             desc: "Fails a subject requirement."},
+  WARN:     {label: "Warning",
+             desc: "Worth a look, but not scored — a style/best-practice " +
+                   "note, not a subject violation."},
+};
+/* Full word for a status code, for anywhere it is shown to a person - the
+   raw code (used in CSS classes, ids, and every internal comparison) stays
+   what it always was, only the visible text changes. */
+const statusLabel = status => (STATUS_INFO[status] || {}).label || status;
+
 const el = (t, cls, txt) => { const n = document.createElement(t);
   if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
+/* A status pill showing the full word, coloured and classed by the raw
+   code, with the fuller explanation as a hover tooltip - use everywhere a
+   bare `el("span", "pill s-" + status, status)` would otherwise appear. */
+const statusPill = (status, extraCls) => {
+  const p = el("span", ("pill s-" + status + " " + (extraCls || "")).trim(),
+    statusLabel(status));
+  if (STATUS_INFO[status]) p.title = STATUS_INFO[status].desc;
+  return p;
+};
 const allCases = () => DATA.suites.flatMap(s => s.cases.map(c => ({...c, suite: s})));
 
 /* ---------------------------------------------------------------- header */
@@ -39,13 +90,18 @@ function header() {
     `<b>${s.passed}/${s.total_cases}</b> cases`;
   document.getElementById("c-funcs").innerHTML =
     `<b>${s.present_funcs}/${s.total_funcs}</b> written`;
-  const extra = Object.entries(s.counts)
-    .filter(([k]) => UNSCORED.has(k)).map(([k, v]) => `${v} ${k}`).join(" · ");
-  document.getElementById("c-extra").textContent = extra || "nothing skipped";
+  const extraKV = Object.entries(s.counts).filter(([k]) => UNSCORED.has(k));
+  const extraEl = document.getElementById("c-extra");
+  extraEl.textContent = extraKV.map(([k, v]) => `${v} ${statusLabel(k)}`).join(" · ")
+    || "nothing skipped";
+  extraEl.title = extraKV.length
+    ? extraKV.map(([k]) => `${statusLabel(k)}: ${STATUS_INFO[k].desc}`).join("\n")
+    : "";
   document.getElementById("theme").onclick = () => {
     const r = document.documentElement;
     r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark";
   };
+  wireLegend();
   wireRerun();
 }
 
@@ -57,6 +113,39 @@ function applyReport(fresh) {
   Object.assign(DATA, fresh);
   header();
   render();
+}
+/* A standing glossary, not just a hover tooltip: hover does nothing on a
+   touch screen, and someone unfamiliar with these codes (a peer evaluator,
+   a first-time user) may not think to hover in the first place. Built once
+   and toggled, same pattern as the theme button. */
+function wireLegend() {
+  const btn = document.getElementById("legend");
+  if (!btn) return;
+  let panel = document.getElementById("legend-panel");
+  if (!panel) {
+    panel = el("div", "legend-panel");
+    panel.id = "legend-panel";
+    panel.hidden = true;
+    Object.entries(STATUS_INFO).forEach(([code, info]) => {
+      const row = el("div", "legend-row");
+      row.appendChild(statusPill(code));
+      const text = el("span", "small");
+      /* The raw code (KO, UB, ...) still appears verbatim in the terminal
+         and in --json output, so it is worth keeping here too - this is
+         the one place in the whole tool where someone can look it up. */
+      text.appendChild(el("span", "mono muted", code));
+      text.appendChild(document.createTextNode(" — " + info.desc));
+      row.appendChild(text);
+      panel.appendChild(row);
+    });
+    document.body.appendChild(panel);
+    document.addEventListener("click", ev => {
+      if (!panel.hidden && ev.target !== btn && !panel.contains(ev.target)) {
+        panel.hidden = true;
+      }
+    });
+  }
+  btn.onclick = () => { panel.hidden = !panel.hidden; };
 }
 function wireRerun() {
   if (typeof location === "undefined" || location.protocol !== "http:") return;
@@ -398,7 +487,8 @@ function viewMemory(main, focus) {
   suite.cases.forEach(c => {
     const opt = el("option");
     opt.value = String(c.id);
-    opt.textContent = `${String(c.id).padStart(2, "0")}  ${c.status}  ${c.input || ""}`;
+    opt.textContent =
+      `${String(c.id).padStart(2, "0")}  ${statusLabel(c.status)}  ${c.input || ""}`;
     if (fid === c.id) opt.selected = true;
     sel.appendChild(opt);
   });
@@ -536,7 +626,7 @@ function caseCard(c) {
   const d = el("details", "card");
   d.id = `${c.fn}:${c.id}`;
   const sum = el("summary");
-  sum.appendChild(el("span", "pill s-" + c.status, c.status));
+  sum.appendChild(statusPill(c.status));
   sum.appendChild(el("span", "mono small", `${String(c.id).padStart(2,"0")}`));
   sum.appendChild(el("span", "mono", c.input || ""));
   if (c.msg) { const m = el("span", "small muted", c.msg); m.style.marginLeft = "auto"; sum.appendChild(m); }
@@ -638,12 +728,22 @@ function viewConcepts(main, focus) {
     if (focus === card.slug) d.open = true;
     const tagged = cases.filter(c => (c.kw || []).includes(card.slug));
     const ok = tagged.filter(c => c.status === "OK").length;
+    /* UB is not a failure - the standard defines no correct answer, so a
+       concept where every non-UB case passes should read as green, not red.
+       The warning icon is what tells the reader "look closer" instead. */
+    const hasUB = tagged.some(c => c.status === "UB");
+    const passing = tagged.every(c => c.status === "OK" || c.status === "UB");
     const sum = el("summary");
     sum.appendChild(el("b", "", card.slug));
     sum.appendChild(el("span", "small muted", card.title));
     sum.appendChild(el("span", "spacer"));
-    if (tagged.length) sum.appendChild(el("span",
-      "pill " + (ok === tagged.length ? "s-OK" : "s-KO"), `${ok}/${tagged.length}`));
+    if (tagged.length) {
+      const p = el("span", "pill " + (passing ? "s-OK" : "s-KO"),
+        (hasUB ? "⚠️ " : "") + `${ok}/${tagged.length}`);
+      if (hasUB) p.title = "Includes undefined-behaviour case(s) - " +
+        "not scored, shown for reference.";
+      sum.appendChild(p);
+    }
     d.appendChild(sum);
     const b = el("div", "body");
     b.appendChild(el("pre", "", card.body));
@@ -653,9 +753,11 @@ function viewConcepts(main, focus) {
         `${new Set(tagged.map(c => c.fn)).size} function(s)`));
       const g = el("div", "grid");
       tagged.forEach(c => {
+        const label = `${c.fn.replace("ft_","")} ${String(c.id).padStart(2,"0")}`;
         const n = el("div", "node " + (c.status === "OK" ? "ok" :
           UNSCORED.has(c.status) ? "none" : "bad"),
-          `${c.fn.replace("ft_","")} ${String(c.id).padStart(2,"0")}`);
+          c.status === "UB" ? "⚠️ " + label : label);
+        if (STATUS_INFO[c.status]) n.title = STATUS_INFO[c.status].desc;
         n.onclick = () => go("tests", c.fn, `${c.fn}:${c.id}`);
         g.appendChild(n);
       });
@@ -684,7 +786,7 @@ function viewMacro(main) {
       const d = el("details", "card");
       d.id = "macro/" + c.name.replace(/\s+/g, "-");
       const sum = el("summary");
-      sum.appendChild(el("span", "pill s-" + c.status, c.status));
+      sum.appendChild(statusPill(c.status));
       sum.appendChild(el("b", "", c.name));
       sum.appendChild(el("span", "small muted", c.desc));
       d.appendChild(sum);

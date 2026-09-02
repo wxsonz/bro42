@@ -406,30 +406,50 @@ def check_valgrind():
     return []
 
 
-def check_subject_19_2_layout():
-    """The same library, laid out the way subject 19.2 asks for it.
+def check_legacy_bonus_layout():
+    """The same library, laid out the way an OLDER subject asked for it.
 
-    19.2 IV.4 puts the nine list functions in the MANDATORY part, so a current
-    repo names them ft_lstnew.c and builds them from `all` with no `bonus`
-    rule. bro42 used to warn twice at exactly that layout - "bonus file(s)
-    not named _bonus.c" and "no working bonus rule" - telling a student who
-    followed their own subject that they had it wrong.
+    19.3 IV.4 puts the nine list functions in the MANDATORY part, so the
+    reference itself now names them ft_lstnew.c and builds them from `all`
+    with no `bonus` rule - see _dev/reference/libft42git/Makefile. A repo
+    started under an older subject instead names them ft_lstnew_bonus.c and
+    gates them behind a `bonus` rule. ft_bro used to warn on exactly that
+    layout - "bonus file(s) not named _bonus.c" and "no working bonus rule" -
+    telling a student who followed their own (older) subject that they had
+    it wrong, so both layouts have to keep working.
 
     Compares every non-OK macro row, not just failures: both of those were
     WARN, so a FAIL-only comparison would sit through the regression.
     """
+    from bro42.packs import libft
+
     src = REFERENCE
-    work = mutants.OUT / "subject_19_2"
+    work = mutants.OUT / "legacy_bonus"
     if work.is_dir():
         shutil.rmtree(work)
     shutil.copytree(src, work, ignore=shutil.ignore_patterns(".git"))
-    for old in list(work.glob("*_bonus.c")) + list(work.glob("*_bonus.h")):
-        old.rename(work / old.name.replace("_bonus", ""))
+    for fn in libft.PART3:
+        c = work / f"{fn}.c"
+        if c.is_file():
+            c.rename(work / f"{fn}_bonus.c")
     mk = work / "Makefile"
-    text = mk.read_text().replace("_bonus.c", ".c")
-    text = text.replace("SRCS_O = $(SRCS:.c=.o)", "SRCS += $(BONUS)\nSRCS_O = $(SRCS:.c=.o)")
-    text = re.sub(r"^bonus: .*\n(\t.*\n)+", "", text, flags=re.M)
-    mk.write_text(text.replace("$(BONUS_O)", ""))
+    text = mk.read_text()
+    bonus_srcs = " ".join(f"{fn}_bonus.c" for fn in libft.PART3)
+    for fn in libft.PART3:
+        text = re.sub(rf"\s*{fn}\.c\\?", "", text)
+    # Removing the Part 3 entries can leave the last Part 1/2 line's
+    # continuation backslash dangling with nothing after it on its own line,
+    # which folds the next real assignment (BONUS) into SRCS instead of
+    # starting a new variable.
+    text = re.sub(r"\\\s*\nSRCS_O", "\nSRCS_O", text)
+    text = text.replace(
+        "SRCS_O = $(SRCS:.c=.o)",
+        f"BONUS = {bonus_srcs}\nSRCS_O = $(SRCS:.c=.o)\nBONUS_O = $(BONUS:.c=.o)")
+    text = text.replace(
+        "clean:\n\trm -rf $(SRCS_O)",
+        "bonus: $(SRCS_O) $(BONUS_O)\n\tar rc $(NAME) $(BONUS_O) $(SRCS_O)\n\n"
+        "clean:\n\trm -rf $(SRCS_O) $(BONUS_O)")
+    mk.write_text(text)
 
     records = run(work, macro=True)
     rows = {r["name"]: r["status"] for r in records
@@ -438,11 +458,11 @@ def check_subject_19_2_layout():
     micro = failures(records)
     problems = []
     if unexpected:
-        problems.append(f"19.2 layout raises rows a legacy layout does not: {unexpected}")
+        problems.append(f"legacy bonus layout raises rows the 19.3 layout does not: {unexpected}")
     if micro:
-        problems.append(f"19.2 layout changes micro results: {micro}")
+        problems.append(f"legacy bonus layout changes micro results: {micro}")
     if not problems:
-        print("  ok   subject 19.2 layout mandatory Part 3, no bonus rule, nothing raised")
+        print("  ok   legacy bonus layout  pre-19.3 _bonus.c naming, nothing raised")
     return problems
 
 
@@ -508,7 +528,7 @@ def main():
     problems += check_dashboard()
     problems += check_determinism()
     problems += check_mutant_docs()
-    problems += check_subject_19_2_layout()
+    problems += check_legacy_bonus_layout()
     problems += check_valgrind()
     if problems:
         print(f"\nFAILED ({len(problems)})", file=sys.stderr)

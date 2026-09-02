@@ -1,4 +1,4 @@
-"""Libft (subject v19.2) - rank00. The pack bro42 was built around.
+"""Libft (subject v19.3) - rank00. The pack bro42 was built around.
 
 Part is not a difficulty ordering - it is the PERMISSION boundary. Subject IV.3
 lets Part 2 call write; Parts 1 and 3 may not. The macro symbol audit needs the
@@ -26,7 +26,7 @@ PART3 = [
     "ft_lstadd_back", "ft_lstdelone", "ft_lstclear", "ft_lstiter", "ft_lstmap",
 ]
 
-# Subject 19.2 puts Part 3 in Chapter IV, the MANDATORY part - "IV.4 Part 3 -
+# Subject 19.3 puts Part 3 in Chapter IV, the MANDATORY part - "IV.4 Part 3 -
 # linked list". Libft has no bonus part at all: every "bonus" in the document
 # is in the Chapter II boilerplate that ships with every 42 subject.
 #
@@ -68,7 +68,7 @@ PACK = Pack(
     id="libft",
     display="Libft",
     rank="r00",
-    subject_version="19.2",
+    subject_version="19.3",
     artifact=("archive", "libft.a"),
     header="libft.h",
     sources=set(ALL) | {f"{f}_bonus" for f in ALL},

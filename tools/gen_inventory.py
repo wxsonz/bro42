@@ -3,7 +3,7 @@
 
 The inventory is a VIEW. cases.json and roadmap.json are the facts, and they
 are themselves generated from the authored specs. Writing it by hand is how
-the part names drifted the first time - subject 19.2 moved the list functions
+the part names drifted the first time - subject 19.3 moved the list functions
 into the mandatory part and the hand-written table still called them bonus.
 
 Not wired into `make`: it writes into _dev, which is private and absent from a
@@ -27,7 +27,7 @@ TIER = {
     5: "T5 mutates a caller-owned linked structure",
 }
 
-# Subject 19.2: IV.2 Part 1, IV.3 Part 2, IV.4 Part 3 - linked list. All three
+# Subject 19.3: IV.2 Part 1, IV.3 Part 2, IV.4 Part 3 - linked list. All three
 # are inside Chapter IV, the mandatory part.
 PART_NAME = {1: "1 — libc", 2: "2 — additional", 3: "3 — linked list"}
 
@@ -66,7 +66,7 @@ Part is not a difficulty ordering. It is what the subject permits each function 
 Calls between your own `ft_*` functions are legal in every part and are not violations — a check
 that flags `ft_strjoin` for calling `ft_strlen` is accusing correct code.
 
-**All three parts are mandatory.** Subject 19.2 places Part 3 in Chapter IV alongside the others;
+**All three parts are mandatory.** Subject 19.3 places Part 3 in Chapter IV alongside the others;
 Libft has no bonus part. Repositories started under an older subject keep the list functions in
 `ft_lst*_bonus.c` behind a `bonus` rule, which the build and macro checks both accept.
 

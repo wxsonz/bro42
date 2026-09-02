@@ -5,7 +5,7 @@
 
 /*
 ** Libft pack interfaces. A linked list is this PROJECT's subject matter
-** (Part 3, subject v19.2), not the harness's - bro.h is the core's public
+** (Part 3, subject v19.3), not the harness's - bro.h is the core's public
 ** header and has no business declaring t_list, so the Part 3 fixtures and
 ** their ownership-tracking hooks live here instead, next to the pack that
 ** actually needs them.

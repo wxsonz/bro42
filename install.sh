@@ -124,8 +124,15 @@ case ":${PATH}:" in
 		;;
 	*)
 		b "6. $BIN is NOT on your \$PATH"
-		rc="${HOME}/.zshrc"
-		[ -n "${BASH_VERSION:-}" ] && rc="${HOME}/.bashrc"
+		# This script always runs under bash - the #!/usr/bin/env bash line
+		# guarantees that no matter what invoked it - so $BASH_VERSION is
+		# set even for a zsh user and is useless here. $SHELL is the login
+		# shell, inherited from the parent process, so it is what actually
+		# tells us which rc file the user's shell reads.
+		case "$(basename "${SHELL:-bash}")" in
+			zsh) rc="${HOME}/.zshrc" ;;
+			*)   rc="${HOME}/.bashrc" ;;
+		esac
 		line="export PATH=\"\$HOME/.local/bin:\$PATH\""
 		cat <<EOF
    To make "bro" work from anywhere, this exact line needs to be added to

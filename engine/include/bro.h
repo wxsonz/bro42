@@ -335,6 +335,8 @@ size_t	bro_capture_take(t_ctx *c, int slot, char *out, size_t max);
 
 /* oracle.c - reference implementations libc does not provide */
 char	*bro_ref_strnstr(const char *big, const char *little, size_t len);
+size_t	bro_ref_strlcpy(char *dst, const char *src, size_t size);
+size_t	bro_ref_strlcat(char *dst, const char *src, size_t size);
 
 /* emit.c */
 void	bro_emit(const t_suite *s, const t_case *c, const t_result *r,

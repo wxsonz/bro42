@@ -90,7 +90,7 @@ def tracked_artifacts(root):
 def source_of(root, fn):
     """The file a function lives in, under either subject revision.
 
-    19.2 makes Part 3 mandatory, so `ft_lstnew.c` is the current name. Repos
+    19.3 makes Part 3 mandatory, so `ft_lstnew.c` is the current name. Repos
     started under an older subject use `ft_lstnew_bonus.c`. Both are real
     submissions; neither is an error.
     """
@@ -154,7 +154,7 @@ def check_structure(target, pack, out):
             hint=("not written yet: " + ", ".join(missing[:8])) if missing else
                  "Subject IV: every mandatory function has its own .c file"))
 
-        # Part 3 is a Libft-only naming quirk: 19.2 made it mandatory, but an
+        # Part 3 is a Libft-only naming quirk: 19.3 made it mandatory, but an
         # older subject gated it behind a `bonus` rule and _bonus.c names.
         # Nothing analogous exists for a pack whose bonus is separate
         # features sharing the mandatory part's own symbol (ft_printf).
@@ -165,7 +165,7 @@ def check_structure(target, pack, out):
                 out.append(Check(
                     1, "Part 3 naming", "OK",
                     f"{len(legacy)}/{len(part3)} in _bonus.c files",
-                    hint="An older subject made the list functions a bonus. 19.2 puts "
+                    hint="An older subject made the list functions a bonus. 19.3 puts "
                          "them in the mandatory part (IV.4), so plain .c names are "
                          "current - but nothing here requires you to rename them."))
 
@@ -227,7 +227,7 @@ def check_rules(work, pack, out):
     if pack.id != "libft":
         return True
 
-    # Part 3 is mandatory (19.2 IV.4), so a plain `make` has to produce the
+    # Part 3 is mandatory (19.3 IV.4), so a plain `make` has to produce the
     # list functions. A repo written against an older subject gates them
     # behind a `bonus` rule instead; that is a valid layout, so the rule is
     # run when it exists and its absence is not a finding.

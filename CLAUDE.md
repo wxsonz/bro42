@@ -4,7 +4,7 @@ Guidance for Claude Code working in this repository.
 
 ## What this is
 
-`bro42` is a teaching companion and test suite for the 42 **Libft** project (subject v19.2).
+`bro42` is a teaching companion and test suite for the 42 **Libft** project (subject v19.3).
 It is deliberately **not a grader**: every case carries prose explaining what it was for, shown
 on passes as well as failures. Run as `bro` from inside a student's libft repository.
 

@@ -102,7 +102,7 @@ MUTANTS = {
     # Freeing the content directly instead of routing it through del. Only the
     # cases that count del calls can see this - which is why they exist.
     "lstclear_free_not_del": (
-        "ft_lstclear_bonus.c",
+        "ft_lstclear.c",
         "del((*l)->content);",
         "free((*l)->content);",
         {"ft_lstclear:2": "KO", "ft_lstclear:3": "KO", "ft_lstclear:6": "KO"},
@@ -227,8 +227,8 @@ MUTANTS = {
     "memcmp_drops_const": (
         [("ft_memcmp.c", "int\tft_memcmp(const void *s1",
                          "int\tft_memcmp(void *s1"),
-         ("libft.h", "int\t\tft_memcmp(const void *s1",
-                     "int\t\tft_memcmp(void *s1")],
+         ("libft.h", "int\t\t\t\tft_memcmp(const void *s1",
+                     "int\t\t\t\tft_memcmp(void *s1")],
         None, None,
         {},
         {"prototypes match the subject"},
@@ -341,7 +341,7 @@ MUTANTS = {
     # actually lives". The `t_list *back` declaration has to go with it, or
     # the mutant leaves it unused under -Werror and never builds (rule 2).
     #
-    # ft_lstmap:1,2,3,4,6,7 go KO as well: ft_lstmap_bonus.c appends every
+    # ft_lstmap:1,2,3,4,6,7 go KO as well: ft_lstmap.c appends every
     # mapped node with ft_lstadd_back, so a broken add_back silently truncates
     # the list ft_lstmap builds - genuine propagation between the two
     # functions, not a second seeded bug.
@@ -352,7 +352,7 @@ MUTANTS = {
     # The expected statuses are unchanged either way - check_mutants compares
     # the delta against whatever the baseline is.)
     "lstadd_back_no_walk": (
-        "ft_lstadd_back_bonus.c",
+        "ft_lstadd_back.c",
         "void\tft_lstadd_back(t_list **l, t_list *new)\n{\n\tt_list\t*back;"
         "\n\n\tif (*l == NULL)\n\t{\n\t\t*l = new;\n\t\treturn ;\n\t}\n\t"
         "back = *l;\n\twhile (back -> next)\n\t\tback = back -> next;\n\t"
@@ -366,14 +366,14 @@ MUTANTS = {
     ),
     # Orphan the content f() just produced when the following ft_lstnew
     # fails: this is the real defect the reference shipped in
-    # ft_lstmap_bonus.c until it was fixed on 2026-08-23 (see selftest.py's
+    # ft_lstmap.c until it was fixed on 2026-08-23 (see selftest.py's
     # REFERENCE_KNOWN_BAD history). Seeded by removing exactly the del(content)
     # line the fix added, so it restores this defect and nothing else.
     # ft_lstmap:8 moves too: dropping the call outright means del ran zero
     # times, which case 8's own allocator-arming counter catches directly -
     # it does not need the sweep at all to see this one.
     "lstmap_orphans_content": (
-        "ft_lstmap_bonus.c",
+        "ft_lstmap.c",
         "\t\t\tdel(content);\n\t\t\tft_lstclear(&newl, del);",
         "\t\t\tft_lstclear(&newl, del);",
         {"ft_lstmap:1": "LEAK", "ft_lstmap:2": "LEAK", "ft_lstmap:3": "LEAK",
@@ -390,7 +390,7 @@ MUTANTS = {
     # itself outside BRO_INJECT specifically so its own bro_fail() is not
     # the one being discarded.
     "lstmap_free_not_del": (
-        "ft_lstmap_bonus.c",
+        "ft_lstmap.c",
         "\t\t\tdel(content);\n\t\t\tft_lstclear(&newl, del);",
         "\t\t\tfree(content);\n\t\t\tft_lstclear(&newl, del);",
         {"ft_lstmap:8": "KO"},
@@ -400,7 +400,7 @@ MUTANTS = {
     # well), and only visible through bro_del_counting's call count - which is
     # the entire reason that instrumented del exists instead of plain free.
     "lstdelone_free_not_del": (
-        "ft_lstdelone_bonus.c",
+        "ft_lstdelone.c",
         "\t(*del)(l -> content);\n\tfree(l);",
         "\tfree(l -> content);\n\tfree(l);",
         {"ft_lstdelone:2": "KO", "ft_lstdelone:4": "KO",

@@ -45,8 +45,34 @@ def _run(cmd, cwd=None):
                           errors="replace")
 
 
+def _first_error(stderr):
+    """The compiler's own one-line diagnosis, stripped of its file:line:col
+    prefix so identical root causes in different files compare equal - that
+    is what lets several broken functions be reported as one shared cause
+    instead of N unexplained names."""
+    for line in stderr.splitlines():
+        if "error:" in line:
+            return line.split("error:", 1)[1].strip()
+    tail = stderr.strip().splitlines()
+    return tail[-1].strip() if tail else "compile failed"
+
+
 def make_target(target):
-    """make bonus, falling back to all, then to a bare make. Never fatal."""
+    """make bonus, falling back to all, then to a bare make. Never fatal.
+
+    Subject IV: Files to Submit names the file "Makefile" - not "makefile"
+    or "GNUmakefile". A bare `make` invocation does not care about that; GNU
+    make's own search order accepts either lowercase variant just as
+    happily. Left unchecked, a submission that fails the naming requirement
+    still builds, links and passes every per-function test - the
+    macro/structure audit already refuses to run its own Makefile checks
+    without the exact name (macro.py's audit()), and this has to agree with
+    it or a passing functional run and a failed structure check contradict
+    each other.
+    """
+    if not (Path(target) / "Makefile").is_file():
+        return {"ok": False, "cmd": "make",
+                "output": "no Makefile (exact name) at the target root"}
     for args in (["make", "bonus"], ["make", "all"], ["make"]):
         r = _run(args, cwd=target)
         if r.returncode == 0:
@@ -105,7 +131,7 @@ def compile_known_sources(target, pack, out_dir, info=None):
         includes.append(f"-I{out_dir}")
         if info is not None:
             info["synth_header"] = True
-    objs, errors = [], []
+    objs, errors = [], {}
     for src in sorted(Path(target).glob("*.c")):
         stem = src.stem
         # pack.sources already contains both the plain and the `_bonus`
@@ -118,7 +144,8 @@ def compile_known_sources(target, pack, out_dir, info=None):
         if r.returncode == 0:
             objs.append(obj)
         else:
-            errors.append(r.stderr.strip())
+            fn = stem[:-6] if stem.endswith("_bonus") else stem
+            errors[fn] = _first_error(r.stderr)
     if info is not None:
         info["compile_errors"] = errors
     if not objs:
@@ -235,10 +262,9 @@ def prepare(target, pack):
                       f"bro42 is willing to guess at - fix the build so "
                       f"`make` produces {pack.artifact[1]}")
         else:
-            errs = info.get("compile_errors") or []
+            errs = info.get("compile_errors") or {}
             if errs:
-                lines = [l for e in errs for l in e.splitlines()
-                         if "error:" in l][:4]
+                lines = [f"{fn}: {msg}" for fn, msg in list(errs.items())[:4]]
                 detail = "\n  " + "\n  ".join(lines) if lines else ""
             elif not list(Path(target).glob("*.c")):
                 detail = "\n  the directory contains no .c files"

@@ -4,8 +4,8 @@
 
 /*
 ** ft_strlcpy - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 11.
-** Oracle: BSD strlcpy(dst, src, size) - glibc has carried it natively
-** since 2.38.
+** Oracle: bro_ref_strlcpy - BSD strlcpy is not on every glibc (only since
+** 2.38), so the engine ships its own (engine/src/oracle.c).
 **
 ** Case 8 is UB (NULL destination, even at size 0 - BSD never defined it).
 */
@@ -21,7 +21,7 @@ static void	lcpy_case(t_ctx *c, const char *src, size_t size, size_t buflen)
 	ref = bro_ctx_ref(c, buflen);
 	if (!dst || !ref)
 		return (bro_fail(c->out, "engine: out of memory"));
-	want = strlcpy((char *)ref->ptr, src, size);
+	want = bro_ref_strlcpy((char *)ref->ptr, src, size);
 	got = ft_strlcpy((char *)dst->ptr, src, size);
 	bro_expect_bytes(c->out, ref->ptr, dst->ptr, buflen);
 	bro_expect_num(c->out, (long long)want, (long long)got);
@@ -37,28 +37,19 @@ static void	case_07(t_ctx *c) { lcpy_case(c, "hello!", 6, 6); }
 
 /*
 ** Undefined: BSD never defines strlcpy with a NULL destination, even when
-** size is 0. glibc 2.38+ happens not to dereference it here, but nothing
-** promises that.
+** size is 0. bro_ref_strlcpy happens not to dereference dst in that case,
+** but nothing in the BSD docs promises that of any implementation.
 */
-/*
-** As in test_ft_memcpy.c: glibc declares strlcpy __nonnull, so a literal NULL
-** is a compile-time error under -Werror. The volatile function pointer keeps
-** the glibc half of the comparison, which is what makes a UB case worth
-** running at all.
-*/
-static size_t	(*volatile g_libc_strlcpy)(char *, const char *, size_t)
-	= strlcpy;
-
 static void	case_08(t_ctx *c)
 {
 	size_t	got;
 	size_t	ref;
 
 	got = ft_strlcpy(NULL, "hello", 0);
-	ref = g_libc_strlcpy(NULL, "hello", 0);
+	ref = bro_ref_strlcpy(NULL, "hello", 0);
 	bro_mark_ub(c->out,
-		"yours returns %zu, glibc returns %zu - a NULL destination is "
-		"undefined by BSD even at size 0", got, ref);
+		"yours returns %zu, the reference returns %zu - a NULL "
+		"destination is undefined by BSD even at size 0", got, ref);
 }
 
 static const t_case	g_cases[] = {

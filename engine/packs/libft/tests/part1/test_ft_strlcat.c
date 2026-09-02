@@ -4,7 +4,8 @@
 
 /*
 ** ft_strlcat - T1. Cases transcribed from _dev/plan/rank00/libft-01-cases.md section 12.
-** Oracle: BSD strlcat(dst, src, size).
+** Oracle: bro_ref_strlcat - BSD strlcat is not on every glibc (only since
+** 2.38), so the engine ships its own (engine/src/oracle.c).
 **
 ** Cases 5-8 are the branch everyone gets wrong: when size <= strlen(dst),
 ** nothing can be appended, dst is left alone, and the return is
@@ -26,7 +27,7 @@ static void	lcat_case(t_ctx *c, const char *dst0, const char *src,
 		return (bro_fail(c->out, "engine: out of memory"));
 	memcpy(dst->ptr, dst0, strlen(dst0) + 1);
 	memcpy(ref->ptr, dst0, strlen(dst0) + 1);
-	want = strlcat((char *)ref->ptr, src, size);
+	want = bro_ref_strlcat((char *)ref->ptr, src, size);
 	got = ft_strlcat((char *)dst->ptr, src, size);
 	bro_expect_bytes(c->out, ref->ptr, dst->ptr, buflen);
 	bro_expect_num(c->out, (long long)want, (long long)got);
