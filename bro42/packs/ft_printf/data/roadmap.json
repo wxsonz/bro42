@@ -1,0 +1,108 @@
+{
+ "functions": {
+  "pf_c": {
+   "level": 2,
+   "order": 3,
+   "prereqs": [
+    "pf_literal"
+   ]
+  },
+  "pf_d": {
+   "level": 3,
+   "order": 5,
+   "prereqs": [
+    "pf_c"
+   ]
+  },
+  "pf_flags": {
+   "level": 8,
+   "order": 15,
+   "prereqs": [
+    "pf_precision"
+   ]
+  },
+  "pf_i": {
+   "level": 3,
+   "order": 6,
+   "prereqs": [
+    "pf_d"
+   ]
+  },
+  "pf_literal": {
+   "level": 1,
+   "order": 1,
+   "prereqs": []
+  },
+  "pf_p": {
+   "level": 5,
+   "order": 10,
+   "prereqs": [
+    "pf_u"
+   ]
+  },
+  "pf_pct": {
+   "level": 1,
+   "order": 2,
+   "prereqs": [
+    "pf_literal"
+   ]
+  },
+  "pf_precision": {
+   "level": 8,
+   "order": 14,
+   "prereqs": [
+    "pf_width"
+   ]
+  },
+  "pf_ret": {
+   "level": 6,
+   "order": 11,
+   "prereqs": [
+    "pf_p"
+   ]
+  },
+  "pf_robust": {
+   "level": 7,
+   "order": 12,
+   "prereqs": [
+    "pf_ret"
+   ]
+  },
+  "pf_s": {
+   "level": 2,
+   "order": 4,
+   "prereqs": [
+    "pf_c"
+   ]
+  },
+  "pf_u": {
+   "level": 4,
+   "order": 7,
+   "prereqs": [
+    "pf_d"
+   ]
+  },
+  "pf_width": {
+   "level": 8,
+   "order": 13,
+   "prereqs": [
+    "pf_robust"
+   ]
+  },
+  "pf_x": {
+   "level": 4,
+   "order": 8,
+   "prereqs": [
+    "pf_u"
+   ]
+  },
+  "pf_xup": {
+   "level": 4,
+   "order": 9,
+   "prereqs": [
+    "pf_x"
+   ]
+  }
+ },
+ "source": "_dev/plan/rank01/ftprintf-02-learning.md"
+}

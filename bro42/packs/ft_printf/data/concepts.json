@@ -1,0 +1,287 @@
+{
+ "concepts": {
+  "base-conversion": {
+   "body": "`%u` is base 10 over `\"0123456789\"`. `%x` is base 16 over `\"0123456789abcdef\"`. `%X` is base 16\nover `\"0123456789ABCDEF\"`. Everything else \u2014 accumulate the remainder, recurse or stack the digits\nso they come out most-significant-first, stop when the quotient reaches zero, print a lone `\"0\"`\nfor the value zero rather than nothing \u2014 is identical across all three. `%p` runs through the same\nroutine again: base 16, lowercase, over a pointer's bit pattern instead of an integer's.\n\nWriting three separate conversion functions instead of one parameterised by base and alphabet is\nhow `%x` gets fixed and `%X` quietly does not \u2014 the two drift apart, and drift like that is exactly\nwhat a differential test against the real `printf` is built to catch.",
+   "defense": [
+    "Why should `%x` and `%X` be the same function with one parameter changed?"
+   ],
+   "functions": [
+    "pf_u",
+    "pf_x",
+    "pf_xup",
+    "pf_p"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a77.19.6.1"
+   ],
+   "slug": "base-conversion",
+   "title": "`%u`, `%x` and `%X` are the same algorithm three times: divide-and-remainder against a base, indexed into a digit alphabet."
+  },
+  "int-min": {
+   "body": "`%d` and `%i` share one signed-decimal routine, and that routine's most tempting first line \u2014\nnegate a negative argument so the digit-extraction loop only ever handles positives \u2014 is exactly\nthe line that overflows on `INT_MIN`. Two's complement is asymmetric: `INT_MIN` is `-2147483648`,\n`INT_MAX` is only `2147483647`, so `+2147483648` has no representation as `int` and negating\n`INT_MIN` is undefined behaviour, not merely a wrong number.\n\nThree legitimate fixes exist: promote to `long` before negating; extract digits from the negative\nvalue directly using `%` and `/`, both of which truncate toward zero and give the right digit\neither way; or special-case the ten-digit literal for `INT_MIN`. Which one you chose matters less\nthan being able to say which, and why the naive line was wrong in the first place.",
+   "defense": [
+    "Why does `%d` crash \u2014 or print the wrong thing \u2014 on `INT_MIN`?"
+   ],
+   "functions": [
+    "pf_d",
+    "pf_i"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a76.2.6.2"
+   ],
+   "slug": "int-min",
+   "title": "`-(-2147483648)` does not fit back into an `int`."
+  },
+  "no-buffering": {
+   "body": "The real `printf` batches bytes into an internal buffer and flushes on a newline, on the buffer\nfilling, or on `fflush`/exit \u2014 none of that traffic reaches the descriptor as it happens. Subject\nIV says plainly not to implement that buffer management, which means every `write` your conversions\nperform has to land on the descriptor immediately, unbuffered, in exactly the order the format\nstring produced it.\n\nThis is what makes fd capture a meaningful oracle at all: a test asserting the exact byte sequence\non descriptor `1` only works if what reaches `write()` matches a byte-for-byte reading of the\nformat string, one conversion at a time. It is also why the closed-descriptor case in\n`pf_robust` can observe correct output from the conversions that ran *before* the failing one \u2014\nnothing was ever held back waiting on a flush that this project is not allowed to have.",
+   "defense": [
+    "What does 'do not implement the buffer management of the original printf()' actually forbid you from doing?"
+   ],
+   "functions": [
+    "pf_ret",
+    "pf_robust"
+   ],
+   "refs": [
+    "Subject IV",
+    "man 3 stdio"
+   ],
+   "slug": "no-buffering",
+   "title": "The subject forbids reimplementing `printf`'s buffer management, which changes what a test is even allowed to observe."
+  },
+  "null-string-ub": {
+   "body": "Passing `NULL` is not a documented edge case with a spec-mandated answer; it is outside what the\nstandard defines at all, which is a different thing from \"unspecified\" or \"implementation-defined\".\nglibc chooses to print the seven characters `(null)` rather than let `strlen` dereference a NULL\npointer and crash \u2014 that is glibc being defensive, not glibc following a rule your `ft_printf` is\nbound by.\n\nThe naive path \u2014 call `strlen`/`ft_strlen` on the argument before checking it \u2014 segfaults, and this\nsubject scores a crash as non-functional (Chapter II) even though the standard permits *any*\nbehaviour here, undefined behaviour included. So most implementations pick a printable fallback on\npurpose, and the sentence worth having ready at defense names the behaviour as undefined and states\nwhat yours does and why, not that there is one true output.",
+   "defense": [
+    "Is `printf(\\\"%s\\\", NULL)` defined behaviour?"
+   ],
+   "functions": [
+    "pf_s",
+    "pf_robust"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a77.19.6.1"
+   ],
+   "slug": "null-string-ub",
+   "title": "`printf(\"%s\", NULL)` has no behaviour the C standard defines \u2014 the standard requires `%s`'s argument to point at a string, full stop."
+  },
+  "pointer-format": {
+   "body": "`%p`'s argument is `void *`. Handing it to the base-conversion routine means first reinterpreting\nits bits as an integer type wide enough to hold every one of them \u2014 that type is `uintptr_t`\n(`<stdint.h>`), which the standard actually guarantees round-trips a pointer. `unsigned long`\nhappens to be wide enough on the platforms this project is graded on; code that says `uintptr_t`\nstates what it depends on, and code that says `unsigned long` is depending on an assumption it\nnever wrote down.\n\nThe NULL case is where this concept meets the subject head-on: `printf(\"%p\", NULL)` is not\nstandardised, so \"prepend `0x`, then convert\" and \"check for NULL first\" produce different answers\non different platforms \u2014 glibc prints `(nil)`, macOS's libc prints `0x0`. Since Subject IV says\nyour function \"will be compared against the original `printf()`\", which of those two is *correct*\ndepends entirely on which platform is doing the comparing.",
+   "defense": [
+    "Why does `%p` go through `uintptr_t` instead of `unsigned long`?"
+   ],
+   "functions": [
+    "pf_p"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a77.18.1.4",
+    "Subject IV"
+   ],
+   "slug": "pointer-format",
+   "title": "A pointer is not an integer, and printing one means reinterpreting its bit pattern, not its value in any arithmetic sense."
+  },
+  "return-count": {
+   "body": "Every byte that reaches `write` counts toward the return value \u2014 literal text between conversions,\nthe single byte `%%` produces, an unknown conversion your robustness branch chooses to echo\nverbatim. The only design that keeps this reliably correct is one shared accumulator that every\nbranch adds to on its way out. A `%c` branch that returns early without touching that accumulator\nis a bug that a suite testing `%c` alone will never see, because it only shows up once `%c` shares\na format string with something else.\n\nThis is also why the contract for this pack asserts the return count on *every* case, not only in\n`pf_ret`: it is not one suite's property, it is the one number every suite is jointly responsible\nfor.",
+   "defense": [
+    "Does `ft_printf(\\\"%s%d\\\", \\\"ab\\\", 3)` count the `3` even though neither conversion is in `pf_ret`?"
+   ],
+   "functions": [
+    "pf_literal",
+    "pf_pct",
+    "pf_c",
+    "pf_s",
+    "pf_d",
+    "pf_i",
+    "pf_u",
+    "pf_x",
+    "pf_xup",
+    "pf_p",
+    "pf_ret",
+    "pf_robust",
+    "pf_width",
+    "pf_precision",
+    "pf_flags"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a77.19.6.1"
+   ],
+   "slug": "return-count",
+   "title": "The number ft_printf returns is a running total accumulated across the whole call, not a length computed after the fact."
+  },
+  "unsigned-reinterpret": {
+   "body": "The argument promotes to `int` the same way regardless of which conversion reads it; what changes\nis the type `va_arg` names when fetching it. Fetch it as `unsigned int` and a negative bit pattern\nis simply read differently \u2014 no arithmetic happens, no sign is inspected. `-1` as a 32-bit `int` is\nthe bit pattern `0xFFFFFFFF`; as `unsigned int` that same bit pattern is `4294967295`.\n\n```\n-1 as int              = 0xFFFFFFFF\nsame bits as unsigned  = 4294967295      \u2190 what %u must print\nabs(-1)                = 1               \u2190 a different routine, wrong answer\n```\n\nReinterpretation is free the moment the local variable is declared `unsigned int` \u2014 the mistake is\ndoing work you were not asked to do, by calling `abs()` or hand-flipping the sign before\nconversion. That produces `1`, four billion away from the answer the original `printf` gives.",
+   "defense": [
+    "What does `%u` print for the argument `-1`, and why is it not `1`?"
+   ],
+   "functions": [
+    "pf_u",
+    "pf_x",
+    "pf_xup"
+   ],
+   "refs": [
+    "man 3 printf",
+    "C99 \u00a76.3.1.3"
+   ],
+   "slug": "unsigned-reinterpret",
+   "title": "`%u` and `%x` do not convert a negative number into a positive one \u2014 they read the same bits under a different type."
+  },
+  "va-copy": {
+   "body": "Once `va_start(ap, format)` runs, `ap` is a live, one-directional cursor: every `va_arg(ap, T)`\nadvances it by the width of `T`, permanently. Passing `ap` itself into a helper function does not\nreliably hand that helper an independent copy \u2014 on the x86-64 System V ABI, `va_list` is an\narray type, so a \"by value\" parameter decays to a pointer, and the helper's reads move the\ncaller's cursor too. On another ABI the same code might genuinely copy the state and never fail a\nsingle test, which is exactly what makes this bug invisible until it meets the wrong platform.\n\n`va_copy(dst, src)` is the only portable way to get a second, independent cursor over the\narguments `src` has not yet consumed. Every `va_copy` needs its own `va_end`, same as the original\n`va_start` does \u2014 copying it does not exempt it from being closed.",
+   "defense": [
+    "What goes wrong if you pass a `va_list` to a helper by value and then keep reading it in the caller?"
+   ],
+   "functions": [
+    "pf_robust"
+   ],
+   "refs": [
+    "man 3 stdarg",
+    "C99 \u00a77.15.1.2"
+   ],
+   "slug": "va-copy",
+   "title": "A `va_list` is a single cursor into the argument frame; reading it moves it, and there is no way to move it back."
+  },
+  "variadic-promotion": {
+   "body": "C99 \u00a76.5.2.2 requires the *default argument promotions* on every trailing argument of a variadic\ncall, before the call even happens. The caller's `ft_printf(\"%c\", 'A')` does not push a one-byte\n`'A'` \u2014 the compiler has already promoted it to an `int`-sized slot by the time your function sees\nthe argument list. `va_arg` only knows how to read the promoted type; there is no macro for reading\na narrower one, because the narrower one was never actually written.\n\n```\nva_arg(ap, char)   \u2192 wrong: reads the wrong width off a list built with int-sized slots\nva_arg(ap, int)    \u2192 correct; narrow afterward with (unsigned char)va_arg(ap, int)\n```\n\n`%c` is the one conversion in this subject where the mismatch is visible immediately \u2014 `%d`, `%u`,\n`%x` and `%X` all already declare `int`/`unsigned int`, which is the promoted type anyway, so the\nbug hides behind them. It does not hide behind `%c`.",
+   "defense": [
+    "Why must `va_arg(ap, char)` never appear in your ft_printf?"
+   ],
+   "functions": [
+    "pf_c",
+    "pf_s",
+    "pf_d",
+    "pf_i",
+    "pf_u",
+    "pf_x",
+    "pf_xup",
+    "pf_p"
+   ],
+   "refs": [
+    "man 3 stdarg",
+    "C99 \u00a76.5.2.2",
+    "Subject IV"
+   ],
+   "slug": "variadic-promotion",
+   "title": "`char` and `short` never travel through `...` at their own size; they arrive already widened to `int`, and `float` arrives as `double`."
+  },
+  "write-partial": {
+   "body": "`ssize_t write(int fd, const void *buf, size_t count)` returns the number of bytes it actually\nwrote, which can be less than `count` \u2014 a full pipe, a signal, a closed descriptor \u2014 and can be\n`-1` on error, with nothing written at all. An accumulator that adds `count` unconditionally,\ninstead of adding whatever `write` actually returned, reports bytes that were never sent the\nmoment a single call comes back short.\n\nThe subject's robustness case for this is a closed file descriptor: `write` returns `-1`, your\nreturn value has to go negative to reflect it, and the conversions that already ran before the\nfailing `write` keep whatever they already produced \u2014 nothing may crash trying to keep converting\npast it.",
+   "defense": [
+    "Your ft_printf writes to a closed file descriptor. What has to happen?"
+   ],
+   "functions": [
+    "pf_robust",
+    "pf_ret"
+   ],
+   "refs": [
+    "man 2 write",
+    "POSIX.1-2017 write()"
+   ],
+   "slug": "write-partial",
+   "title": "`write` is a system call, not a library promise \u2014 it reports what happened, and what happened is not always all of it."
+  }
+ },
+ "defense": [
+  {
+   "answer": "Default argument promotion widens every `char`, `short` or `float` argument before it is placed in the variable argument list \u2014 `char` arrives as `int`, `float` arrives as `double`. `va_arg(ap, char)` reads the wrong width off a list that was built with `int`-sized slots; the fix is `va_arg(ap, int)` followed by a cast down to the byte you actually want.",
+   "concepts": [
+    "variadic-promotion"
+   ],
+   "n": 1,
+   "question": "Why must `va_arg(ap, char)` never appear in your ft_printf?"
+  },
+  {
+   "answer": "On some ABIs (x86-64 System V) `va_list` is really an array, so a \"by value\" parameter decays to a pointer and the helper's reads move the caller's cursor too \u2014 the caller then reads whatever argument the helper already consumed. On another ABI the same code might genuinely copy the state and never fail, which is what makes the bug invisible until it meets the wrong platform. `va_copy` is the portable fix.",
+   "concepts": [
+    "va-copy"
+   ],
+   "n": 2,
+   "question": "What goes wrong if you pass a `va_list` to a helper by value and then keep reading it in the caller?"
+  },
+  {
+   "answer": "`4294967295`. `-1` as a 32-bit `int` is the bit pattern `0xFFFFFFFF`; `%u` reinterprets those same bits as `unsigned int` instead of converting the value, so it prints `2^32 - 1`. `abs(-1)` gives `1`, which is a different routine solving a different problem.",
+   "concepts": [
+    "unsigned-reinterpret"
+   ],
+   "n": 3,
+   "question": "What does `%u` print for the argument `-1`?"
+  },
+  {
+   "answer": "Both are base-16 division-and-remainder against the same accumulator logic; the only real difference is which sixteen-character alphabet the remainder indexes into. Two independent functions means every future fix has to be made twice, and the two conversions drifting apart is exactly what a differential test against the real `printf` is built to catch.",
+   "concepts": [
+    "base-conversion"
+   ],
+   "n": 4,
+   "question": "Why should `%x` and `%X` be the same function with one parameter changed?"
+  },
+  {
+   "answer": "`uintptr_t` is the type `<stdint.h>` actually guarantees can hold a pointer's bit pattern and round-trip it. `unsigned long` happens to be wide enough on the platforms this project is graded on, but code that says `uintptr_t` states exactly what it depends on, and code that says `unsigned long` is depending on an assumption it never wrote down.",
+   "concepts": [
+    "pointer-format"
+   ],
+   "n": 5,
+   "question": "Why does `%p` go through `uintptr_t` instead of `unsigned long`?"
+  },
+  {
+   "answer": "There is no single correct answer \u2014 it is platform-defined. glibc prints `(nil)`; macOS's libc prints `0x0`. Since the subject compares your output against \"the original `printf()`\", the right answer depends on which platform is doing the comparing, and the honest thing to say at defense is which one you targeted and why, not that there is one true output.",
+   "concepts": [
+    "pointer-format",
+    "null-string-ub"
+   ],
+   "n": 6,
+   "question": "What should `ft_printf(\"%p\", NULL)` print?"
+  },
+  {
+   "answer": "Yes \u2014 the return value is a running total across the whole call, not something specific to a \"return count\" suite. `\"ab\"` contributes 2, `\"3\"` contributes 1, the total is 3. Any branch that produces bytes without touching the shared accumulator is wrong the moment it shares a format string with something else, even if its own suite passes in isolation.",
+   "concepts": [
+    "return-count"
+   ],
+   "n": 7,
+   "question": "Does `ft_printf(\"%s%d\", \"ab\", 3)` count the `3` in its return value, even though neither conversion is `pf_ret`?"
+  },
+  {
+   "answer": "`write` returns `-1` and sets `errno`; your return value must reflect that failure by going negative, and nothing may crash or keep converting the rest of the format string as though the write had succeeded. The bug this catches is an accumulator that adds what you *asked* `write` to send instead of what `write` says it actually sent.",
+   "concepts": [
+    "write-partial"
+   ],
+   "n": 8,
+   "question": "Your ft_printf writes to a closed file descriptor. What has to happen?"
+  },
+  {
+   "answer": "`INT_MIN` is `-2147483648`; its positive counterpart, `2147483648`, does not exist as an `int`, since the range tops out at `2147483647`. A routine that negates the argument first to make it positive invokes undefined behaviour on exactly this value. I avoid the negation entirely by <promoting to `long` / extracting digits from the negative value with `%` and `/` / special-casing it>.",
+   "concepts": [
+    "int-min"
+   ],
+   "n": 9,
+   "question": "Why does `%d` crash \u2014 or print the wrong thing \u2014 on `INT_MIN`?"
+  },
+  {
+   "answer": "No. The C standard requires `%s`'s argument to point at a valid string; `NULL` is outside what it defines at all. glibc prints `(null)` instead of crashing, which is glibc's own defensive choice, not a rule I am bound by. The answer worth giving names it as undefined and states what my implementation does.",
+   "concepts": [
+    "null-string-ub"
+   ],
+   "n": 10,
+   "question": "Is `printf(\"%s\", NULL)` defined behaviour?"
+  },
+  {
+   "answer": "It forbids accumulating output in an internal buffer and flushing it in batches the way `printf` does. Every byte a conversion produces has to reach `write` as that conversion runs, in format-string order \u2014 which is also the only reason a test can assert an exact byte sequence on a descriptor at all, and the only reason correct output before a failing `write` stays visible.",
+   "concepts": [
+    "no-buffering"
+   ],
+   "n": 11,
+   "question": "The subject says \"do not implement the buffer management of the original printf().\" What does that forbid?"
+  },
+  {
+   "answer": "Each `va_arg` call has to advance the shared cursor by exactly the promoted width of the type it names, exactly once per argument the format string actually consumes \u2014 an unknown specifier that still consumes an argument, or a known one that gets skipped, desynchronises every conversion after it. Anything that needs to look at an argument without permanently consuming it needs `va_copy`, not a `va_list` passed around by value.",
+   "concepts": [
+    "va-copy",
+    "variadic-promotion"
+   ],
+   "n": 12,
+   "question": "Two format specifiers in one call each need to read the argument list. What has to stay true between them?"
+  }
+ ],
+ "source": "_dev/plan/rank01/ftprintf-02-learning.md"
+}
