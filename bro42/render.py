@@ -305,12 +305,29 @@ def delta_header(d, st, pack):
     return out
 
 
+def unbuilt_notice(records, st, pack):
+    """Warn when the pack declares suites this build of bro42 cannot run."""
+    unbuilt = pack.unbuilt_suites({r.get("fn") for r in records})
+    if not unbuilt:
+        return []
+    total = len(pack.suites)
+    return [
+        "  " + st.yellow(f"incomplete pack · {len(unbuilt)} of {total} "
+                       f"{pack.display} suites are not built into this bro42"),
+        "  " + st.dim("  " + " ".join(sorted(unbuilt))),
+        "  " + st.dim("  the score below covers only the suites that ran - "
+                      "it is not a verdict on your project"),
+        "",
+    ]
+
+
 def report(records, target, st, pack, verbose=0, macro=None, hist_delta=None):
     out = []
     out.append("")
     out.append(f"  {st.bold('bro42')}  {st.dim(str(target))}  "
                f"{st.dim('· ' + pack.display)}")
     out.append("")
+    out += unbuilt_notice(records, st, pack)
     out += delta_header(hist_delta, st, pack)
     out += summary(records, st, pack)
     out.append("")

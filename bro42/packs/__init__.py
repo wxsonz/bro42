@@ -102,6 +102,21 @@ class Pack:
                        len(self.allowed_externals[p]))
         return meta["part"]
 
+    def unbuilt_suites(self, seen):
+        """Suites this pack declares that the ENGINE did not report on.
+
+        Not the same as a student's missing function: `seen` is what the
+        compiled bro_micro emitted, so a gap here means bro42's own binary
+        has no suite for a spec that declares one - usually a pack whose
+        cases are authored but not yet transcribed into C.
+
+        It has to be said out loud. A tester that runs the six suites it
+        happens to have and prints a confident 68/68 is the exact failure
+        09-selftest.md exists to prevent: silent, total, and indistinguishable
+        from success until evaluation.
+        """
+        return [s for s in self.suites if s not in seen]
+
     def missing_suites(self, defined):
         """Suite ids whose symbol is absent from the archive."""
         return [s for s, m in self.suites.items()
