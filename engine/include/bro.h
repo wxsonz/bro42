@@ -2,7 +2,7 @@
 # define BRO_H
 
 /*
-** ft_bro micro engine - core interfaces.
+** bro42 micro engine - core interfaces.
 **
 ** STATUS: stage B. All six tiers now use t_ctx, so it is frozen: T0 and T1 in
 ** the alpha, then T2 (allocation), T3 (structure of allocations), T4 (fd
@@ -79,7 +79,13 @@ typedef struct s_buf
 # define BRO_EVID_MAX		64
 # define BRO_MSG_MAX		256
 # define BRO_INJECT_MAX		128
-# define BRO_CAPTURE_MAX	512
+/* 4096, not 512: ft_printf cases capture far more than a Libft fd-write
+** does. This pushes sizeof(t_result) past PIPE_BUF, so the child's result
+** record is no longer written to the pipe as a single atomic write - safe
+** here only because harness.c's read_retry/write_retry already loop over
+** short reads/writes and this is a dedicated single-writer pipe (one
+** child, one record, nothing else can interleave on it). */
+# define BRO_CAPTURE_MAX	4096
 /* A sweep records, per tested integer, what the student's function did AND
 ** what the oracle did. 160 covers the 128 ASCII slots plus the short list of
 ** notable integers shown beside them - deliberately small: the grid is a
@@ -155,6 +161,12 @@ void	bro_expect_bytes(t_result *r, const void *expected, const void *actual,
 			size_t n);
 void	bro_expect_offset(t_result *r, const void *base, const void *expected,
 			const void *actual);
+/*
+** Thin wrapper over bro_expect_bytes for NUL-terminated C strings: strlen
+** both sides and compare as bytes, so a mismatch still draws EV_BYTES
+** evidence with a divergence index instead of a bare pass/fail.
+*/
+void	bro_expect_str(t_result *r, const char *expected, const char *actual);
 void	bro_mark_ub(t_result *r, const char *fmt, ...);
 
 /*
@@ -314,21 +326,12 @@ bool	bro_alloc_available(void);
 bool	bro_capture_bind(t_ctx *c, int slot, int fd);
 size_t	bro_capture_take(t_ctx *c, int slot, char *out, size_t max);
 
-/* list.c - t_list fixtures, cycle-safe traversal, ownership tracking */
-typedef struct s_list
-{
-	void		*content;
-	struct s_list	*next;
-}	t_list;
-
-# define BRO_LIST_MAX	4096
-
-t_list	*bro_list_build(size_t n);
-void	bro_list_free(t_list *lst);
-long	bro_list_len(const t_list *lst);
-void	bro_del_counting(void *content);
-size_t	bro_del_calls(void);
-void	bro_del_reset(void);
+/*
+** t_list and its fixtures moved to engine/packs/libft/pack.h - a linked list
+** is Libft's subject matter (Part 3), not the harness's. bro.h stays clean of
+** any pack's types; see harness.c for the one place that still leaks a
+** Libft-specific hook into the core (out of scope for this split to fix).
+*/
 
 /* oracle.c - reference implementations libc does not provide */
 char	*bro_ref_strnstr(const char *big, const char *little, size_t len);

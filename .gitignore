@@ -19,6 +19,6 @@ _dev/
 
 # Generated FROM _dev, and committed on purpose - without these a clone has
 # no case prose, no concept cards and no roadmap, and bro refuses to start.
-!ft_bro/data/cases.json
-!ft_bro/data/concepts.json
-!ft_bro/data/roadmap.json
+!bro42/packs/*/data/cases.json
+!bro42/packs/*/data/concepts.json
+!bro42/packs/*/data/roadmap.json

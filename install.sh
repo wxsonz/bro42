@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ft_bro installer - an educational walkthrough, not a silent installer.
+# bro42 installer - an educational walkthrough, not a silent installer.
 #
 # PLAN.md asks for a setup that teaches. So every step EXPLAINS what it is
 # about to do and why, then asks, then does it. Nothing is appended to a
@@ -38,23 +38,23 @@ ask() {
 	return 0
 }
 
-# If ft_bro was fetched by piping this script from a URL, there is no checkout
+# If bro42 was fetched by piping this script from a URL, there is no checkout
 # to install from - so make one first, in a place the user chooses.
 if [ ! -f "$DIR/bro" ] || [ ! -d "$DIR/engine" ]; then
-	b "ft_bro is not checked out here"
+	b "bro42 is not checked out here"
 	cat <<EOF
-   This script is running outside an ft_bro checkout, so there is nothing to
+   This script is running outside a bro42 checkout, so there is nothing to
    install yet. Clone it first, then run this script from inside it:
 
-     git clone ${FT_BRO_ORIGIN:-<repository url>} ft_bro
-     cd ft_bro && ./install.sh
+     git clone ${BRO42_ORIGIN:-<repository url>} bro42
+     cd bro42 && ./install.sh
 
 EOF
 	exit 1
 fi
 
 echo
-b "ft_bro setup"
+b "bro42 setup"
 [ "$DRY" = 1 ] && dim "(dry run - nothing will be changed)"
 echo
 
@@ -84,7 +84,7 @@ echo
 # ---------------------------------------------------------------- step 3
 b "3. Building the test engine"
 cat <<EOF
-   ft_bro's engine is C. It is compiled once here; the final link happens
+   bro42's engine is C. It is compiled once here; the final link happens
    later, per libft, because the engine links against YOUR library.
 EOF
 # The redirect must live INSIDE run, or in dry-run mode it swallows the
@@ -138,7 +138,7 @@ case ":${PATH}:" in
 EOF
 		if ask; then
 			if [ "$DRY" = 1 ]; then dim "   would append to $rc"
-			else printf '\n# added by ft_bro install.sh\n%s\n' "$line" >> "$rc"
+			else printf '\n# added by bro42 install.sh\n%s\n' "$line" >> "$rc"
 				dim "   appended. Run:  source $rc"
 			fi
 		fi

@@ -1,4 +1,4 @@
-# ft_bro
+# bro42
 
 A pair-programming, guidance and testing companion for 42 **Libft** (subject v19.2).
 
@@ -10,7 +10,7 @@ cd ~/my_libft && bro
 
 ## Description
 
-**ft_bro is not a grader.** A grader tells you a number and speaks only when you are wrong.
+**bro42 is not a grader.** A grader tells you a number and speaks only when you are wrong.
 `bro` tells you what each test was *for* — including the ones you pass, because that sentence is
 what you repeat at defense.
 
@@ -28,7 +28,7 @@ Concretely, it does three things:
   questions with model answers, and a searchable dashboard.
 
 It writes nothing into your repository. Reports, run history and the test binary all live in
-`~/.cache/ft_bro/`, so `git status` stays clean.
+`~/.cache/bro42/`, so `git status` stays clean.
 
 ### What it can find that a return-value check cannot
 
@@ -47,8 +47,8 @@ It writes nothing into your repository. Reports, run history and the test binary
 ### Install
 
 ```sh
-git clone <this repository> ft_bro
-cd ft_bro
+git clone <this repository> bro42
+cd bro42
 ./install.sh            # explains each step, asks before doing it
 ./install.sh --dry-run  # show what it would do, change nothing
 ```
@@ -90,7 +90,7 @@ you are told when there is a release, not when a typo was fixed. It remembers wh
 until you update, later runs remind you:
 
 ```
-  ft_bro 1.0.0   1.1.0 is available · git -C /path/to/bro pull && make
+  bro42 1.0.0   1.1.0 is available · git -C /path/to/bro pull && make
 ```
 
 Run it whenever you like — nothing expires, and `bro` works exactly the same with no internet at
@@ -119,12 +119,12 @@ were rejected outright, and the AI's own mistakes were caught by the self-test i
 It is disclosed here for the same reason `bro` checks for a disclosure in *your* README: Chapter
 V asks for one, and a tool that makes that check should not be quiet about its own answer.
 
-**On ft_bro's own README**
+**On bro42's own README**
 
 Running `bro`'s Chapter V validator against this file gives 4 of 5: Description, Instructions,
 Resources and the AI disclosure all pass. The first-line check fails, and deliberately so — it
 requires the line *"This project has been created as part of the 42 curriculum by &lt;login&gt;"*,
-which would be false here. ft_bro is a tool, not a curriculum submission. Chapter V governs your
+which would be false here. bro42 is a tool, not a curriculum submission. Chapter V governs your
 Libft, not this; the four checks that do apply are met, and faking the fifth to score a clean
 report would be exactly the habit this tool exists to argue against.
 
@@ -137,15 +137,15 @@ submission:
   every decision;
 - **the reference Libft** used as the self-test fixture, and the mutants generated from it.
 
-`bro` itself runs fine from a clone: the data it needs (`ft_bro/data/*.json` — case rationales,
-concept cards, the progressive track) is generated from those specs and committed here.
+`bro` itself runs fine from a clone: the data it needs (`bro42/packs/<pack>/data/*.json` — case
+rationales, concept cards, the progressive track) is generated from those specs and committed here.
 
 What a clone cannot do is regenerate that data (`make cases`) or run the self-test
 (`make selftest`), because both read sources that are not shipped. Point the self-test at any
 working Libft to run it:
 
 ```sh
-FT_BRO_REFERENCE=/path/to/a/working/libft make selftest
+BRO42_REFERENCE_LIBFT=/path/to/a/working/libft make selftest
 ```
 
 It will seed deliberate bugs into a copy of it and check that each is caught — it never modifies
@@ -154,7 +154,7 @@ the libft you point it at.
 **On finding real bugs**
 
 The Libft this was developed against was not a straw man; it was a real, passing 42 submission.
-ft_bro found **seven** genuine defects in it, every one verified independently of the tester
+bro42 found **seven** genuine defects in it, every one verified independently of the tester
 before being reported: `ft_memmove` dropping the `n % 4` tail of an unrolled overlapping copy,
 `ft_split` returning a partly-built array without freeing, `ft_strchr` and `ft_strrchr` unable to
 find any byte above 127, `ft_calloc` silently refusing every allocation of 64 KB or more,
@@ -167,7 +167,7 @@ own blind spots, which is the property worth having.
 
 ---
 
-## Is ft_bro itself tested?
+## Is bro42 itself tested?
 
 Yes, and this is the part that matters most: **a tester's failure mode is silent.** A broken web
 app looks broken. A broken tester reports 43/43 forever and you find out at evaluation.

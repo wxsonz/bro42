@@ -17,6 +17,7 @@ Five checks:
                  for trusting any number it reports about someone else
 """
 
+import argparse
 import json
 import re
 import shutil
@@ -27,18 +28,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from bro42 import packs  # noqa: E402
 from tools import mutants  # noqa: E402
 
 BAD = {"KO", "SIGSEGV", "SIGBUS", "SIGABRT", "TIMEOUT", "LEAK"}
 
+# The mutant catalogue below (REFERENCE_KNOWN_BAD, BASELINE_MACRO, MUTANTS
+# itself, check_tier_agreement, check_mutant_docs) stays Libft-only - it is
+# seeded bugs in ONE known-good repository, and building a second catalogue
+# for a second pack is exactly the "generalise ahead of evidence" thing
+# _dev/plan/platform/10-packs.md argues against. --pack only widens the
+# checks that are already pack-agnostic (the spec generators, valgrind).
+PACK = "libft"
+
 # The reference Libft is a real 42 submission and is not published with this
 # repository. Everything here needs one; point it somewhere with
-# FT_BRO_REFERENCE=/path/to/a/working/libft.
+# BRO42_REFERENCE_LIBFT=/path/to/a/working/libft.
 REFERENCE = mutants.REFERENCE
 
 # The reference fixture is clean across all six tiers.
 #
-# It has not always been. ft_bro found two real defects in it on first contact
+# It has not always been. bro42 found two real defects in it on first contact
 # and both were fixed while this was being built:
 #   ft_memmove  the unrolled d < s branch copied in chunks of four and dropped
 #               the n % 4 tail, so an overlapping 3-byte move copied nothing
@@ -79,7 +89,7 @@ REFERENCE = mutants.REFERENCE
 REFERENCE_KNOWN_BAD = {}
 
 # The reference has no README.md, which is a real Subject V failure and not
-# something ft_bro should pretend away. Held as a baseline so the macro mutants
+# something bro42 should pretend away. Held as a baseline so the macro mutants
 # are judged on what they add.
 BASELINE_MACRO = {"README.md", "first line", "Description section",
                   "Instructions section", "Resources section",
@@ -91,7 +101,7 @@ def run(target, extra=(), macro=False):
     actually needs it. History is off everywhere: the self-test must not
     depend on, or pollute, the run log."""
     cmd = [str(ROOT / "bro"), "--json", "--target", str(target),
-           "--no-history", *extra]
+           "--pack", PACK, "--no-history", *extra]
     if not macro:
         cmd.append("--no-macro")
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT))
@@ -126,7 +136,7 @@ def check_baseline():
 def check_mutants_compile():
     """Every mutant must build with the project's OWN Makefile and flags.
 
-    A mutant that fails -Werror produces no archive, so ft_bro falls back to
+    A mutant that fails -Werror produces no archive, so bro42 falls back to
     compiling the sources leniently - and the mutant then exercises the
     fallback path rather than the defect it was written to seed. That looked
     like a pass and was not one.
@@ -177,8 +187,14 @@ def check_static():
     # buffers would be counted as the student's and every case would leak.
     # list.c is the deliberate exception: its fixtures are memory the student
     # is expected to free, so they must go through the wrapped allocator.
+    # Scope: the core (engine/core/) plus each pack's own sources
+    # (engine/packs/<pack>/*.c) - NOT the per-function test files, which
+    # never allocated to begin with and were never in scope here.
     allowed = {"alloc.c", "list.c", "util.c"}
-    for src in sorted((ROOT / "engine" / "src").glob("*.c")):
+    engine_srcs = sorted((ROOT / "engine" / "core").glob("*.c"))
+    for pack_dir in sorted((ROOT / "engine" / "packs").glob("*")):
+        engine_srcs += sorted(pack_dir.glob("*.c"))
+    for src in engine_srcs:
         if src.name in allowed:
             continue
         body = re.sub(r"/\*.*?\*/", "", src.read_text(), flags=re.S)
@@ -188,14 +204,17 @@ def check_static():
     if not problems:
         print("  ok   allocator discipline no bare malloc outside alloc.c/list.c")
 
-    # The spec grammar, prose completeness and concept coverage.
-    for gen in ("gen_cases", "gen_concepts"):
-        r = subprocess.run([sys.executable, f"ft_bro/data/{gen}.py", "--check"],
+    # The spec grammar, prose completeness and concept coverage. gen_roadmap
+    # was missing from this loop until Phase 2 - it has the same --check
+    # contract as the other two and was simply never asked for it.
+    for gen in ("gen_cases", "gen_concepts", "gen_roadmap"):
+        r = subprocess.run([sys.executable, f"bro42/data/{gen}.py",
+                            "--pack", PACK, "--check"],
                            capture_output=True, text=True, cwd=str(ROOT))
         if r.returncode:
             problems.append(f"{gen} check failed:\n" + r.stderr)
     if not any("gen_" in p for p in problems):
-        print("  ok   spec                grammar, prose, concepts, defense bank")
+        print("  ok   spec                grammar, prose, concepts, roadmap, defense bank")
 
     # The tier tables in the spec and the design doc must agree. Tier labels
     # are what the Stage D handoff instruction is built from, so a mismatch
@@ -204,8 +223,9 @@ def check_static():
     problems += check_tier_agreement()
 
     # Every concept a case is tagged with must have a card to open.
-    cases = json.loads((ROOT / "ft_bro" / "data" / "cases.json").read_text())
-    cards = json.loads((ROOT / "ft_bro" / "data" / "concepts.json").read_text())
+    data_dir = packs.get(PACK).data_dir()
+    cases = json.loads((data_dir / "cases.json").read_text())
+    cards = json.loads((data_dir / "concepts.json").read_text())
     tagged = {k for c in cases["cases"].values() for k in c["kw"]}
     unbacked = sorted(tagged - set(cards["concepts"]))
     if unbacked:
@@ -214,7 +234,7 @@ def check_static():
         print(f"  ok   concept index      {len(tagged)} tags all resolve to a card")
 
     # Every case the engine can emit must have prose to render.
-    data = json.loads((ROOT / "ft_bro" / "data" / "cases.json").read_text())
+    data = cases
     records = run(REFERENCE)
     cases_only = [r for r in records if r.get("kind") != "macro"]
     orphans = [f"{r['fn']}:{r['id']}" for r in cases_only
@@ -231,10 +251,11 @@ def check_dashboard():
     machine with no internet and be safe to hand to a peer, and the previous
     revision of plan/platform/07-dashboard.md promised a file:// mode that could not work."""
     target = REFERENCE
-    subprocess.run([str(ROOT / "bro"), "--target", str(target), "--no-web",
-                    "--no-history"], capture_output=True, cwd=str(ROOT))
-    cache = subprocess.run([str(ROOT / "bro"), "--where", "--target", str(target)],
-                           capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
+    subprocess.run([str(ROOT / "bro"), "--target", str(target), "--pack", PACK,
+                    "--no-web", "--no-history"], capture_output=True, cwd=str(ROOT))
+    cache = subprocess.run(
+        [str(ROOT / "bro"), "--where", "--target", str(target), "--pack", PACK],
+        capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
     page = Path(cache) / "report.html"
     if not page.is_file():
         return ["no report.html was written"]
@@ -292,7 +313,10 @@ def check_tier_agreement():
             declared[fn] = tier
     if not declared:
         return ["could not parse the tier table out of plan/platform/04-testdesign.md"]
-    funcs = json.loads((ROOT / "ft_bro" / "data" / "cases.json").read_text())["functions"]
+    # Libft-only (see this function's docstring and the module note at the
+    # top) - hardcoded to the libft pack regardless of --pack.
+    funcs = json.loads(
+        (packs.get("libft").data_dir() / "cases.json").read_text())["functions"]
     bad = [f"{fn}: spec says T{m['tier']}, 04-testdesign says T{declared[fn]}"
            for fn, m in sorted(funcs.items())
            if fn in declared and declared[fn] != m["tier"]]
@@ -339,15 +363,19 @@ def check_valgrind():
         return []
     target = REFERENCE
     subprocess.run([str(ROOT / "bro"), "--json", "--target", str(target),
-                    "--no-macro", "--no-history"],
+                    "--pack", PACK, "--no-macro", "--no-history"],
                    capture_output=True, cwd=str(ROOT))
     cache = subprocess.run(
-        [str(ROOT / "bro"), "--where", "--target", str(target)],
+        [str(ROOT / "bro"), "--where", "--target", str(target), "--pack", PACK],
         capture_output=True, text=True, cwd=str(ROOT)).stdout.strip()
     binary = Path(cache) / "bro_micro"
+    # Any suite will do - this is a smoke test of the engine's OWN allocation
+    # accounting, not of the suite it happens to run. The pack's first suite
+    # keeps this generic instead of naming one Libft function.
+    probe_suite = packs.get(PACK).suite_ids[0]
     r = subprocess.run(
         ["valgrind", "--leak-check=full",
-         str(binary), "--no-fork", "--only", "ft_memmove"],
+         str(binary), "--no-fork", "--only", probe_suite],
         capture_output=True, text=True)
 
     # Evidence valgrind actually instrumented the program. Without one of
@@ -360,8 +388,14 @@ def check_valgrind():
         print(f"  skip valgrind            could not run - {why[:64]}")
         return []
 
+    # A fully clean run prints no LEAK SUMMARY at all - valgrind replaces it
+    # with "All heap blocks were freed". That sentence is the only silence
+    # worth trusting; any other missing summary still means we learned nothing.
     m = re.search(r"definitely lost: ([\d,]+) bytes", r.stderr)
     if not m:
+        if "no leaks are possible" in r.stderr:
+            print("  ok   valgrind            the engine leaks nothing of its own")
+            return []
         return ["valgrind ran but printed no leak summary - cannot conclude "
                 "anything about the engine's own accounting"]
     lost = int(m.group(1).replace(",", ""))
@@ -377,7 +411,7 @@ def check_subject_19_2_layout():
 
     19.2 IV.4 puts the nine list functions in the MANDATORY part, so a current
     repo names them ft_lstnew.c and builds them from `all` with no `bonus`
-    rule. ft_bro used to warn twice at exactly that layout - "bonus file(s)
+    rule. bro42 used to warn twice at exactly that layout - "bonus file(s)
     not named _bonus.c" and "no working bonus rule" - telling a student who
     followed their own subject that they had it wrong.
 
@@ -452,12 +486,19 @@ def check_mutant_docs():
 
 
 def main():
+    global PACK
+    p = argparse.ArgumentParser()
+    p.add_argument("--pack", default="libft",
+                   help="which pack's mutant gate to run (default: libft)")
+    args = p.parse_args()
+    PACK = args.pack
+
     print("selftest")
     if not REFERENCE.is_dir():
         print(f"\n  no reference Libft at {REFERENCE}", file=sys.stderr)
         print("  The self-test seeds deliberate bugs into a known-good Libft;\n"
               "  that fixture is not shipped with this repository.\n"
-              "  FT_BRO_REFERENCE=/path/to/a/working/libft make selftest",
+              "  BRO42_REFERENCE_LIBFT=/path/to/a/working/libft make selftest",
               file=sys.stderr)
         return 1
     baseline, problems = check_baseline()

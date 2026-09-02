@@ -17,8 +17,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REFERENCE = Path(os.environ.get(
-    "FT_BRO_REFERENCE", ROOT / "_dev" / "reference" / "libft42git"))
+# BRO42_REFERENCE_LIBFT is the current name (Phase 0 renamed the project from
+# ft_bro to bro42); FT_BRO_REFERENCE is honoured too so an existing setup
+# keeps working.
+REFERENCE = Path(os.environ.get("BRO42_REFERENCE_LIBFT") or os.environ.get(
+    "FT_BRO_REFERENCE") or ROOT / "_dev" / "reference" / "libft42git")
 
 
 def require_reference():
@@ -33,7 +36,7 @@ def require_reference():
         f"no reference Libft at {REFERENCE}\n"
         "  The self-test seeds deliberate bugs into a known-good Libft, and\n"
         "  that fixture is not shipped with this repository.\n"
-        "  Point it at one:  FT_BRO_REFERENCE=/path/to/a/working/libft make selftest")
+        "  Point it at one:  BRO42_REFERENCE_LIBFT=/path/to/a/working/libft make selftest")
 OUT = ROOT / "_dev" / "fixtures" / "mutants"
 
 # name -> (file, snippet, replacement, {case id: expected status})

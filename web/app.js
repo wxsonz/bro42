@@ -1,4 +1,4 @@
-/* ft_bro dashboard. Vanilla ES6, zero dependencies, no network access - it has
+/* bro42 dashboard. Vanilla ES6, zero dependencies, no network access - it has
    to render on a cluster machine with no internet and be safe to hand to
    someone else (SPEC_FRONTEND, decision B10). */
 "use strict";
@@ -19,7 +19,7 @@ function header() {
   const s = DATA.summary;
   document.getElementById("target").textContent = DATA.target;
   const version = DATA.bro_version || "";
-  document.querySelector(".brand").title = "ft_bro " + version;
+  document.querySelector(".brand").title = "bro42 " + version;
   const ver = document.getElementById("version");
   if (ver) {
     ver.textContent = "v" + version;
@@ -29,10 +29,10 @@ function header() {
     if (DATA.update_available) {
       ver.textContent = "v" + version + " → " + DATA.update_available;
       ver.classList.add("stale");
-      ver.title = "ft_bro " + DATA.update_available
+      ver.title = "bro42 " + DATA.update_available
         + " is available. Update with: git pull && make";
     } else {
-      ver.title = "ft_bro " + version;
+      ver.title = "bro42 " + version;
     }
   }
   document.getElementById("c-cases").innerHTML =
@@ -204,7 +204,7 @@ function deriveMemmoveSteps(c) {
   const soff = sm[2] ? parseInt(sm[2], 10) : 0;
   // The report holds only the post-move result, not a pre-move snapshot, so
   // the seed below is NOT read from this case's data - it is this suite's
-  // fixed overlap fixture (engine/tests/part1/test_ft_memmove.c,
+  // fixed overlap fixture (engine/packs/libft/tests/part1/test_ft_memmove.c,
   // overlap_case: memcpy(buf, "abcde", 6) into a 16-byte guarded buffer).
   const seed = [97, 98, 99, 100, 101, 0, 170, 170, 170, 170, 170, 170, 170, 170, 170, 170];
   return {ok: true, overlap: true, n, doff, soff, seed,
