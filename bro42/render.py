@@ -338,7 +338,14 @@ def delta_header(d, st, pack):
 
 
 def unbuilt_notice(records, st, pack):
-    """Warn when the pack declares suites this build of bro42 cannot run."""
+    """Warn when the pack declares suites this build of bro42 cannot run.
+
+    Only meaningful on a whole-pack run. `records` is what actually ran, so
+    on a filtered run (`bro ft_split:3`, `bro part2`) every suite the filter
+    excluded looks absent, and the notice would tell a student their tool is
+    broken when it is only doing what they asked. The caller passes
+    restricted=True for those - see cli.main.
+    """
     unbuilt = pack.unbuilt_suites({r.get("fn") for r in records})
     if not unbuilt:
         return []
@@ -353,13 +360,15 @@ def unbuilt_notice(records, st, pack):
     ]
 
 
-def report(records, target, st, pack, verbose=0, macro=None, hist_delta=None):
+def report(records, target, st, pack, verbose=0, macro=None, hist_delta=None,
+        restricted=False):
     out = []
     out.append("")
     out.append(f"  {st.bold('bro42')}  {st.dim(str(target))}  "
                f"{st.dim('· ' + pack.display)}")
     out.append("")
-    out += unbuilt_notice(records, st, pack)
+    if not restricted:
+        out += unbuilt_notice(records, st, pack)
     out += delta_header(hist_delta, st, pack)
     out += summary(records, st, pack)
     out.append("")

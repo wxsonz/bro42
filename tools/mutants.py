@@ -186,6 +186,20 @@ MUTANTS = {
         # here so a silent change to KO would be noticed.
         {"ft_split:1": "SIGABRT", "ft_split:15": "KO"},
     ),
+    # Drop the NULL terminator on the returned array itself. strcmp cannot see
+    # this either - every word is right - and the array is the right SIZE, so
+    # split_no_null_slot's heap-checker trip does not fire. Before alloc.c
+    # poisoned fresh memory (0xAA) this passed every case: a freshly mapped
+    # page comes back zeroed, so the uninitialised last slot happened to read
+    # NULL anyway and the test's own count_words() walk stopped in the right
+    # place by luck. Found by a user; ft_split:15 stays silent on purpose -
+    # it only checks the total byte count, which this mutant does not change.
+    "split_no_terminator": (
+        "ft_split.c",
+        "\twordarr[i] = NULL;\n",
+        "",
+        {f"ft_split:{i}": "KO" for i in range(1, 15)},
+    ),
     "isalpha_off_by_one": (
         "ft_isalpha.c",
         "- 'a' < 26",

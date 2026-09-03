@@ -21,6 +21,20 @@
 ** Enforced by a grep in the self-test - no bare malloc under engine/core/ or
 ** engine/packs/<pack>/ except this file (and a pack's own list.c-equivalent,
 ** whose fixtures are deliberately student-visible allocation).
+**
+** POISONING: every block __wrap_malloc hands back is filled with BRO_POISON
+** (0xAA) before it is returned, same idea as glibc's MALLOC_PERTURB_. A fresh
+** page from the kernel is zeroed, so an uninitialised read that happens to
+** land on such a page reads 0 and a bug like "forgot to NULL-terminate the
+** array" gets lucky. Poisoning makes that read deterministic and non-zero
+** instead, so tests that only trust a sentinel value (e.g. a NULL terminator)
+** rather than checking for it explicitly stop passing by accident (found via
+** ft_split's missing terminator - see mutants.py's split_no_terminator).
+** __wrap_calloc's contract is zeroed memory, so it overwrites the poison
+** after __wrap_malloc sets it. __wrap_realloc never poisons directly: it
+** grows through __wrap_malloc (which poisons the whole new block) and then
+** memcpy's the old prefix over it, so only the newly grown tail is left
+** poisoned - the copied-over prefix is untouched.
 */
 
 # ifdef BRO_HAVE_WRAP
@@ -147,6 +161,8 @@ void	*__wrap_malloc(size_t n)
 	p = __real_malloc(n);
 	if (!p)
 		return (NULL);
+	if (n)
+		memset(p, BRO_POISON, n);
 	g_alloc.live_blocks++;
 	g_alloc.live_bytes += n;
 	if (g_alloc.live_bytes > g_alloc.peak_bytes)

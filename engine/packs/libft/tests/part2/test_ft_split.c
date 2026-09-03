@@ -20,32 +20,51 @@
 ** allocated byte count, read from the wrapped allocator, catches the extra.
 */
 
-static void	free_split(char **r)
+/*
+** Frees exactly the first `n` slots and then the array itself. Bounded, on
+** purpose: it never trusts a terminator to tell it where to stop, so a
+** result that is missing one cannot make this walk off the end of the
+** allocation - see count_words below for why that used to be possible.
+*/
+static void	free_split(char **r, long n)
 {
-	size_t	i;
+	long	i;
 
 	if (!r)
 		return ;
 	i = 0;
-	while (r[i])
+	while (i < n)
 		free(r[i++]);
 	free(r);
 }
 
-static long	count_words(char **r)
+/*
+** Counts leading non-NULL slots, but never reads past r[limit - 1]: callers
+** pass the number of words THEY expect, so an ft_split that never writes its
+** terminator cannot make this run off the end of the array hunting for a
+** NULL that is not there. Before alloc.c poisoned fresh memory (0xAA), that
+** uninitialised tail usually came back zeroed by the kernel and an unbounded
+** walk here would stop in the right place by luck; poisoned, it would run
+** until it faulted. Bounding it is what makes the walk safe to do at all,
+** not just correct.
+*/
+static long	count_words(char **r, long limit)
 {
 	long	n;
 
 	n = 0;
-	while (r[n])
+	while (n < limit && r[n])
 		n++;
 	return (n);
 }
 
 /*
 ** `expected` is a NULL-terminated list of the words that should come back.
-** The NULL terminator on the result is checked explicitly: it is how the
-** caller knows where to stop, and it is not optional.
+** The terminator on the result (got[want]) is asserted explicitly below,
+** never merely trusted: count_words is bounded to exactly `want` slots so
+** it counts words and nothing else - it cannot stand in for the terminator
+** check the way it used to. A split that skips its final `wordarr[i] =
+** NULL;` has no way to pass this any more (mutants.py: split_no_terminator).
 */
 static void	split_case(t_ctx *c, const char *s, char sep,
 		const char *const *expected)
@@ -53,6 +72,7 @@ static void	split_case(t_ctx *c, const char *s, char sep,
 	char	**got;
 	long	i;
 	long	want;
+	long	n;
 
 	got = ft_split(s, sep);
 	bro_track(c, got);
@@ -63,19 +83,26 @@ static void	split_case(t_ctx *c, const char *s, char sep,
 	want = 0;
 	while (expected[want])
 		want++;
-	if (count_words(got) != want)
+	n = count_words(got, want);
+	if (n != want)
 	{
-		bro_fail(c->out, "expected %ld word(s), got %ld", want,
-			count_words(got));
-		return (free_split(got));
+		bro_fail(c->out, "expected %ld word(s), got %ld", want, n);
+		return (free_split(got, n));
 	}
 	i = 0;
 	while (i < want && !strcmp(got[i], expected[i]))
 		i++;
 	if (i < want)
+	{
 		bro_fail(c->out, "word %ld: expected \"%s\", got \"%s\"", i,
 			expected[i], got[i]);
-	free_split(got);
+		return (free_split(got, n));
+	}
+	if (got[want] != NULL)
+		bro_fail(c->out, "word %ld is not NULL: the result is not "
+			"terminated, so the caller has no way to know where it ends",
+			want);
+	free_split(got, n);
 }
 
 static const char *const	g_none[] = {NULL};
@@ -191,6 +218,7 @@ static void	case_15(t_ctx *c)
 	size_t						want;
 	size_t						got_bytes;
 	long						i;
+	long						n;
 
 	want = 3 * sizeof(char *);
 	i = 0;
@@ -209,7 +237,11 @@ static void	case_15(t_ctx *c)
 		bro_fail(c->out, "the array and its words need at least %zu byte(s), "
 			"only %zu were allocated", want,
 			got_bytes);
-	free_split(got);
+	/* `i` is the word count from the loop above (2, here) - reused as the
+	** bound so this free, like split_case's, never walks past the words it
+	** knows are really there hunting for a terminator that might be missing. */
+	n = count_words(got, i);
+	free_split(got, n);
 }
 
 static const t_case	g_cases[] = {

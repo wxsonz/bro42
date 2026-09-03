@@ -249,6 +249,7 @@ def main(argv=None):
         print(f"{ok}/{len(scored)}")
     else:
         print(render.report(records, target, st, pack, verbose=verbose,
+                            restricted=restricted,
                             macro=checks, hist_delta=hist_delta))
         if page:
             print(f"  {st.dim('→ ' + str(page))}")
