@@ -2,13 +2,28 @@
 # because bro_micro is linked against the student's libft.a.
 
 CC       = cc
+OBJDIR   = build
+
+# Whether THIS linker accepts -Wl,--wrap (decision A8), decided by asking it
+# rather than guessing from uname/sys.platform - wrong in both directions,
+# since a Linux box can have a non-GNU linker and a Mac can have GNU
+# binutils installed. Link a throwaway program with the same flag alloc.c
+# needs and let the linker answer. Evaluated ONCE here via $(shell ...), not
+# inside a compile rule, so it costs one subprocess for the whole build
+# instead of one per object file - bro42/build.py's wrap_supported() asks
+# the identical question for the per-target link, so the two stay in
+# agreement (a mismatch would link but silently stop accounting).
+BRO_HAVE_WRAP := $(shell mkdir -p $(OBJDIR) && printf 'void\t*__wrap_malloc(unsigned long n) { return ((void *)n); }\nint\tmain(void) { return (0); }\n' > $(OBJDIR)/.wrap_probe.c && $(CC) $(OBJDIR)/.wrap_probe.c -Wl,--wrap=malloc -o $(OBJDIR)/.wrap_probe 2>/dev/null && echo 1)
+
 # -MMD -MP emits a .d per object listing the headers it includes, so touching
 # bro.h rebuilds everything that uses it. Without this, changing a struct
 # leaves stale objects that disagree about its size - which is exactly the
 # dependency-tracking failure plan/platform/08-macro.md section 3 checks for in a student's
 # Makefile, and it cost an afternoon here before the check was applied to us.
-CFLAGS   = -Wall -Wextra -Werror -g3 -Iengine/include -Iengine/packs/libft -DBRO_HAVE_WRAP -MMD -MP
-OBJDIR   = build
+CFLAGS   = -Wall -Wextra -Werror -g3 -Iengine/include -Iengine/packs/libft -MMD -MP
+ifeq ($(BRO_HAVE_WRAP),1)
+CFLAGS  += -DBRO_HAVE_WRAP
+endif
 
 # Project-agnostic harness. Knows nothing about Libft, ft_printf, or any
 # other pack - see engine/core/.

@@ -20,6 +20,7 @@ decided per SUITE (a suite is what the engine and the spec address). For
 Libft the two coincide; for ft_printf fifteen suites share one symbol.
 """
 
+import functools
 import shutil
 import subprocess
 from pathlib import Path
@@ -34,6 +35,31 @@ WRAP_FLAGS = [
     "-Wl,--wrap=malloc", "-Wl,--wrap=free",
     "-Wl,--wrap=calloc", "-Wl,--wrap=realloc",
 ]
+
+
+@functools.lru_cache(maxsize=None)
+def wrap_supported(probe_dir):
+    """Whether THIS linker accepts --wrap, decided by asking it - not by
+    guessing from sys.platform.
+
+    A platform-name test is wrong in both directions: a Linux box can have a
+    non-GNU linker (lld, mold) that also lacks --wrap, and a Mac can have GNU
+    binutils installed and support it fine. So compile and link a throwaway
+    program with the same flag the real link uses, and let the linker itself
+    answer. lru_cache means that subprocess runs once per process, not once
+    per link (prepare() calls this on every build). probe_dir is a Path - it
+    must be the TARGET's cache directory, never the student's repo (A9).
+    """
+    probe_dir = Path(probe_dir)
+    probe_dir.mkdir(parents=True, exist_ok=True)
+    src = probe_dir / "wrap_probe.c"
+    src.write_text(
+        "void\t*__wrap_malloc(unsigned long n) { return ((void *)n); }\n"
+        "int\tmain(void) { return (0); }\n"
+    )
+    out = probe_dir / "wrap_probe"
+    r = _run(["cc", str(src), "-Wl,--wrap=malloc", "-o", str(out)])
+    return r.returncode == 0
 
 
 class BuildError(Exception):
@@ -334,7 +360,16 @@ def prepare(target, pack):
     cmd += [str(archive)]
     if stubs:
         cmd += [str(stubs)]
-    cmd += WRAP_FLAGS
+    # The engine objects were compiled against whatever BRO_HAVE_WRAP the
+    # Makefile's own probe decided (see the top-level Makefile). Passing
+    # WRAP_FLAGS here when they were compiled WITHOUT it - or withholding them
+    # when they were compiled WITH it - links either way but leaves
+    # __wrap_malloc either undefined or silently unreachable: a mismatch is
+    # worse than either side of A8 alone, because it stops accounting for
+    # allocations without ever failing loudly. Asking the same question
+    # (wrap_supported) both places is what keeps them in agreement.
+    if wrap_supported(cache / "probe"):
+        cmd += WRAP_FLAGS
     cmd += ["-o", str(binary)]
     r = _run(cmd)
     if r.returncode:

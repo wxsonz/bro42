@@ -1,3 +1,3 @@
 """bro42 - a Libft gym bro."""
 
-VERSION = "1.1.0"
+VERSION = "1.1.1"

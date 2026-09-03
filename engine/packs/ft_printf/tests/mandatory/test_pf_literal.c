@@ -28,17 +28,12 @@ static void	case_01(t_ctx *c)
 
 static void	case_02(t_ctx *c)
 {
-	char	ref[BRO_CAPTURE_MAX];
-	int	eret;
 	int	aret;
-
-	const char	*fmt = "";
 
 	if (!pf_begin(c))
 		return ;
-	aret = ft_printf(fmt);
-	eret = snprintf(ref, sizeof(ref), fmt);
-	pf_check(c, aret, ref, eret);
+	aret = ft_printf("");
+	pf_check(c, aret, "", 0);
 }
 
 /* control bytes are still just bytes - nothing about scanning for '%' looks
@@ -77,17 +72,12 @@ static void	case_04(t_ctx *c)
 */
 static void	case_05(t_ctx *c)
 {
-	char	ref[BRO_CAPTURE_MAX];
-	int	eret;
 	int	aret;
-
-	const char	*fmt = "ab\0cd";
 
 	if (!pf_begin(c))
 		return ;
-	aret = ft_printf(fmt);
-	eret = snprintf(ref, sizeof(ref), fmt);
-	pf_check(c, aret, ref, eret);
+	aret = ft_printf("ab\0cd");
+	pf_check(c, aret, "ab", 2);
 }
 
 static void	case_06(t_ctx *c)

@@ -266,23 +266,13 @@ void	bro_alloc_snapshot(t_alloc *out)
 bool	bro_alloc_available(void) { return (false); }
 void	bro_alloc_reset(void) { }
 void	bro_alloc_arm(long f) { (void)f; }
-void	bro_alloc_ready(void) { }
 /*
-** Records how many allocations the case made before the function under test
-** was invoked. The harness uses it to decide WHICH absolute allocation indices
-** to sweep - it no longer affects the failure decision itself.
-**
-** It used to: the check subtracted base from the running count. That was wrong,
-** because base is only set once the fixture is already built, so at the moment
-** a fixture allocated, base was still zero and a low failure index broke the
-** test's own setup. bro.h promised fixture allocations "can never be the
-** injected failure" and the code did not deliver it.
+** No g_alloc on this path (it is the wrap branch's own static), so there is
+** nothing to record base into. Harmless: with bro_alloc_available() false,
+** harness.c's bro_run_case() reports SKIP for BRO_INJECT cases before ever
+** calling this - it only exists so every entry point in bro.h still links.
 */
-void	bro_alloc_ready(void)
-{
-	g_alloc.base = g_alloc.calls;
-}
-
+void	bro_alloc_ready(void) { }
 void	bro_alloc_disarm(void) { }
 void	bro_alloc_snapshot(t_alloc *out) { memset(out, 0, sizeof(*out)); }
 

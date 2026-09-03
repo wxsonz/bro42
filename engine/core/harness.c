@@ -400,12 +400,36 @@ static int	inject_sweep(const t_suite *s, const t_case *c,
 	return (0);
 }
 
+/*
+** A8: on a platform without --wrap, injection AND leak accounting are both
+** unavailable for these cases - not just the sweep. Running the case anyway
+** would report OK on the strength of a live_bytes count that is always zero
+** here (alloc.c's stub branch), which is a silent pass, not a verified one.
+** So the whole case reports SKIP, named after the missing linker feature,
+** before it ever runs - matching plan/platform/02-engine.md's "INJECT cases
+** report SKIP with 'malloc injection requires GNU ld'".
+*/
+static void	skip_no_wrap(t_result *out)
+{
+	memset(out, 0, sizeof(*out));
+	out->diverge = -1;
+	out->write_extent = -1;
+	out->status = BRO_SKIP;
+	snprintf(out->msg, sizeof(out->msg),
+		"malloc injection requires GNU ld's --wrap, not available here");
+}
+
 int	bro_run_case(const t_suite *s, const t_case *c, const t_limits *lim,
 		t_result *out)
 {
+	if ((c->flags & BRO_INJECT) && !bro_alloc_available())
+	{
+		skip_no_wrap(out);
+		return (0);
+	}
 	if (run_once(s, c, lim, -1, out) < 0)
 		return (-1);
-	if (!(c->flags & BRO_INJECT) || !bro_alloc_available())
+	if (!(c->flags & BRO_INJECT))
 		return (0);
 	if (out->status != BRO_OK
 		|| out->alloc.calls == out->alloc.base)
